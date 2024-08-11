@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap Stepper</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="form.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <!-- Left Column: Loan Approval Information -->
+            <div class="col-12 col-sm-7 col-md-5 col-lg-5" id="leftsection">
+                <div class="loan-info p-4 bg-light rounded h-100">
+                    <img src="image 50.png" alt="loan-info" class="img-fluid w-50 mb-3 d-block mx-auto">
+                    <h3 class="text-center">Loan Approval Form Requirements</h3>
+                    <p class="text-center">Ensure you meet the following requirements before applying:</p>
+                    <ul class="pl-3">
+                        <li><strong>Eligibility:</strong> Must be a citizen with valid ID.</li>
+                        <li><strong>Education:</strong> Minimum requirement is a high school diploma.</li>
+                        <li><strong>Employment:</strong> Must provide proof of employment or self-employment.</li>
+                        <li><strong>Income:</strong> Documented proof of sufficient annual income.</li>
+                        <li><strong>Credit Score:</strong> A minimum credit score is required.</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary mt-3 d-block mx-auto text-center" id="button">Learn More</a>
+                </div>
+            </div>
+
+            <!-- Right Column: Loan Approval Form -->
+            <div class="col-12 col-sm-8 col-md-7 col-lg-6" id="rightcoloumn">
+                
+                    <div class="col-md-12">
+                        <form id="stepperForm">
+                            <h2 id="h2" class="mb-4">Loan Approval Form</h2>
+
+                            <!-- Stepper -->
+                            <div class="stepper">
+                                <div class="stepper-header">
+                                    <ul class="nav nav-pills nav-justified">
+                                        <li class="nav-item" id="nav1item">
+                                            <a class="nav-link active" id="nav1" href="#step1">Personal Info</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#step2">Apply For Loan</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#step3">Asset Information</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- Perosonal info -->
+                                <div id="step1" class="step-content d-none">
+                                    <div class="mb-3">
+                                        <label for="inputcitizen" class="form-label">Citizenship No</label>
+                                        <input type="text" class="form-control" id="inputcitizen" placeholder="eg- 22114055">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="inputcountry" class="form-label">Country</label>
+                                        <input type="text" class="form-control" id="inputcountry" placeholder="eg- Nepal">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="inputAddress" class="form-label">Address</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fa-solid fa-location-dot"></i>
+                                            </span>
+                                            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3"> 
+                                        <label for="inputState" class="form-label">State</label>
+                                        <select id="inputState" class="form-select">
+                                            <option selected>Choose...</option>
+                                            <option>...</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3"> 
+                                        <label for="inputStreet" class="form-label">Street</label>
+                                        <select id="Street" class="form-select">
+                                            <option value="" selected>eg- Freak Street...</option>
+                                            <option value="Patan">Patan</option>
+                                            <option value="Ikache">Ikache</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="inputZip" class="form-label">Zip</label>
+                                        <input type="text" class="form-control" id="inputZip">
+                                    </div>
+                                </div>
+
+                                <!-- Step 2 -->
+                                <div id="step2" class="step-content d-none">
+                                    <div class="mb-3">
+                                        <label for="education" class="form-label">Education</label>
+                                        <select id="education" class="form-select">
+                                            <option value="" selected>Select Education...</option>                                       
+                                            <option value="Graduate">Graduate</option>
+                                            <option value="Not Graduate">Not Graduate</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="employment" class="form-label">Self Employed</label>
+                                        <select id="employment" class="form-select">
+                                            <option value="" selected>Self Employed...</option>
+                                            <option value="Graduate">Yes</option>
+                                            <option value="Not Graduate">No</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="Loanamount" class="form-label">Loan Amount</label>
+                                        <input type="number" class="form-control" id="Loanamount">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="Loanterm" class="form-label">Loan Term</label>
+                                        <input type="number" class="form-control" id="Loanterm">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="dependers" class="form-label">No of Dependers</label>
+                                        <input type="number" class="form-control" id="dependers">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="credit" class="form-label">Credit Score</label>
+                                        <input type="number" class="form-control" id="credit">
+                                    </div>
+                                </div>
+
+                                <!-- Step 3 -->
+                                <div id="step3" class="step-content d-none">
+                                    <div class="mb-3">
+                                        <label for="annualIncome" class="form-label">Annual Income</label>
+                                        <input type="number" class="form-control" id="annualIncome" placeholder="Enter your annual income">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="residentialAsset" class="form-label">Residential Asset</label>
+                                        <input type="number" class="form-control" id="residentialAsset" placeholder="Enter value of residential asset">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="luxuryAsset" class="form-label">Luxury Asset</label>
+                                        <input type="number" class="form-control" id="luxuryAsset" placeholder="Enter value of luxury asset">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="bankAsset" class="form-label">Bank Asset</label>
+                                        <input type="number" class="form-control" id="bankAsset" placeholder="Enter value of bank asset">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="commercialAsset" class="form-label">Commercial Asset</label>
+                                        <input type="number" class="form-control" id="commercialAsset" placeholder="Enter value of commercial asset">
+                                    </div>
+                                </div>
+
+                                <!-- Pagination -->
+                                <div class="mt-4 d-flex justify-content-between">
+                                    <button type="button" class="btn btn-secondary" id="prevBtn" onclick="nextPrev(-1)" disabled>Previous</button>
+                                    <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextPrev(1)">Next</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <script src="form.js"></script>
+
+</body>
+
+</html>
