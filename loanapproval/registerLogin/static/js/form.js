@@ -112,5 +112,21 @@ function validateForm() {
 document.querySelectorAll('input[type=number]').forEach(removeNumberInputSpinner);
 
 
+function nextPrev(n) {
+    const steps = document.querySelectorAll('.step-content');
+    
+    if (n === 1 && !validateForm()) return false;
+
+    currentStep += n;
+
+    if (currentStep > steps.length) {
+        // Submit the form
+        document.getElementById("stepperForm").submit();
+        return false; // Prevent default button behavior
+    }
+
+    showStep(currentStep);
+}
+
 
 

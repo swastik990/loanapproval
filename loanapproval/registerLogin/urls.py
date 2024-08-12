@@ -6,5 +6,7 @@ from . import views
 urlpatterns = [
     path('register/', views.user_action, name='user_action'),
     path('success/', views.success_page, name='success'),
-    path('logout/', LogoutView.as_view(next_page='register_login'), name='logout'),
+    path('form/', views.predictor, name = 'formInfo'),
+    path('formInfo', views.formInfo, name = 'formInfo'),
+
 ]
