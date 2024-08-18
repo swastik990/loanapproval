@@ -64,18 +64,18 @@ def success_page(request):
 model = load('./predictionModel/model.joblib')
 preprocessor = load('./predictionModel/preprocessor.joblib')
 
-# Utility function to get feature names from ColumnTransformer
-def get_feature_names(preprocessor):
-    feature_names = []
-    if isinstance(preprocessor, ColumnTransformer):
-        for name, transformer, columns in preprocessor.transformers_:
-            if hasattr(transformer, 'get_feature_names_out'):
-                feature_names.extend(transformer.get_feature_names_out())
-            elif isinstance(transformer, OneHotEncoder):
-                feature_names.extend(transformer.get_feature_names_out(input_features=columns))
-            else:
-                feature_names.extend(columns)
-    return feature_names
+# # Utility function to get feature names from ColumnTransformer
+# def get_feature_names(preprocessor):
+#     feature_names = []
+#     if isinstance(preprocessor, ColumnTransformer):
+#         for name, transformer, columns in preprocessor.transformers_:
+#             if hasattr(transformer, 'get_feature_names_out'):
+#                 feature_names.extend(transformer.get_feature_names_out())
+#             elif isinstance(transformer, OneHotEncoder):
+#                 feature_names.extend(transformer.get_feature_names_out(input_features=columns))
+#             else:
+#                 feature_names.extend(columns)
+#     return feature_names
 
 def predictor(request):
     return render(request, 'form.html')
@@ -94,6 +94,11 @@ def formInfo(request):
         commercial_assets_value = float(request.POST.get('commercialAsset', 0))
         luxury_assets_value = float(request.POST.get('luxuryAsset', 0))
         bank_asset_value = float(request.POST.get('bankAsset', 0))
+        
+        print(f"education: {education}")
+        print(f"self_employed: {self_employed}")
+
+        
 
         # Preparing the input DataFrame 
         input_data = pd.DataFrame([[
@@ -123,21 +128,21 @@ def formInfo(request):
         ])
 
         # Get the column order expected by the preprocessor
-        expected_columns = get_feature_names(preprocessor)
+        # expected_columns = get_feature_names(preprocessor)
 
-        # Ensure all expected columns are present in input_data
-        for col in expected_columns:
-            if col not in input_data.columns:
-                input_data[col] = 0  # Add missing columns with default value
+        # # Ensure all expected columns are present in input_data
+        # for col in expected_columns:
+        #     if col not in input_data.columns:
+        #         input_data[col] = 0  # Add missing columns with default value
 
-        # Reorder columns to match expected column order
-        input_data = input_data[expected_columns]
+        # # Reorder columns to match expected column order
+        # input_data = input_data[expected_columns]
 
-        # Apply preprocessor
-        input_data_transformed = preprocessor.transform(input_data)
+        # # Apply preprocessor
+        # input_data_transformed = preprocessor.transform(input_data)
 
         # Make the prediction
-        prediction = model.predict(input_data_transformed)
+        prediction = model.predict(input_data)
 
         # Convert the prediction into a human-readable format
         prediction_text = "Congratulations, your loan is approved!" if prediction == 1 else "Sorry, your loan application is rejected."
