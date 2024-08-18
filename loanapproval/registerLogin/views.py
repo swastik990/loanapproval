@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+`from django.shortcuts import render, redirect
 import mysql.connector as sql
 from django.views.decorators.csrf import csrf_protect
 from joblib import load
