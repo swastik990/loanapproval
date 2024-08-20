@@ -34,11 +34,7 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     // Change status bar color
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: const Color.fromARGB(255, 171, 171, 171),
-      statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
-      statusBarBrightness: Brightness.light, // For iOS (light background)
-    ));
+    
 
     return SafeArea(
       child: Scaffold(

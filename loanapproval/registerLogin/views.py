@@ -1,17 +1,37 @@
-`from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect
 import mysql.connector as sql
+from rest_framework import status
 from django.views.decorators.csrf import csrf_protect
 from joblib import load
 import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
+from rest_framework.response import Response
+from django.views.decorators.csrf import csrf_exempt
+from .models import User
+from rest_framework.decorators import api_view
+from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.hashers import make_password
+from django.http import JsonResponse
+from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import UserRegistrationSerializer
+from .serializers import UserLoginSerializer
+from rest_framework.views import APIView
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import authenticate
+import logging
+import json
+
+
 
 
 @csrf_protect
 def user_action(request):
     if request.method == "POST":
-        m = sql.connect(host="localhost", user="root", password="Infiniti@111", database="user_auth")
+        m = sql.connect(host="localhost", user="root", password="binesh9845998009", database="user_auth")
         cursor = m.cursor()
         d = request.POST
 
@@ -59,6 +79,80 @@ def user_action(request):
 
 def success_page(request):
     return render(request, 'success.html')
+
+#jwt token authentication
+
+def get_tokens_for_user(user):
+    """Generate JWT tokens for the given user."""
+    refresh = RefreshToken.for_user(user)
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
+
+class UserSignupView(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.data
+            required_fields = ['firstname', 'lastname', 'email', 'dob', 'phone', 'password', 'agree_terms']
+            for field in required_fields:
+                if field not in data:
+                    return Response({"error": f"Missing required field: {field}"}, status=status.HTTP_400_BAD_REQUEST)
+
+            user = User(
+                firstname=data['firstname'],
+                lastname=data['lastname'],
+                email=data['email'],
+                dob=data['dob'],
+                phone=data['phone'],
+                password=make_password(data['password']),
+                is_admin=data.get('is_admin', False),
+                agree_terms=data['agree_terms']
+            )
+            user.save()
+
+            # Create JWT tokens
+            refresh = RefreshToken.for_user(user)
+
+            return Response({
+                "message": "User created successfully",
+                "refresh": str(refresh),
+                "access": str(refresh.access_token)
+            }, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request, *args, **kwargs):
+        return Response({"error": "GET method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+
+
+class UserLoginView(APIView):
+    def post(self, request, format=None):
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            email = serializer.data.get('email')
+            password = serializer.data.get('password')
+
+            user = authenticate(request, email=email, password=password)
+            
+            if user is not None:
+                # Create JWT tokens
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'msg': 'Login successful'
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({'errors': {'non_field_errors': ['Invalid credentials']}}, status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
 
 #loading model
 model = load('./predictionModel/model.joblib')
@@ -152,3 +246,25 @@ def formInfo(request):
 
     except Exception as e:
         return render(request, 'result.html', {'prediction': f"An error occurred: {str(e)}"})
+def form_view(request):
+    return render(request, 'form.html')
+
+
+
+# from rest_framework.response import Response
+# from rest_framework import status
+# from rest_framework.views import APIView
+# from rest_framework_simplejwt.tokens import RefreshToken
+# from django.contrib.auth import authenticate
+
+from .serializers import (
+    UserRegistrationSerializer,
+    UserLoginSerializer,
+    # UserProfileSerializer,
+    # UserChangePasswordSerializer,
+    # SendPasswordResetEmailSerializer,
+    # UserPasswordResetSerializer
+)
+from .renderers import UserRenderer
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.hashers import make_password

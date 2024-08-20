@@ -3,6 +3,11 @@ import 'package:flutter/services.dart';
 import 'signup_mobile.dart';
 import 'homepage.dart';
 import 'forgot_password.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
+const String apiUrl = 'http://10.0.2.2:8000/login/';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -21,16 +26,57 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _login() {
+  Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       String email = _emailController.text;
       String password = _passwordController.text;
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      try {
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'email': email, 'password': password}),
+        );
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+
+          // Save authentication tokens
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('refresh_token', data['refresh']);
+          await prefs.setString('access_token', data['access']);
+
+          // Navigate to the home page
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        } else {
+          final responseBody = jsonDecode(response.body);
+          _showErrorDialog(responseBody['error'] ?? 'Unknown error occurred.');
+        }
+      } catch (e) {
+        _showErrorDialog('An error occurred.');
+      }
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Login Failed'),
+        content: Text('Error: $message'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _navigateToSignup() {
@@ -51,9 +97,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     // Change status bar color
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: const Color.fromARGB(255, 171, 171, 171),
-      statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
-      statusBarBrightness: Brightness.light, // For iOS (light background)
+      statusBarColor: Colors.blue, // Adjusted color for visibility
+      statusBarIconBrightness: Brightness.light, // For dark status bar background
     ));
 
     return SafeArea(
@@ -135,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'lib/assets/loan_approval.png', // Replace with your asset path
+                      'lib/assets/loan_approval.png', // Ensure this path is correct
                       height: 200,
                     ),
                     SizedBox(height: 20),
@@ -154,7 +199,7 @@ class _LoginPageState extends State<LoginPage> {
                         labelText: 'Email',
                         labelStyle: TextStyle(color: Colors.black),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue), // Changed border color to blue
+                          borderSide: BorderSide(color: Colors.blue),
                         ),
                         border: OutlineInputBorder(),
                       ),
@@ -172,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                         labelText: 'Password',
                         labelStyle: TextStyle(color: Colors.black),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue), // Changed border color to blue
+                          borderSide: BorderSide(color: Colors.blue),
                         ),
                         border: OutlineInputBorder(),
                       ),
@@ -206,7 +251,7 @@ class _LoginPageState extends State<LoginPage> {
                           icon: SizedBox(
                             width: 40,
                             height: 40,
-                            child: Image.asset('lib/assets/facebook.png'), // Replace with your asset path
+                            child: Image.asset('lib/assets/facebook.png'), // Ensure this path is correct
                           ),
                           onPressed: () {},
                         ),
@@ -214,15 +259,7 @@ class _LoginPageState extends State<LoginPage> {
                           icon: SizedBox(
                             width: 40,
                             height: 40,
-                            child: Image.asset('lib/assets/apple.png'), // Replace with your asset path
-                          ),
-                          onPressed: () {},
-                        ),
-                        IconButton(
-                          icon: SizedBox(
-                            width: 40,
-                            height: 40,
-                            child: Image.asset('lib/assets/google.png'), // Replace with your asset path
+                            child: Image.asset('lib/assets/google.png'), // Ensure this path is correct
                           ),
                           onPressed: () {},
                         ),
