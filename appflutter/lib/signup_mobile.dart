@@ -319,18 +319,18 @@ class _SignupPageState extends State<SignupPage> {
                     },
                   ),
                   SizedBox(height: 20),
-                  CheckboxListTile(
-                    title: Text('Is Admin'),
-                    value: _user.isAdmin,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _user.isAdmin = value ?? false;
-                      });
-                    },
-                    controlAffinity: ListTileControlAffinity.leading,
-                    activeColor: Colors.blue,
-                  ),
-                  SizedBox(height: 20),
+                  // CheckboxListTile(
+                  //   title: Text('Is Admin'),
+                  //   value: _user.isAdmin,
+                  //   onChanged: (bool? value) {
+                  //     setState(() {
+                  //       _user.isAdmin = value ?? false;
+                  //     });
+                  //   },
+                  //   controlAffinity: ListTileControlAffinity.leading,
+                  //   activeColor: Colors.blue,
+                  // ),
+                  // SizedBox(height: 20),
                   CheckboxListTile(
                     title: Text('I agree to the Terms & Conditions'),
                     value: _user.agreeTerms,
