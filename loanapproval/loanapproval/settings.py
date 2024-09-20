@@ -100,9 +100,9 @@ WSGI_APPLICATION = 'loanapproval.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'user_auth',
+        'NAME': 'loanapprovaldb',
         'USER': 'root',
-        'PASSWORD': 'binesh9845998009',
+        'PASSWORD': 'Infiniti@111',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }

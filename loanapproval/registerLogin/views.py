@@ -9,7 +9,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
-from .models import User
+from .models import *
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.hashers import make_password
@@ -31,7 +31,7 @@ import json
 @csrf_protect
 def user_action(request):
     if request.method == "POST":
-        m = sql.connect(host="localhost", user="root", password="binesh9845998009", database="user_auth")
+        m = sql.connect(host="localhost", user="root", password="Infiniti@111", database="loanapprovaldb")
         cursor = m.cursor()
         d = request.POST
 
@@ -221,6 +221,26 @@ def formInfo(request):
             ' bank_asset_value'
         ])
 
+        application = Application(
+            user_id = 1,
+            loan_amount=loan_amount,
+            loan_terms=loan_term,
+            credit_score=cibil_score,
+            no_of_dependents=no_of_dependents,
+            education=education == 'Graduate',  # Boolean field in the model
+            self_employed=self_employed == 'Yes',  # Boolean field in the model
+            annual_income=income_annum,
+            residential_asset=residential_assets_value,
+            commercial_asset=commercial_assets_value,
+            luxury_asset=luxury_assets_value,
+            bank_asset=bank_asset_value,
+            state=request.POST.get('state', '').strip(),
+            street=request.POST.get('street', '').strip(),
+            citizenship_no=request.POST.get('citizenship_no', '').strip(),
+            zip_code=request.POST.get('zip_code', '').strip(),
+            submitted_time=pd.Timestamp.now()  # Store current time as submission time
+        )
+        application.save()
         # Get the column order expected by the preprocessor
         # expected_columns = get_feature_names(preprocessor)
 
