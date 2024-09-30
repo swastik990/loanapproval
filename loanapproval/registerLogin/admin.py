@@ -14,6 +14,14 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ('first_name', 'last_name', 'email', 'phone')
     list_filter = ('user_type', 'agree_terms')
 
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'first_name', 'last_name', 'dob', 'phone', 'password', 'user_type', 'is_staff', 'is_superuser', 'agree_terms'),
+        }),
+    )
+
+
 @admin.register(Feedback)
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = ('fb_id', 'user', 'feedback', 'feedback_time')

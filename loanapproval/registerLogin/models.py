@@ -1,23 +1,53 @@
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.utils import timezone
+import pytz
+# function to show nepali time
+NEPAL_TZ = pytz.timezone('Asia/Kathmandu')
 
 class UserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, phone, dob, password=None, **extra_fields):
         if not email:
             raise ValueError('The Email field must be set')
         email = self.normalize_email(email)
-        user = self.model(email=email, first_name=first_name, last_name=last_name, phone=phone, dob=dob)
+        
+        # Extract the user_type from extra_fields, default to NORMAL_USER if not provided
+        user_type = extra_fields.pop('user_type', User.NORMAL_USER)
+        
+        user = self.model(
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            phone=phone,
+            dob=dob,
+            user_type=user_type,  # Set user_type here
+            is_staff=extra_fields.get('is_staff', False),
+            is_superuser=extra_fields.get('is_superuser', False)
+        )
+        
         user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_superuser(self, email, first_name, last_name, phone, dob, password=None, **extra_fields):
+        extra_fields.setdefault('user_type', User.ADMIN_SUPERUSER)  # Ensure user_type is set to Admin/Superuser
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('check_in_time', '09:00:00') 
+        
         return self.create_user(email, first_name, last_name, phone, dob, password, **extra_fields)
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser):
+
+    NORMAL_USER = 0
+    ADMIN_SUPERUSER = 1
+    STAFF = 2
+
+    USER_TYPE_CHOICES = [
+        (NORMAL_USER, 'Normal User'),
+        (ADMIN_SUPERUSER, 'Admin/Superuser'),
+        (STAFF, 'Staff'),
+    ]
+
     user_id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -26,13 +56,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     pictures = models.ImageField(upload_to='uploads/')
-    user_type = models.IntegerField(default=0)  # 0, 1, 2, etc. for different user types
+    user_type = models.IntegerField(choices=USER_TYPE_CHOICES, default=NORMAL_USER)
     agree_terms = models.BooleanField(default=False)
-    check_in_time = models.TimeField(default="12:00:00")
+    # nepali time function call gareko
+    def get_nepal_time():
+    # Get current datetime in Nepal timezone
+        nepal_time = timezone.now().astimezone(NEPAL_TZ)
+    # Format date, day, and time as requested
+        return nepal_time.strftime("%Y-%m-%d, %A %H:%M:%S")
+
+    check_in_time = models.CharField(max_length=50, default=get_nepal_time)
+
 
     # New fields required by Django's authentication system
-    is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
 
     # The field used to log in
     USERNAME_FIELD = 'email'
@@ -43,6 +82,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    # Required for Django admin access
+    def has_perm(self, perm, obj=None):
+        """ Return True if the user has the specified permission """
+        return self.is_superuser
+
+    def has_module_perms(self, app_label):
+        """ Return True if the user has permissions to view the app `app_label` """
+        return self.is_superuser
+
 
 class Navbar(models.Model):
     nav_id = models.AutoField(primary_key=True)

@@ -31,7 +31,7 @@ import json
 @csrf_protect
 def user_action(request):
     if request.method == "POST":
-        m = sql.connect(host="localhost", user="root", password="Infiniti@111", database="loanapprovaldb")
+        m = sql.connect(host="localhost", user="root", password="binesh98456998009", database="loanapprovaldb1")
         cursor = m.cursor()
         d = request.POST
 
