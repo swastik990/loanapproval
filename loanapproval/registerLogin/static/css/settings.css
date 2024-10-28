@@ -1,0 +1,401 @@
+/* General page styles */
+body {
+    background-color: #f4f7f6;
+    font-family: 'Arial', sans-serif;
+  }
+
+  #navbar1 {
+ 
+    padding: 15px 50px; /* Adjust padding for a more spacious look */
+    display: flex;
+    justify-content: space-between; /* Space out the brand and menu */
+    align-items: center; /* Center vertically */
+    background: linear-gradient( #062d9ad8, #101550 );
+  }
+  
+  .navbar-brand {
+    color: white;
+    font-size: 30px; /* Adjusted font size for prominence */
+    text-decoration: none;
+    letter-spacing: 1.5px; /* Add spacing for a more elegant look */
+  }
+  
+  /* Toggler button styling */
+  #toggler-button {
+    font-size: 30px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: none; /* Hidden on larger screens */
+  }
+  
+  /* Navbar links in row on desktop mode */
+  .navbar-menu {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Make items in a row by default (desktop view) */
+  }
+  
+  .nav-item {
+    margin-left: 50px; /* Increased spacing between items */
+  }
+  
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    font-size: 18px; /* Adjust font size */
+    transition: color 0.3s; /* Smooth color transition */
+  }
+  
+  .navbar-toggler{
+    color: rgba(245, 245, 245, 0.778) !important;
+  }
+  
+  /* Change color on hover */
+  .nav-link:hover {
+    color: #ffcc00; /* Highlight color on hover */
+  }
+  
+  
+  .settings-page {
+    max-width: 900px;
+    margin: 50px auto;
+    background-color: white;
+    padding: 20px 40px;
+    background: linear-gradient( #0738befa, #0b0f33 );
+    box-shadow: 0px 0px 10px 3px rgb(10, 10, 183);
+    border-radius: 10px;
+    background: linear-gradient(to bottom, #062d9ad8, #101550);
+  }
+  
+  .settings-header {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #ffcc00;
+  }
+  
+  .section-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #ffcc00;
+  }
+  
+  /* Sidebar Menu */
+  .settings-menu {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .menu-item {
+    background-color:#007bffca;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    text-align: left;
+    cursor: pointer;
+  }
+  
+  .menu-item.active {
+    background-color: #6691be9a;
+  }
+  
+  .menu-item:hover {
+    background-color: #192794;
+  }
+  
+  /* Form and Button Styles */
+  .form-control {
+    border: 1px solid #52cd52;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  .input-group-text {
+    background-color: transparent;
+    border: none;
+  }
+  
+  .input-group-text .fas {
+    font-size: 1.2em;
+    color: #6c757d;
+    padding-left: 10px;
+  }
+
+  .input-group {
+    display: flex;
+    align-items: center;
+  }
+
+  .form-control {
+    padding-right: 40px;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    cursor: pointer;
+  }
+  .form-control:focus {
+    box-shadow: none;
+    border-color: #ffcc00;
+  }
+  
+  .form-label {
+    color: white;
+  }
+  
+  .form-check-label {
+    color: white;
+  }
+  
+  .btn-save {
+    background-color: #52cd52;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+  }
+
+  .btn-save:hover {
+    background-color: #47a347 !important;
+    color: whitesmoke;
+}
+  .btn-cancel {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 0 10px;
+  }
+
+  .btn-cancel:hover{
+    color: whitesmoke;
+    background-color: #a73838;
+  }
+
+.text-white{
+  color: white;
+}
+  
+
+/* Profile Picture Container Fix */
+/* Profile Picture Container */
+.profile-pic-container {
+    display: flex;
+    justify-content: flex-start; 
+    margin-bottom: 15px;
+  }
+  
+  .profile-pic {
+    text-align: center;
+  }
+
+  #profilePicUpload{
+    margin-top: 15px;
+    display: flex;
+  }
+
+  
+  
+  .profile-pic img {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 5px solid #52cd52;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .profile-pic label {
+    display: block;
+    margin-top: 10px;
+    cursor: pointer;
+    color: #ffcc00;
+    font-size: 14px;
+    background-color: #101550;
+    padding: 5px 10px;
+    border-radius: 20px;
+  }
+  
+  #pass-requirements{
+    padding-top: 0px !important;
+    margin-bottom: 0px !important;
+    padding-bottom: 0 !important; 
+    padding-left: 0px !important;  
+}
+
+.pass-bold{
+  margin-bottom: 5px !important;
+  padding-left: 15px !important;
+  color: white;
+
+}
+
+ul{
+  color: white !important;
+}
+
+  /* Adjust Form Layout */
+  .col-md-9 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+/*for navbar*/
+@media (max-width: 768px) {
+  /* Show toggler button on small screens */
+  #toggler-button {
+    display: block;
+  }
+
+  /* Initially hide the navbar links on small screens */
+  .navbar-menu {
+    display: none;
+    flex-direction: column; /* Stack menu items vertically */
+    width: 100%; /* Full width on mobile */
+  }
+
+  /* Make navbar menu visible when toggler is clicked */
+  .navbar-menu.active {
+    display: flex;
+  }
+
+  /* Navbar links take full width on mobile */
+  .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-item {
+    margin: 10px 0; /* Adjust spacing for mobile */
+  }
+  #navbar1{
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+}
+
+@media (max-width: 445px) {
+  .nav-link {
+    font-size: 12px !important;
+
+  }
+  
+}
+
+@media (min-width: 446px) and (max-width: 489px ){
+  .nav-link {
+    font-size: 15px !important;
+
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1091px) {
+
+  .nav-item{
+    margin-left: 30px !important;
+  }
+}
+
+
+@media (max-width: 992px){
+  #description {
+    margin-top: 10px !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .navbar-brand{
+    font-size: 20px !important;
+  }
+}
+
+@media (max-width: 370px) {
+  .nav-link {
+    font-size: 11px !important;
+    padding: 5px !important;
+
+  }
+}
+
+
+@media (max-width: 829px) and  (min-width: 769px) {
+  .nav-item {
+    margin-left: 0 !important;
+  }
+}
+
+
+/*content page*/
+
+  @media (max-width: 920px) {
+    .settings-page {
+        width: 90%;
+    }
+}
+
+@media (max-width: 340px) {
+  .profile-pic{
+    width: 80%;
+  }
+
+  .settings-page{
+    margin-left: 20px !important;
+    margin-right: 0 !important;
+    width: 90% !important;
+  }
+
+}
+
+
+
+@media (max-width: 420px) and (min-width:310px) {
+  .profile-pic{
+    width: 80% !important;
+  }
+}
+
+@media (max-width: 376px) {
+  ::placeholder {
+      font-size: 14px;
+      opacity: 1;       
+  }
+}
+
+@media (max-width: 767px) {
+  #name-margin{
+    margin-top: 10px !important;
+
+  }
+
+  #num-margin{
+    margin-top: 10px !important;
+
+  }
+
+  #employ-margin{
+    margin-top: 10px !important;
+
+  }
+}
+
+
+
+  
