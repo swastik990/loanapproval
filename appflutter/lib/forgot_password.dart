@@ -42,10 +42,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light.copyWith(
-        statusBarColor: Colors.black,
-      ),
+    return SafeArea(
+      
       child: Scaffold(
         appBar: AppBar(
           title: Text('Forgot Password', style: TextStyle(color: Colors.white)),

@@ -1,6 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'login_mobile.dart';
+import 'login_mobile.dart'; // Ensure this file exists and contains the LoginPage class
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class User {
+  String firstname;
+  String lastname;
+  String email;
+  DateTime dob;
+  String phone;
+  String password;
+  bool isAdmin;
+  bool agreeTerms;
+
+  User({
+    required this.firstname,
+    required this.lastname,
+    required this.email,
+    required this.dob,
+    required this.phone,
+    required this.password,
+    this.isAdmin = false,
+    this.agreeTerms = false,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'firstname': firstname,
+      'lastname': lastname,
+      'email': email,
+      'dob': dob.toIso8601String().split('T')[0], // Convert to YYYY-MM-DD format
+      'phone': phone,
+      'password': password,
+      'is_admin': isAdmin,
+      'agree_terms': agreeTerms,
+    };
+  }
+}
 
 class SignupPage extends StatefulWidget {
   @override
@@ -9,55 +46,68 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
-  final _firstnameController = TextEditingController();
-  final _lastnameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _dobController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  bool _termsAccepted = false;
+  User _user = User(
+    firstname: '',
+    lastname: '',
+    email: '',
+    dob: DateTime.now(),
+    phone: '',
+    password: '',
+  );
 
-  @override
-  void dispose() {
-    _firstnameController.dispose();
-    _lastnameController.dispose();
-    _emailController.dispose();
-    _dobController.dispose();
-    _phoneController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
+  void _signup() async {
+    if (_formKey.currentState!.validate() && _user.agreeTerms) {
+      ApiService apiService = ApiService();
+      try {
+        final response = await apiService.signup(_user);
+        if (response.statusCode == 201) {
+          _showSuccessDialog();
+        } else {
+          _showErrorDialog(response.body);
+        }
+      } catch (e) {
+        _showErrorDialog('An error occurred: $e');
+      }
+    } else if (!_user.agreeTerms) {
+      _showErrorDialog('You must agree to the terms and conditions');
+    }
   }
 
-  void _signup() {
-    if (_formKey.currentState!.validate() && _termsAccepted) {
-      String firstname = _firstnameController.text;
-      String lastname = _lastnameController.text;
-      String email = _emailController.text;
-      String dob = _dobController.text;
-      String phone = _phoneController.text;
-      String password = _passwordController.text;
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Sign Up Success'),
+        content: Text('Your account has been created.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _navigateToLogin(); // Navigate to login after closing the dialog
+            },
+            child: Text('Login'),
+          ),
+        ],
+      ),
+    );
+  }
 
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Sign Up'),
-            content: Text(
-                'Firstname: $firstname\nLastname: $lastname\nEmail: $email\nDOB: $dob\nPhone: $phone\nPassword: $password'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Sign Up Failed'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _navigateToLogin() {
@@ -69,263 +119,263 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Change status bar color
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: const Color.fromARGB(255, 171, 171, 171),
-      statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
-      statusBarBrightness: Brightness.light, // For iOS (light background)
-    ));
-
-    return SafeArea(
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          textSelectionTheme: TextSelectionThemeData(
-            cursorColor: Colors.blue, // Blue cursor
-            selectionColor: Colors.blue.withOpacity(0.5), // Blue text selection color
-            selectionHandleColor: Colors.blue, // Blue text selection handle color
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Sign Up', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blue,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-        home: Scaffold(
-          appBar: AppBar(
-            title: Text('SignUp', style: TextStyle(color: Colors.white)),
-            backgroundColor: Colors.blue,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.info, color: Colors.white),
-                onPressed: () {
-                  // Show information dialog
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.settings, color: Colors.white),
-                onPressed: () {
-                  // Show settings page
-                },
-              ),
-            ],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.info, color: Colors.white),
+            onPressed: () {
+              // Show information dialog
+            },
           ),
-          body: Center(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextFormField(
-                        controller: _firstnameController,
-                        decoration: InputDecoration(
-                          labelText: 'Firstname',
-                          labelStyle: TextStyle(color: Colors.black),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue), // Changed border color to blue
-                          ),
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your firstname';
-                          }
-                          return null;
-                        },
+          IconButton(
+            icon: Icon(Icons.settings, color: Colors.white),
+            onPressed: () {
+              // Show settings page
+            },
+          ),
+        ],
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextFormField(
+                    initialValue: _user.firstname,
+                    decoration: InputDecoration(
+                      labelText: 'Firstname',
+                      labelStyle: TextStyle(color: Colors.black),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
                       ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _lastnameController,
-                        decoration: InputDecoration(
-                          labelText: 'Lastname',
-                          labelStyle: TextStyle(color: Colors.black),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue), // Changed border color to blue
-                          ),
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your lastname';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: TextStyle(color: Colors.black),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue), // Changed border color to blue
-                          ),
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _dobController,
-                        decoration: InputDecoration(
-                          labelText: 'D.O.B',
-                          labelStyle: TextStyle(color: Colors.black),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue), // Changed border color to blue
-                          ),
-                          border: OutlineInputBorder(),
-                          suffixIcon: Icon(Icons.calendar_today, color: Colors.blue),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your date of birth';
-                          }
-                          return null;
-                        },
-                        onTap: () async {
-                          FocusScope.of(context).requestFocus(new FocusNode());
-                          DateTime? picked = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(1950),
-                            lastDate: DateTime(2100),
-                            builder: (context, child) {
-                              return Theme(
-                                data: ThemeData.light().copyWith(
-                                  colorScheme: ColorScheme.light(
-                                    primary: Colors.blue, // Changed the selected date color to blue
-                                    onPrimary: Colors.white, // Text color of the selected date
-                                  ),
-                                  dialogBackgroundColor: Colors.white,
-                                ),
-                                child: child!,
-                              );
-                            },
-                          );
-                          if (picked != null) {
-                            setState(() {
-                              _dobController.text = "${picked.day}/${picked.month}/${picked.year}";
-                            });
-                          }
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _phoneController,
-                        decoration: InputDecoration(
-                          labelText: 'Phone number',
-                          labelStyle: TextStyle(color: Colors.black),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue), // Changed border color to blue
-                          ),
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your phone number';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _passwordController,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          labelStyle: TextStyle(color: Colors.black),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue), // Changed border color to blue
-                          ),
-                          border: OutlineInputBorder(),
-                        ),
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _confirmPasswordController,
-                        decoration: InputDecoration(
-                          labelText: 'Confirm Password',
-                          labelStyle: TextStyle(color: Colors.black),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue), // Changed border color to blue
-                          ),
-                          border: OutlineInputBorder(),
-                        ),
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please confirm your password';
-                          }
-                          if (value != _passwordController.text) {
-                            return 'Passwords do not match';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      CheckboxListTile(
-                        title: Text('I agree to the Terms & Conditions'),
-                        value: _termsAccepted,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _termsAccepted = value ?? false;
-                          });
-                        },
-                        controlAffinity: ListTileControlAffinity.leading,
-                        activeColor: Colors.blue,
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                            onPressed: _navigateToLogin,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                              padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                            ),
-                            child: Text(
-                              'Log In',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          ElevatedButton(
-                            onPressed: _signup,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                              padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                            ),
-                            child: Text(
-                              'Submit',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _user.firstname = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your firstname';
+                      }
+                      return null;
+                    },
                   ),
-                ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    initialValue: _user.lastname,
+                    decoration: InputDecoration(
+                      labelText: 'Lastname',
+                      labelStyle: TextStyle(color: Colors.black),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _user.lastname = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your lastname';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    initialValue: _user.email,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      labelStyle: TextStyle(color: Colors.black),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _user.email = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      labelText: 'D.O.B',
+                      labelStyle: TextStyle(color: Colors.black),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      border: OutlineInputBorder(),
+                      suffixIcon: Icon(Icons.calendar_today, color: Colors.blue),
+                    ),
+                    controller: TextEditingController(
+                      text: "${_user.dob.year.toString().padLeft(4, '0')}-${_user.dob.month.toString().padLeft(2, '0')}-${_user.dob.day.toString().padLeft(2, '0')}",
+                    ),
+                    onTap: () async {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: _user.dob,
+                        firstDate: DateTime(1950),
+                        lastDate: DateTime(2100),
+                        builder: (context, child) {
+                          return Theme(
+                            data: ThemeData.light().copyWith(
+                              colorScheme: ColorScheme.light(
+                                primary: Colors.blue,
+                                onPrimary: Colors.white,
+                              ),
+                              dialogBackgroundColor: Colors.white,
+                            ),
+                            child: child!,
+                          );
+                        },
+                      );
+                      if (picked != null && picked != _user.dob) {
+                        setState(() {
+                          _user.dob = picked;
+                        });
+                      }
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    initialValue: _user.phone,
+                    decoration: InputDecoration(
+                      labelText: 'Phone number',
+                      labelStyle: TextStyle(color: Colors.black),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(10),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _user.phone = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your phone number';
+                      }
+                      if (value.length != 10) {
+                        return 'Phone number must be 10 digits';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    initialValue: _user.password,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      labelStyle: TextStyle(color: Colors.black),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      border: OutlineInputBorder(),
+                    ),
+                    obscureText: true,
+                    onChanged: (value) {
+                      setState(() {
+                        _user.password = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  // CheckboxListTile(
+                  //   title: Text('Is Admin'),
+                  //   value: _user.isAdmin,
+                  //   onChanged: (bool? value) {
+                  //     setState(() {
+                  //       _user.isAdmin = value ?? false;
+                  //     });
+                  //   },
+                  //   controlAffinity: ListTileControlAffinity.leading,
+                  //   activeColor: Colors.blue,
+                  // ),
+                  // SizedBox(height: 20),
+                  CheckboxListTile(
+                    title: Text('I agree to the Terms & Conditions'),
+                    value: _user.agreeTerms,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _user.agreeTerms = value ?? false;
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                    activeColor: Colors.blue,
+                  ),
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                      onPressed: _signup,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                      ),
+                      child: Text(
+                        'Submit',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class ApiService {
+  final String baseUrl = 'http://10.0.2.2:8000'; // Update with your backend URL
+
+  Future<http.Response> signup(User user) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/signup/'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(user.toJson()),
+    );
+    return response;
   }
 }
