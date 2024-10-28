@@ -7,7 +7,7 @@
 
 body {
     background-color: #a8c0ff;
-    background: linear-gradient(to right, #f8ffae, #a8c0ff);
+    background: linear-gradient(to right, #f8ffae, #1a49be);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -34,7 +34,6 @@ body {
 }
 
 .container span {
-    margin: 20px 0;
     font-size: 12px;
 }
 
@@ -46,17 +45,17 @@ body {
 }
 
 .container button {
-    background-color: rgb(123, 198, 223);
+    background: linear-gradient( #0546f9fa, #152084 );
     color: #fff;
     font-size: 12px;
     padding: 10px 45px;
-    border: 1px solid transparent;
     border-radius: 8px;
     font-weight: 600;
     letter-spacing: 0.5px;
     text-transform: uppercase;
     margin-top: 10px;
     cursor: pointer;
+    border: none;
 }
 
 .container button.hidden {
@@ -127,6 +126,21 @@ body {
     }
 }
 
+.social-icons {
+    margin: 20px 0;
+}
+
+.social-icons a {
+    border: 1px solid #ccc;
+    border-radius: 20%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 3px;
+    width: 40px;
+    height: 40px;
+}
+
 .toggle-container {
     position: absolute;
     top: 0;
@@ -145,9 +159,8 @@ body {
 }
 
 .toggle {
-    background-color: rgb(123, 198, 223);
+    background: linear-gradient( #0f38a7fa, #12195a );
     height: 100%;
-    background: linear-gradient(to right, rgb(123, 198, 223), rgb(99, 195, 227));
     color: #fff;
     position: relative;
     left: -100%;
@@ -192,3 +205,60 @@ body {
 .container.active .toggle-right {
     transform: translateX(200%);
 }
+
+
+
+
+@media(max-width: 900px) {
+    .container{
+        width: 90%;
+    }
+}
+
+@media(max-width: 460px) {
+    #leftsection{
+        padding: 10px;
+    }
+
+    .container form {
+        padding: 10px;
+    }
+
+    .inputedit{
+        width: 95% !important;
+    }
+
+    #rightsection{
+        padding: 10px;
+    }
+
+    .container button{
+        padding: 10px !important;
+    }
+}
+
+
+@media(max-width: 370px) {
+    .container span{
+        font-size: 10px !important;
+        
+    }
+
+    .container p{
+        font-size: 13px !important;
+    }
+
+    .git-icon{
+        margin-top: 6px !important;
+        margin-left: 30px !important;
+    }
+
+    .social-icons{
+        padding-left: 10px !important;
+    }
+
+    h1{
+        font-size: 27px !important;
+    }
+}
+
