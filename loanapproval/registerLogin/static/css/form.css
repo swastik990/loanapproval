@@ -9,12 +9,11 @@
     margin-left: 20px !important;
     border-radius: 8px;
     padding-top: 15px !important;
-    background-color: rgb(19, 19, 106);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    background: linear-gradient( #072b8ffa, #0d1240 );
+    box-shadow: 0px 0px 5px 3px rgb(10, 10, 183);
     
    
 }
-
 
 
 #leftsection{
@@ -22,11 +21,11 @@
     margin-top: 33px !important;
     margin-right: 25px !important;
     border-radius: 8px;
-    padding-top: 15px !important;
-    /*background-color: black;*/
-    padding: 3px !important;
-
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
 }
+
+
 
 #section{
     margin-right: 40px;
@@ -46,10 +45,13 @@
     text-align: center;
 }
 
-body{
-   
-    background: linear-gradient(to right, #94a8dd, #6c754c );
+#loan-info{
+    box-shadow: 0px 0px 10px 3px rgb(187, 184, 184) !important;
 }
+/*body{
+   
+    background: linear-gradient(to right, #122c73, rgb(176, 175, 175));
+}*/
 
 .form-label{
     color: white;
@@ -76,7 +78,7 @@ body{
         margin: 30px !important;
         margin-left: 0px !important;
         margin-right: 15px !important;
-        margin-top: 110px !important;
+        margin-top: 50px !important;
         
     }
 
@@ -95,6 +97,11 @@ body{
 
     }
 
+    #pagination {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
     body{
         background-color: white !important;
     }
@@ -104,6 +111,18 @@ body{
     #rightcoloumn {
         margin-top: 15px !important;
 
+    }
+
+    
+}
+
+@media (max-width: 575px) {
+    #rightcoloumn{
+        width: 90% !important;
+        margin: auto !important;
+        margin-top: 30px 
+        !important;
+        margin-bottom: 30px !important;
     }
 
 }
