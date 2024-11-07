@@ -1,0 +1,258 @@
+/* Reset some default styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: #f5f5f5;
+}
+
+/* Header Section Styling */
+.hero {
+  background: url('/loanapproval/registerLogin/static/image/newloan.jpg') center/cover no-repeat;
+  height: 500px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.container{
+  margin-left: 10px !important;
+  padding-bottom: 10px !important;
+ 
+}
+
+.container2{
+  margin-left: 20px !important;
+}
+
+.container3{
+  width: 95% !important;
+}
+
+#row{
+  display: flex !important;
+  width: 35% !important;
+  justify-items: left !important;
+}
+
+
+/* .hero h1 {
+  font-size: 29px;
+  color: #4CAF50; 
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.hero h2 {
+  font-size: 29px;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+*/
+.p-edit {
+  font-size: 18px !important;
+  margin-bottom: 15px;
+  text-align: left;
+  color: rgb(255, 254, 254);
+  
+}
+
+#p-text{
+  color: white;
+  font-size: 22px !important;
+  font-weight: bold;
+  margin-bottom: 18px !important;
+}
+#button {
+  background-color:  rgb(15, 15, 200);
+  border-radius: 7px;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  
+  
+}
+
+#button:hover {
+  background-color: rgb(22, 22, 158);
+}
+
+.button-container {
+  text-align: left !important;
+}
+
+/* Features Section Styling */
+#card-section{
+  padding-bottom: 20px !important;
+  width: 95% !important;
+  padding-left: 4% !important
+}
+
+#cardbox-middle{
+  padding-bottom: 12px !important;
+  padding-top: 20px !important;
+}
+
+.features .card {
+  transition: transform 0.2s;
+}
+
+.features .card:hover {
+  transform: scale(1.05);
+}
+
+h2{
+  padding-bottom: 20px !important;
+}
+
+.heading-blue{
+  color: rgb(13, 13, 228) !important;
+}
+
+.card-title{
+  font-weight: bold;
+}
+
+footer {
+  padding-left: 4.5% !important;
+}
+
+
+@media (max-width: 1093px) {
+ 
+  #p-text{
+    font-size: 18px !important;
+  }
+
+  .p-edit{
+    margin-bottom: 15px !important;
+    font-size: 16px !important;
+
+  }
+
+  .container{
+    margin-left: 10px !important;
+    padding-bottom: 20px !important;
+  }
+
+  #row{
+    width: 50% !important;
+  }
+}
+
+
+@media (max-width: 868px) and (min-width:670px) {
+  #row{
+    width: 40% !important;
+    
+  }
+
+  #button{
+    padding: 7px 11px; 
+    font-size: 14px;
+  }
+
+  .container{
+    margin-left: 10px !important;
+  }
+
+  #p-text {
+    font-size: 14px !important;
+  }
+
+  .p-edit {
+    font-size: 13px !important;
+    margin-bottom: 10px;
+    color: white;
+    
+  }
+
+}
+
+@media (max-width: 669px) {
+  .hero {
+    display: flex !important;
+    width: 100% !important;
+  }
+
+  #row{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 30% !important;
+  }
+ 
+  #p-text {
+    font-size: 14px !important;
+  }
+
+  .p-edit {
+    font-size: 12px !important;
+    margin-bottom: 10px;
+    color: white;
+    
+  }
+
+  #button {
+    padding: 7px 11px;
+    font-size: 13px;
+  }
+
+  
+}
+
+
+@media (max-width: 668px) {
+
+.container{
+  margin-bottom: 2% !important;
+  padding-bottom: 2% !important;
+  bottom: 0 !important ;
+  position: absolute !important;
+  margin-left: 0 !important;
+
+}
+
+#card-section{
+  padding-left: 2% !important;
+}
+
+}
+
+
+@media (max-width: 450px) {
+  #row{
+    width: 50% !important;
+  }
+
+  .p-edit{
+    margin-bottom: 5px !important;
+  }    #button {
+    padding: 5px 9px;
+    font-size: 12px;
+}
+
+#card-section{
+  padding-left: 0 !important;
+}
+
+#p-text{
+  margin-bottom: 8px !important;
+}
+
+.button-container {
+  text-align: left !important;
+}
+
+}

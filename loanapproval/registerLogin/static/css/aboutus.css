@@ -1,0 +1,194 @@
+body {
+  font-family: Arial, sans-serif;
+}
+.about-us img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .our-values .value-box {
+    background-color: #fff;
+    transition: transform 0.3s ease;
+  }
+  
+  .our-values .value-box:hover {
+    transform: translateY(-10px);
+  }
+    
+
+/* Style the navbar */
+
+#navbar1 {
+ 
+  padding: 15px 50px; 
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; 
+  background: linear-gradient( #062d9ad8, #101550 );
+}
+
+.navbar-brand {
+  color: white;
+  font-size: 30px; 
+  text-decoration: none;
+  letter-spacing: 1.5px; 
+}
+
+/* Toggler button styling */
+#toggler-button {
+  font-size: 30px;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none; 
+}
+
+/* Navbar links in row on desktop mode */
+.navbar-menu {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex; 
+}
+
+.nav-item {
+  margin-left: 50px; /
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  font-size: 18px; 
+  transition: color 0.3s; 
+}
+
+.navbar-toggler{
+  color: rgba(245, 245, 245, 0.778) !important;
+}
+
+.nav-link:hover {
+  color: #ffcc00; 
+}
+
+.container-fluid{
+  padding-right: 30px !important;
+}
+
+#label-aboutus{
+  color:  rgb(13, 13, 228);
+}
+
+
+/*content*/
+
+.heading-blue{
+  color: rgb(13, 13, 228) !important;
+  
+}
+
+footer h5 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+#section{
+  padding-top: 50px !important;
+  background: linear-gradient( #FFFFFF, #2f3ccd );
+}
+
+
+/* Responsive - for smaller screens */
+@media (max-width: 768px) {
+  /* Show toggler button on small screens */
+  #toggler-button {
+    display: block;
+  }
+
+  /* Initially hide the navbar links on small screens */
+  .navbar-menu {
+    display: none;
+    flex-direction: column; 
+    width: 100%; 
+  }
+
+  /* Make navbar menu visible when toggler is clicked */
+  .navbar-menu.active {
+    display: flex;
+  }
+
+  /* Navbar links take full width on mobile */
+  .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-item {
+    margin: 10px 0; 
+  }
+  #navbar1{
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+}
+
+@media (max-width: 445px) {
+  .nav-link {
+    font-size: 12px !important;
+
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1091px) {
+
+  .nav-item{
+    margin-left: 30px !important;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .about-us img {
+    height: 400px !important;
+}
+
+#img-section{
+  padding-right: 20px !important;
+  
+}
+}
+
+@media (max-width: 992px){
+  #description {
+    margin-top: 10px !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .navbar-brand{
+    font-size: 20px !important;
+  }
+}
+
+@media (max-width: 370px) {
+  .nav-link {
+    font-size: 11px !important;
+    padding: 5px !important;
+
+  }
+}
+
+
+@media (max-width: 829px) and  (min-width: 769px) {
+  .nav-item {
+    margin-left: 0 !important;
+  }
+}
+

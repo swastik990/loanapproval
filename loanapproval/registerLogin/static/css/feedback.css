@@ -1,0 +1,189 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+#navbar1 {
+  padding: 15px 50px; 
+  padding-right: 65px !important;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; 
+  background: linear-gradient( #062d9ad8, #101550 );
+}
+
+.navbar-brand {
+  color: white;
+  font-size: 30px;
+  text-decoration: none;
+  letter-spacing: 1.5px;
+}
+
+/* Toggler button styling */
+#toggler-button {
+  font-size: 30px;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none; 
+}
+
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex; 
+}
+
+.nav-item {
+  margin-left: 50px; 
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  font-size: 18px; 
+  transition: color 0.3s; 
+}
+
+.navbar-toggler{
+  color: rgba(245, 245, 245, 0.778) !important;
+}
+
+/* Change color on hover */
+.nav-link:hover {
+  color: #ffcc00;
+}
+
+/*content*/
+
+.heading-blue{
+  color: rgb(13, 13, 228) !important;
+  
+}
+
+
+.feedback-container {
+  max-width: 600px;
+  margin: 50px auto;
+  background: linear-gradient( #0631a5fa, #101550 );
+  padding: 35px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 3px rgb(10, 10, 183);
+  }
+  
+.form-control:focus {
+  box-shadow: none;
+  border-color: #007bff;
+  }
+  
+  .btn-submit {
+    background-color: #007bffa5;
+    color: white;
+    transition: background-color 0.3s;
+    margin-top: 10px !important;
+  }
+  
+  .btn-submit:hover {
+    background-color: #0363ca;
+  }
+  
+  .feedback-success {
+    display: none;
+    color: rgb(14, 215, 14);
+    text-align: center !important;
+  }
+
+  .text-center{
+    color: #ffcc00;
+  }
+  
+  #p-text{
+    color: white;
+  }
+
+  .form-label{
+    color: white;
+  }
+
+  footer h5 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+  }
+
+  footer p {
+    font-size: 16px;
+  }
+  
+
+  /* Responsive - for smaller screens */
+@media (max-width: 768px) {
+  #toggler-button {
+    display: block;
+  }
+
+ 
+  .navbar-menu {
+    display: none;
+    flex-direction: column; 
+    width: 100%; 
+  }
+
+
+  .navbar-menu.active {
+    display: flex;
+  }
+
+ 
+  .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-item {
+    margin: 10px 0; 
+  }
+  #navbar1{
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+}
+
+
+@media (max-width: 445px) {
+  .nav-link {
+    font-size: 12px !important;
+
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1091px) {
+
+  .nav-item{
+    margin-left: 30px !important;
+  }
+}
+
+
+
+@media (max-width: 700px) {
+  .navbar-brand{
+    font-size: 20px !important;
+  }
+}
+
+@media (min-width: 350px) and (max-width: 620px) {
+  .feedback-container{
+    width: 90% !important;
+
+  }
+}
