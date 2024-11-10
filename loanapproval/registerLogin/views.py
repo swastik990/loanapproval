@@ -23,62 +23,91 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
 import logging
-import json
+from django.contrib import messages
 
+#For Landing Page
+@csrf_protect
+def landing_page(request):
+    if request.method == 'POST' and request.POST.get('action') == 'login_signup':
+        # Redirect to the register/login page
+        return redirect('user_action')  # Assuming you have a URL pattern named 'registerlogin'
 
-
+    # Render the landing page by default
+    return render(request, 'landingpage.html')
 
 @csrf_protect
 def user_action(request):
-    if request.method == "POST":
-        m = sql.connect(host="localhost", user="root", password="binesh98456998009", database="loanapprovaldb1")
-        cursor = m.cursor()
-        d = request.POST
+    if request.method == 'POST':
+        action = request.POST.get('action')  # 'Sign Up' or 'Sign In'
+        
+        if action == 'SignUp':
+            first_name = request.POST.get('firstname')
+            last_name = request.POST.get('lastname')
+            email = request.POST.get('Remail')
+            dob = request.POST.get('dob')  # Convert to date format if necessary
+            phone = request.POST.get('phone')
+            password = request.POST.get('Rpassword')
+            agree_terms = request.POST.get('agree_terms') == 'on'
+            
+            # Only proceed if terms are agreed to
+            if agree_terms:
+                try:
+                    user = User.objects.create_user(
+                        email=email,
+                        first_name=first_name,
+                        last_name=last_name,
+                        phone=phone,
+                        dob=dob,
+                        password=make_password(['Rpassword']),
+                        agree_terms=agree_terms,
+                    )
+                    user.save()
+                    messages.success(request, "Account created successfully!")
+                    return redirect('home')  # Redirect to a relevant page after signup
+                except Exception as e:
+                    print(f"Error saving user: {e}")
+                    messages.error(request, "Failed to create account.")
+            else:
+                messages.error(request, "You must agree to terms and conditions to sign up.")
+                
+        elif action == 'SignIn':
+            login_email = request.POST.get('Lemail')
+            login_password = request.POST.get('Lpassword')
 
-        # Determine the action based on the form submitted
-        action = d.get('action')
-
-        if action == 'Sign Up':
-            saveRname = d.get('Rname')
-            saveRemail = d.get('Remail')
-            saveRpassword = d.get('Rpassword')
-
-            if not saveRname or not saveRemail or not saveRpassword:
-                return render(request, 'registerLogin.html', {'error': 'All fields are required'})
-
-            query = "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)"
-            try:
-                cursor.execute(query, (saveRname, saveRemail, saveRpassword))
-                m.commit()
-            except sql.Error as e:
-                return render(request, 'registerLogin.html', {'error': 'An error occurred: {}'.format(e)})
-            finally:
-                m.close()
-
-            return redirect('success')
-
-        elif action == 'Sign In':
-            login_email = d.get('Lemail')
-            login_password = d.get('Lpassword')
-
+            # Validate email and password
             if not login_email or not login_password:
                 return render(request, 'registerLogin.html', {'error': 'Email and password are required for login'})
 
-            query = "SELECT * FROM users WHERE email = %s AND password = %s"
-            cursor.execute(query, (login_email, login_password))
-            user = cursor.fetchone()
-
-            if user:
-                return redirect('success')
-            else:
+            # Authenticate the user
+            try:
+                user = User.objects.get(email=login_email)
+                if user.check_password(login_password):  # Use Django's password check method
+                    return redirect('home')
+                else:
+                    return render(request, 'registerLogin.html', {'error': 'Invalid email or password'})
+            except User.DoesNotExist:
                 return render(request, 'registerLogin.html', {'error': 'Invalid email or password'})
-
-            m.close()
 
     return render(request, 'registerLogin.html')
 
+
 def success_page(request):
     return render(request, 'success.html')
+
+#For Home Page
+@csrf_protect
+def home_page(request):
+    if request.method == 'POST' and request.POST.get('action') == 'applyforaloan':
+            return redirect('formInfo')
+
+    return render(request, 'homepage.html')
+
+#For Settings Page
+@csrf_protect
+def settings_page(request):
+    if request.method == 'POST':
+        pass
+    return render(request, 'settings.html')
 
 #jwt token authentication
 
@@ -177,6 +206,7 @@ def predictor(request):
 def formInfo(request):
     try:
         # Getting form data with default values if missing
+        
         education = request.POST.get('education', 'Not Graduate').strip()  # Default value added
         self_employed = request.POST.get('employment', 'No').strip()  # Default value added
         loan_amount = float(request.POST.get('Loanamount', 0))
@@ -222,7 +252,7 @@ def formInfo(request):
         ])
 
         application = Application(
-            user_id = 1,
+            user_id = 2,
             loan_amount=loan_amount,
             loan_terms=loan_term,
             credit_score=cibil_score,

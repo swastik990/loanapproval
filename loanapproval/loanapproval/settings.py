@@ -64,7 +64,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",  # For iOS simulator
     "http://127.0.0.1:8000"   # For local development
 ]
- 
 
 ROOT_URLCONF = 'loanapproval.urls'
 
@@ -102,7 +101,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'loanapprovaldb',
         'USER': 'root',
-        'PASSWORD': 'binesh9845998009',
+        'PASSWORD': 'Infiniti@111',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
