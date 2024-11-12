@@ -1,3 +1,4 @@
+from venv import logger
 from django.shortcuts import render, redirect
 import mysql.connector as sql
 from rest_framework import status
@@ -22,8 +23,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
-import logging
+from django.contrib.auth import login 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 #For Landing Page
 @csrf_protect
@@ -81,12 +86,18 @@ def user_action(request):
             # Authenticate the user
             try:
                 user = User.objects.get(email=login_email)
+                
                 if user.check_password(login_password):  # Use Django's password check method
-                    return redirect('home')
+                    login(request, user)  # Log the user in
+                    messages.success(request, "Logged in successfully!")
+                    return redirect('home')  # Redirect to the home page on successful login
                 else:
-                    return render(request, 'registerLogin.html', {'error': 'Invalid email or password'})
+                    messages.error(request, 'Invalid email or password')
+                    return render(request, 'registerLogin.html')
+                    
             except User.DoesNotExist:
-                return render(request, 'registerLogin.html', {'error': 'Invalid email or password'})
+                messages.error(request, 'Invalid email or password')
+                return render(request, 'registerLogin.html')
 
     return render(request, 'registerLogin.html')
 
@@ -95,6 +106,7 @@ def success_page(request):
     return render(request, 'success.html')
 
 #For Home Page
+@login_required
 @csrf_protect
 def home_page(request):
     if request.method == 'POST' and request.POST.get('action') == 'applyforaloan':
@@ -108,6 +120,8 @@ def settings_page(request):
     if request.method == 'POST':
         pass
     return render(request, 'settings.html')
+
+
 
 #jwt token authentication
 
@@ -185,24 +199,11 @@ class UserLoginView(APIView):
 
 #loading model
 model = load('./predictionModel/model.joblib')
-preprocessor = load('./predictionModel/preprocessor.joblib')
 
-# # Utility function to get feature names from ColumnTransformer
-# def get_feature_names(preprocessor):
-#     feature_names = []
-#     if isinstance(preprocessor, ColumnTransformer):
-#         for name, transformer, columns in preprocessor.transformers_:
-#             if hasattr(transformer, 'get_feature_names_out'):
-#                 feature_names.extend(transformer.get_feature_names_out())
-#             elif isinstance(transformer, OneHotEncoder):
-#                 feature_names.extend(transformer.get_feature_names_out(input_features=columns))
-#             else:
-#                 feature_names.extend(columns)
-#     return feature_names
 
 def predictor(request):
     return render(request, 'form.html')
-
+@login_required
 def formInfo(request):
     try:
         # Getting form data with default values if missing
@@ -218,11 +219,6 @@ def formInfo(request):
         commercial_assets_value = float(request.POST.get('commercialAsset', 0))
         luxury_assets_value = float(request.POST.get('luxuryAsset', 0))
         bank_asset_value = float(request.POST.get('bankAsset', 0))
-        
-        print(f"education: {education}")
-        print(f"self_employed: {self_employed}")
-
-        
 
         # Preparing the input DataFrame 
         input_data = pd.DataFrame([[
@@ -252,7 +248,7 @@ def formInfo(request):
         ])
 
         application = Application(
-            user_id = 2,
+            user=request.user,
             loan_amount=loan_amount,
             loan_terms=loan_term,
             credit_score=cibil_score,
@@ -271,22 +267,16 @@ def formInfo(request):
             submitted_time=pd.Timestamp.now()  # Store current time as submission time
         )
         application.save()
-        # Get the column order expected by the preprocessor
-        # expected_columns = get_feature_names(preprocessor)
 
-        # # Ensure all expected columns are present in input_data
-        # for col in expected_columns:
-        #     if col not in input_data.columns:
-        #         input_data[col] = 0  # Add missing columns with default value
-
-        # # Reorder columns to match expected column order
-        # input_data = input_data[expected_columns]
-
-        # # Apply preprocessor
-        # input_data_transformed = preprocessor.transform(input_data)
-
-        # Make the prediction
         prediction = model.predict(input_data)
+        
+        #LoanStatus entry based on the prediction
+        loan_status = LoanStatus(
+            user=request.user,  # Linking the loan status to the logged-in user
+            application=application,  # Link to the application
+            status=prediction == 1,  # If approved, status is True
+        )
+        loan_status.save()
 
         # Convert the prediction into a human-readable format
         prediction_text = "Congratulations, your loan is approved!" if prediction == 1 else "Sorry, your loan application is rejected."
@@ -296,6 +286,7 @@ def formInfo(request):
 
     except Exception as e:
         return render(request, 'result.html', {'prediction': f"An error occurred: {str(e)}"})
+    
 def form_view(request):
     return render(request, 'form.html')
 

@@ -36,13 +36,13 @@ class ProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display = ('application_id', 'user', 'loan_amount', 'loan_terms', 'credit_score', 'no_of_dependents', 'education', 'self_employed', 'annual_income', 'residential_asset', 'luxury_asset', 'bank_asset', 'commercial_asset', 'citizenship_no', 'zip_code', 'submitted_time', 'state', 'street')
+    list_display = ('application_id', 'user', 'user_id', 'loan_amount', 'loan_terms', 'credit_score', 'no_of_dependents', 'education', 'self_employed', 'annual_income', 'residential_asset', 'luxury_asset', 'bank_asset', 'commercial_asset', 'citizenship_no', 'zip_code', 'submitted_time', 'state', 'street')
     search_fields = ('user__email', 'citizenship_no', 'state', 'street')
     list_filter = ('submitted_time', 'education', 'self_employed')
 
 @admin.register(LoanStatus)
 class LoanStatusAdmin(admin.ModelAdmin):
-    list_display = ('status_id', 'user', 'application', 'status', 'time_updated')
+    list_display = ('status_id', 'user', 'user_id', 'application', 'status', 'time_updated')
     search_fields = ('user__email', 'application__application_id')
     list_filter = ('status', 'time_updated')
 
