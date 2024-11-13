@@ -16,8 +16,8 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserRegistrationSerializer
-from .serializers import UserLoginSerializer
+
+from .serializers import UserLoginSerializer, UserSignupSerializer
 from rest_framework.views import APIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -27,6 +27,23 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from registerLogin.models import User   
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+import pandas as pd
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+import pandas as pd
+from .models import Application, User
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Application
+import pandas as pd
+from rest_framework.permissions import IsAuthenticated
 
 User = get_user_model()
 
@@ -133,24 +150,23 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
-
+# User registration viewclass UserSignupView(APIView):
 class UserSignupView(APIView):
     def post(self, request, *args, **kwargs):
         try:
             data = request.data
-            required_fields = ['firstname', 'lastname', 'email', 'dob', 'phone', 'password', 'agree_terms']
+            required_fields = ['first_name', 'last_name', 'email', 'dob', 'phone', 'password', 'agree_terms']
             for field in required_fields:
                 if field not in data:
                     return Response({"error": f"Missing required field: {field}"}, status=status.HTTP_400_BAD_REQUEST)
 
-            user = User(
-                firstname=data['firstname'],
-                lastname=data['lastname'],
+            user = User(    
+                first_name=data['first_name'],
+                last_name=data['last_name'],
                 email=data['email'],
                 dob=data['dob'],
                 phone=data['phone'],
                 password=make_password(data['password']),
-                is_admin=data.get('is_admin', False),
                 agree_terms=data['agree_terms']
             )
             user.save()
@@ -166,11 +182,9 @@ class UserSignupView(APIView):
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def get(self, request, *args, **kwargs):
         return Response({"error": "GET method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
 
 
 class UserLoginView(APIView):
@@ -194,7 +208,9 @@ class UserLoginView(APIView):
                 return Response({'errors': {'non_field_errors': ['Invalid credentials']}}, status=status.HTTP_401_UNAUTHORIZED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+ 
+
+
 
 
 #loading model
@@ -290,22 +306,106 @@ def formInfo(request):
 def form_view(request):
     return render(request, 'form.html')
 
+# mobile loan approval System
+model1= load('./predictionModel/model.pkl')
 
 
-# from rest_framework.response import Response
-# from rest_framework import status
-# from rest_framework.views import APIView
-# from rest_framework_simplejwt.tokens import RefreshToken
-# from django.contrib.auth import authenticate
+@api_view(['POST'])
+def loan_prediction(request):
+    print("Request data:", request.data)
+    
+    try:
+        # Get user by email 
+        email = request.data.get('email')
+        if not email:
+            return Response({'error': 'Email is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-from .serializers import (
-    UserRegistrationSerializer,
-    UserLoginSerializer,
-    # UserProfileSerializer,
-    # UserChangePasswordSerializer,
-    # SendPasswordResetEmailSerializer,
-    # UserPasswordResetSerializer
-)
-from .renderers import UserRenderer
-from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.hashers import make_password
+        # Extract and validate fields from request data
+        education = request.data.get('education', 'Not Graduate').strip()
+        self_employed = request.data.get('self_employed', 'No').strip()
+        loan_amount = float(request.data.get('loan_amount', 0))
+        loan_term = int(request.data.get('loan_term', 0))
+        no_of_dependents = int(request.data.get('no_of_dependents', 0))
+        credit_score = int(request.data.get('credit_score', 0))
+        annual_income = float(request.data.get('annual_income', 0))
+        residential_asset = float(request.data.get('residential_asset', 0))
+        commercial_asset = float(request.data.get('commercial_asset', 0))
+        luxury_asset = float(request.data.get('luxury_asset', 0))
+        bank_asset = float(request.data.get('bank_asset', 0))
+
+        # Convert education and self_employed to boolean
+        education_bool = education == 'Graduate'
+        self_employed_bool = self_employed == 'Yes'
+
+        # Prepare input DataFrame for the prediction model
+        input_data = pd.DataFrame([[
+            no_of_dependents,
+            education_bool,
+            self_employed_bool,
+            annual_income,
+            loan_amount,
+            loan_term,
+            credit_score,
+            residential_asset,
+            commercial_asset,
+            luxury_asset,
+            bank_asset
+        ]], columns=[
+            ' no_of_dependents',
+            ' education',
+            ' self_employed',
+            ' income_annum',
+            ' loan_amount',
+            ' loan_term',
+            ' cibil_score',
+            ' residential_assets_value',
+            ' commercial_assets_value',
+            ' luxury_assets_value',
+            ' bank_asset_value'
+        ])
+
+        # Create the application instance and save it
+        application = Application(
+            user=user,
+            loan_amount=loan_amount,
+            loan_terms=loan_term,
+            credit_score=credit_score,
+            no_of_dependents=no_of_dependents,
+            education=education_bool,
+            self_employed=self_employed_bool,
+            annual_income=annual_income,
+            residential_asset=residential_asset,
+            commercial_asset=commercial_asset,
+            luxury_asset=luxury_asset,
+            bank_asset=bank_asset,
+            submitted_time=pd.Timestamp.now()
+        )
+        application.save()
+
+        # Prediction (ensure `model` is defined and imported)
+        prediction = model1.predict(input_data)
+        prediction_text = (
+            "Congratulations, your loan is approved!" if prediction[0] == 1
+            else "Sorry, your loan application is rejected."
+        )
+        return Response({'prediction': prediction_text}, status=status.HTTP_200_OK)
+
+    except ValueError as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'error': 'An error occurred. ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    except User.DoesNotExist:
+        return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+    except ValueError as e:
+        return Response({'error': f'Invalid data: {e}'}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'error': f'An unexpected error occurred: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
