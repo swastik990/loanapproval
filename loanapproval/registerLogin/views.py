@@ -28,7 +28,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from registerLogin.models import User   
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 import pandas as pd
@@ -309,34 +309,28 @@ def form_view(request):
 # mobile loan approval System
 model1= load('./predictionModel/model.pkl')
 
-
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def loan_prediction(request):
     print("Request data:", request.data)
     
     try:
         # Get user by email 
-        email = request.data.get('email')
-        if not email:
-            return Response({'error': 'Email is required.'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+        user = request.user
 
         # Extract and validate fields from request data
+        
         education = request.data.get('education', 'Not Graduate').strip()
         self_employed = request.data.get('self_employed', 'No').strip()
         loan_amount = float(request.data.get('loan_amount', 0))
         loan_term = int(request.data.get('loan_term', 0))
         no_of_dependents = int(request.data.get('no_of_dependents', 0))
-        credit_score = int(request.data.get('credit_score', 0))
-        annual_income = float(request.data.get('annual_income', 0))
-        residential_asset = float(request.data.get('residential_asset', 0))
-        commercial_asset = float(request.data.get('commercial_asset', 0))
-        luxury_asset = float(request.data.get('luxury_asset', 0))
-        bank_asset = float(request.data.get('bank_asset', 0))
+        cibil_score = int(request.data.get('credit_score', 0))
+        annual_income = float(request.data.get('income_annum', 0))
+        residential_asset = float(request.data.get('residential_assets_value', 0))
+        commercial_asset = float(request.data.get('commercial_assets_value', 0))
+        luxury_asset = float(request.data.get('luxury_assets_value', 0))
+        bank_asset = float(request.data.get('bank_asset_value', 0))
 
         # Convert education and self_employed to boolean
         education_bool = education == 'Graduate'
@@ -350,7 +344,7 @@ def loan_prediction(request):
             annual_income,
             loan_amount,
             loan_term,
-            credit_score,
+            cibil_score,
             residential_asset,
             commercial_asset,
             luxury_asset,
@@ -372,25 +366,26 @@ def loan_prediction(request):
         # Create the application instance and save it
         application = Application(
             user=user,
-            loan_amount=loan_amount,
-            loan_terms=loan_term,
-            credit_score=credit_score,
-            no_of_dependents=no_of_dependents,
-            education=education_bool,
-            self_employed=self_employed_bool,
-            annual_income=annual_income,
-            residential_asset=residential_asset,
-            commercial_asset=commercial_asset,
-            luxury_asset=luxury_asset,
-            bank_asset=bank_asset,
+             loan_amount= loan_amount,
+             loan_terms= loan_term,
+             credit_score= cibil_score,
+             no_of_dependents= no_of_dependents,
+             education= education_bool,
+             self_employed= self_employed_bool,
+             annual_income= annual_income,
+             residential_asset= residential_asset,
+             commercial_asset= commercial_asset,
+             luxury_asset= luxury_asset,
+             bank_asset= bank_asset,
             submitted_time=pd.Timestamp.now()
         )
         application.save()
 
         # Prediction (ensure `model` is defined and imported)
-        prediction = model1.predict(input_data)
+        prediction = model1.predict_proba(input_data)[:, 1]
+        threshold = 0.5
         prediction_text = (
-            "Congratulations, your loan is approved!" if prediction[0] == 1
+            "Congratulations, your loan is approved!" if prediction[0] > threshold
             else "Sorry, your loan application is rejected."
         )
         return Response({'prediction': prediction_text}, status=status.HTTP_200_OK)
@@ -406,6 +401,4 @@ def loan_prediction(request):
         return Response({'error': f'Invalid data: {e}'}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         return Response({'error': f'An unexpected error occurred: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 
