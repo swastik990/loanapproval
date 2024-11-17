@@ -12,15 +12,6 @@ body {
 }
 
 /* Header Section Styling */
-.hero {
-  background: url('/loanapproval/registerLogin/static/image/newloan.jpg') center/cover no-repeat;
-  height: 500px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
 
 .container{
   margin-left: 10px !important;
@@ -252,6 +243,7 @@ footer h5 {
 
 .button-container {
   text-align: left !important;
+  margin-top: 10px !important;
 }
 
 }
