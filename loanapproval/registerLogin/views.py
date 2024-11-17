@@ -1,3 +1,4 @@
+from venv import logger
 from django.shortcuts import render, redirect
 import mysql.connector as sql
 from rest_framework import status
@@ -15,70 +16,129 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserRegistrationSerializer
-from .serializers import UserLoginSerializer
+
+from .serializers import UserLoginSerializer, UserSignupSerializer
 from rest_framework.views import APIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
-import logging
-import json
+from django.contrib.auth import login 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+from registerLogin.models import User   
+from rest_framework.decorators import api_view,permission_classes
+from rest_framework.response import Response
+from rest_framework import status
+import pandas as pd
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+import pandas as pd
+from .models import Application, User
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Application
+import pandas as pd
+from rest_framework.permissions import IsAuthenticated
 
+User = get_user_model()
 
+#For Landing Page
+@csrf_protect
+def landing_page(request):
+    if request.method == 'POST' and request.POST.get('action') == 'login_signup':
+        # Redirect to the register/login page
+        return redirect('user_action')  # Assuming you have a URL pattern named 'registerlogin'
 
+    # Render the landing page by default
+    return render(request, 'landingpage.html')
 
 @csrf_protect
 def user_action(request):
-    if request.method == "POST":
-        m = sql.connect(host="localhost", user="root", password="binesh98456998009", database="loanapprovaldb1")
-        cursor = m.cursor()
-        d = request.POST
+    if request.method == 'POST':
+        action = request.POST.get('action')  # 'Sign Up' or 'Sign In'
+        
+        if action == 'SignUp':
+            first_name = request.POST.get('firstname')
+            last_name = request.POST.get('lastname')
+            email = request.POST.get('Remail')
+            dob = request.POST.get('dob')  # Convert to date format if necessary
+            phone = request.POST.get('phone')
+            password = request.POST.get('Rpassword')
+            agree_terms = request.POST.get('agree_terms') == 'on'
+            
+            # Only proceed if terms are agreed to
+            if agree_terms:
+                try:
+                    user = User.objects.create_user(
+                        email=email,
+                        first_name=first_name,
+                        last_name=last_name,
+                        phone=phone,
+                        dob=dob,
+                        password=make_password(['Rpassword']),
+                        agree_terms=agree_terms,
+                    )
+                    user.save()
+                    messages.success(request, "Account created successfully!")
+                    return redirect('home')  # Redirect to a relevant page after signup
+                except Exception as e:
+                    print(f"Error saving user: {e}")
+                    messages.error(request, "Failed to create account.")
+            else:
+                messages.error(request, "You must agree to terms and conditions to sign up.")
+                
+        elif action == 'SignIn':
+            login_email = request.POST.get('Lemail')
+            login_password = request.POST.get('Lpassword')
 
-        # Determine the action based on the form submitted
-        action = d.get('action')
-
-        if action == 'Sign Up':
-            saveRname = d.get('Rname')
-            saveRemail = d.get('Remail')
-            saveRpassword = d.get('Rpassword')
-
-            if not saveRname or not saveRemail or not saveRpassword:
-                return render(request, 'registerLogin.html', {'error': 'All fields are required'})
-
-            query = "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)"
-            try:
-                cursor.execute(query, (saveRname, saveRemail, saveRpassword))
-                m.commit()
-            except sql.Error as e:
-                return render(request, 'registerLogin.html', {'error': 'An error occurred: {}'.format(e)})
-            finally:
-                m.close()
-
-            return redirect('success')
-
-        elif action == 'Sign In':
-            login_email = d.get('Lemail')
-            login_password = d.get('Lpassword')
-
+            # Validate email and password
             if not login_email or not login_password:
                 return render(request, 'registerLogin.html', {'error': 'Email and password are required for login'})
 
-            query = "SELECT * FROM users WHERE email = %s AND password = %s"
-            cursor.execute(query, (login_email, login_password))
-            user = cursor.fetchone()
-
-            if user:
-                return redirect('success')
-            else:
-                return render(request, 'registerLogin.html', {'error': 'Invalid email or password'})
-
-            m.close()
+            # Authenticate the user
+            try:
+                user = User.objects.get(email=login_email)
+                
+                if user.check_password(login_password):  # Use Django's password check method
+                    login(request, user)  # Log the user in
+                    messages.success(request, "Logged in successfully!")
+                    return redirect('home')  # Redirect to the home page on successful login
+                else:
+                    messages.error(request, 'Invalid email or password')
+                    return render(request, 'registerLogin.html')
+                    
+            except User.DoesNotExist:
+                messages.error(request, 'Invalid email or password')
+                return render(request, 'registerLogin.html')
 
     return render(request, 'registerLogin.html')
 
+
 def success_page(request):
     return render(request, 'success.html')
+
+#For Home Page
+@login_required
+@csrf_protect
+def home_page(request):
+    if request.method == 'POST' and request.POST.get('action') == 'applyforaloan':
+            return redirect('formInfo')
+
+    return render(request, 'homepage.html')
+
+#For Settings Page
+@csrf_protect
+def settings_page(request):
+    if request.method == 'POST':
+        pass
+    return render(request, 'settings.html')
+
+
 
 #jwt token authentication
 
@@ -90,24 +150,23 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
-
+# User registration viewclass UserSignupView(APIView):
 class UserSignupView(APIView):
     def post(self, request, *args, **kwargs):
         try:
             data = request.data
-            required_fields = ['firstname', 'lastname', 'email', 'dob', 'phone', 'password', 'agree_terms']
+            required_fields = ['first_name', 'last_name', 'email', 'dob', 'phone', 'password', 'agree_terms']
             for field in required_fields:
                 if field not in data:
                     return Response({"error": f"Missing required field: {field}"}, status=status.HTTP_400_BAD_REQUEST)
 
-            user = User(
-                firstname=data['firstname'],
-                lastname=data['lastname'],
+            user = User(    
+                first_name=data['first_name'],
+                last_name=data['last_name'],
                 email=data['email'],
                 dob=data['dob'],
                 phone=data['phone'],
                 password=make_password(data['password']),
-                is_admin=data.get('is_admin', False),
                 agree_terms=data['agree_terms']
             )
             user.save()
@@ -123,11 +182,9 @@ class UserSignupView(APIView):
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def get(self, request, *args, **kwargs):
         return Response({"error": "GET method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
 
 
 class UserLoginView(APIView):
@@ -151,32 +208,22 @@ class UserLoginView(APIView):
                 return Response({'errors': {'non_field_errors': ['Invalid credentials']}}, status=status.HTTP_401_UNAUTHORIZED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+ 
+
+
 
 
 #loading model
 model = load('./predictionModel/model.joblib')
-preprocessor = load('./predictionModel/preprocessor.joblib')
 
-# # Utility function to get feature names from ColumnTransformer
-# def get_feature_names(preprocessor):
-#     feature_names = []
-#     if isinstance(preprocessor, ColumnTransformer):
-#         for name, transformer, columns in preprocessor.transformers_:
-#             if hasattr(transformer, 'get_feature_names_out'):
-#                 feature_names.extend(transformer.get_feature_names_out())
-#             elif isinstance(transformer, OneHotEncoder):
-#                 feature_names.extend(transformer.get_feature_names_out(input_features=columns))
-#             else:
-#                 feature_names.extend(columns)
-#     return feature_names
 
 def predictor(request):
     return render(request, 'form.html')
-
+@login_required
 def formInfo(request):
     try:
         # Getting form data with default values if missing
+        
         education = request.POST.get('education', 'Not Graduate').strip()  # Default value added
         self_employed = request.POST.get('employment', 'No').strip()  # Default value added
         loan_amount = float(request.POST.get('Loanamount', 0))
@@ -188,11 +235,6 @@ def formInfo(request):
         commercial_assets_value = float(request.POST.get('commercialAsset', 0))
         luxury_assets_value = float(request.POST.get('luxuryAsset', 0))
         bank_asset_value = float(request.POST.get('bankAsset', 0))
-        
-        print(f"education: {education}")
-        print(f"self_employed: {self_employed}")
-
-        
 
         # Preparing the input DataFrame 
         input_data = pd.DataFrame([[
@@ -222,7 +264,7 @@ def formInfo(request):
         ])
 
         application = Application(
-            user_id = 1,
+            user=request.user,
             loan_amount=loan_amount,
             loan_terms=loan_term,
             credit_score=cibil_score,
@@ -241,22 +283,16 @@ def formInfo(request):
             submitted_time=pd.Timestamp.now()  # Store current time as submission time
         )
         application.save()
-        # Get the column order expected by the preprocessor
-        # expected_columns = get_feature_names(preprocessor)
 
-        # # Ensure all expected columns are present in input_data
-        # for col in expected_columns:
-        #     if col not in input_data.columns:
-        #         input_data[col] = 0  # Add missing columns with default value
-
-        # # Reorder columns to match expected column order
-        # input_data = input_data[expected_columns]
-
-        # # Apply preprocessor
-        # input_data_transformed = preprocessor.transform(input_data)
-
-        # Make the prediction
         prediction = model.predict(input_data)
+        
+        #LoanStatus entry based on the prediction
+        loan_status = LoanStatus(
+            user=request.user,  # Linking the loan status to the logged-in user
+            application=application,  # Link to the application
+            status=prediction == 1,  # If approved, status is True
+        )
+        loan_status.save()
 
         # Convert the prediction into a human-readable format
         prediction_text = "Congratulations, your loan is approved!" if prediction == 1 else "Sorry, your loan application is rejected."
@@ -266,25 +302,103 @@ def formInfo(request):
 
     except Exception as e:
         return render(request, 'result.html', {'prediction': f"An error occurred: {str(e)}"})
+    
 def form_view(request):
     return render(request, 'form.html')
 
+# mobile loan approval System
+model1= load('./predictionModel/model.pkl')
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def loan_prediction(request):
+    print("Request data:", request.data)
+    
+    try:
+        # Get user by email 
+        user = request.user
 
-# from rest_framework.response import Response
-# from rest_framework import status
-# from rest_framework.views import APIView
-# from rest_framework_simplejwt.tokens import RefreshToken
-# from django.contrib.auth import authenticate
+        # Extract and validate fields from request data
+        
+        education = request.data.get('education', 'Not Graduate').strip()
+        self_employed = request.data.get('self_employed', 'No').strip()
+        loan_amount = float(request.data.get('loan_amount', 0))
+        loan_term = int(request.data.get('loan_term', 0))
+        no_of_dependents = int(request.data.get('no_of_dependents', 0))
+        cibil_score = int(request.data.get('credit_score', 0))
+        annual_income = float(request.data.get('income_annum', 0))
+        residential_asset = float(request.data.get('residential_assets_value', 0))
+        commercial_asset = float(request.data.get('commercial_assets_value', 0))
+        luxury_asset = float(request.data.get('luxury_assets_value', 0))
+        bank_asset = float(request.data.get('bank_asset_value', 0))
 
-from .serializers import (
-    UserRegistrationSerializer,
-    UserLoginSerializer,
-    # UserProfileSerializer,
-    # UserChangePasswordSerializer,
-    # SendPasswordResetEmailSerializer,
-    # UserPasswordResetSerializer
-)
-from .renderers import UserRenderer
-from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.hashers import make_password
+        # Convert education and self_employed to boolean
+        education_bool = education == 'Graduate'
+        self_employed_bool = self_employed == 'Yes'
+
+        # Prepare input DataFrame for the prediction model
+        input_data = pd.DataFrame([[
+            no_of_dependents,
+            education_bool,
+            self_employed_bool,
+            annual_income,
+            loan_amount,
+            loan_term,
+            cibil_score,
+            residential_asset,
+            commercial_asset,
+            luxury_asset,
+            bank_asset
+        ]], columns=[
+            ' no_of_dependents',
+            ' education',
+            ' self_employed',
+            ' income_annum',
+            ' loan_amount',
+            ' loan_term',
+            ' cibil_score',
+            ' residential_assets_value',
+            ' commercial_assets_value',
+            ' luxury_assets_value',
+            ' bank_asset_value'
+        ])
+
+        # Create the application instance and save it
+        application = Application(
+            user=user,
+             loan_amount= loan_amount,
+             loan_terms= loan_term,
+             credit_score= cibil_score,
+             no_of_dependents= no_of_dependents,
+             education= education_bool,
+             self_employed= self_employed_bool,
+             annual_income= annual_income,
+             residential_asset= residential_asset,
+             commercial_asset= commercial_asset,
+             luxury_asset= luxury_asset,
+             bank_asset= bank_asset,
+            submitted_time=pd.Timestamp.now()
+        )
+        application.save()
+
+        # Prediction (ensure `model` is defined and imported)
+        prediction = model1.predict_proba(input_data)[:, 1]
+        threshold = 0.5
+        prediction_text = (
+            "Congratulations, your loan is approved!" if prediction[0] > threshold
+            else "Sorry, your loan application is rejected."
+        )
+        return Response({'prediction': prediction_text}, status=status.HTTP_200_OK)
+
+    except ValueError as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'error': 'An error occurred. ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    except User.DoesNotExist:
+        return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+    except ValueError as e:
+        return Response({'error': f'Invalid data: {e}'}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'error': f'An unexpected error occurred: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

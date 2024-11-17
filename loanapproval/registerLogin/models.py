@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.utils import timezone
 import pytz
+from django.contrib.auth import get_user_model
 # function to show nepali time
 NEPAL_TZ = pytz.timezone('Asia/Kathmandu')
 
@@ -112,7 +113,7 @@ class Profile(models.Model):
 
 class Application(models.Model):
     application_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), to_field='user_id', on_delete=models.CASCADE)
     loan_amount = models.DecimalField(max_digits=10, decimal_places=2)
     loan_terms = models.IntegerField()
     credit_score = models.IntegerField()

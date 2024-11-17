@@ -2,8 +2,11 @@ body {
   font-family: Arial, sans-serif;
 }
 .homepage img {
-    max-width: 100%;
+    margin-left: 50px;
+    width: 500px;
+    height: 600px;
     height: auto;
+    border-radius: 20px !important;
   }
   
   .our-values .value-box {
@@ -33,6 +36,19 @@ body {
   text-decoration: none;
   letter-spacing: 1.5px; /* Add spacing for a more elegant look */
 }
+
+.navbar-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.navbar-brand span {
+  font-weight: bold;
+}
+
 
 /* Toggler button styling */
 #toggler-button {
@@ -125,7 +141,7 @@ body {
   
   display: flex;
   padding-top: 50px !important;
-  background: linear-gradient( #FFFFFF, #2f3ccd );
+  background: linear-gradient( #FFFFFF, #dfdfdf );
 }
 
 .lead{
@@ -175,6 +191,8 @@ footer h5 {
 #registeredUsers.show {
   opacity: 1;
   transform: translateY(0);
+  color: #3cff00 !important;
+  font-weight: bold;
 }
 
 
@@ -436,6 +454,7 @@ footer h5 {
   h3{
     font-size: 20px !important;
   }
+
   #h1{
     margin-bottom: 35px !important;
   }

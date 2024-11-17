@@ -1,39 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'login_mobile.dart'; // Ensure this file exists and contains the LoginPage class
+import 'Pages/homepage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class User {
-  String firstname;
-  String lastname;
+  String first_name;
+  String last_name;
   String email;
   DateTime dob;
   String phone;
   String password;
-  bool isAdmin;
+  
   bool agreeTerms;
 
   User({
-    required this.firstname,
-    required this.lastname,
+    required this.first_name,
+    required this.last_name,
     required this.email,
     required this.dob,
     required this.phone,
     required this.password,
-    this.isAdmin = false,
+    
     this.agreeTerms = false,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'firstname': firstname,
-      'lastname': lastname,
+      'first_name': first_name,
+      'last_name': last_name,
       'email': email,
       'dob': dob.toIso8601String().split('T')[0], // Convert to YYYY-MM-DD format
       'phone': phone,
       'password': password,
-      'is_admin': isAdmin,
+      
       'agree_terms': agreeTerms,
     };
   }
@@ -47,8 +48,8 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   User _user = User(
-    firstname: '',
-    lastname: '',
+    first_name: '',
+    last_name: '',
     email: '',
     dob: DateTime.now(),
     phone: '',
@@ -92,6 +93,15 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
+// void _navigateToHome() {
+//   Navigator.pushReplacement(
+//     context,
+//     MaterialPageRoute(
+//       builder: (context) => HomePage1(firstName: _user.first_name), // Pass first name
+//     ),
+//   );
+// }
+
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
@@ -122,7 +132,7 @@ class _SignupPageState extends State<SignupPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign Up', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF13136A),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
@@ -154,18 +164,18 @@ class _SignupPageState extends State<SignupPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextFormField(
-                    initialValue: _user.firstname,
+                    initialValue: _user.first_name,
                     decoration: InputDecoration(
                       labelText: 'Firstname',
                       labelStyle: TextStyle(color: Colors.black),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Color(0xFF13136A)),
                       ),
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
                       setState(() {
-                        _user.firstname = value;
+                        _user.first_name = value;
                       });
                     },
                     validator: (value) {
@@ -177,18 +187,18 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: 20),
                   TextFormField(
-                    initialValue: _user.lastname,
+                    initialValue: _user.last_name,
                     decoration: InputDecoration(
                       labelText: 'Lastname',
                       labelStyle: TextStyle(color: Colors.black),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Color(0xFF13136A)),
                       ),
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
                       setState(() {
-                        _user.lastname = value;
+                        _user.last_name = value;
                       });
                     },
                     validator: (value) {
@@ -205,7 +215,7 @@ class _SignupPageState extends State<SignupPage> {
                       labelText: 'Email',
                       labelStyle: TextStyle(color: Colors.black),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Color(0xFF13136A)),
                       ),
                       border: OutlineInputBorder(),
                     ),
@@ -228,10 +238,10 @@ class _SignupPageState extends State<SignupPage> {
                       labelText: 'D.O.B',
                       labelStyle: TextStyle(color: Colors.black),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Color(0xFF13136A)),
                       ),
                       border: OutlineInputBorder(),
-                      suffixIcon: Icon(Icons.calendar_today, color: Colors.blue),
+                      suffixIcon: Icon(Icons.calendar_today, color: Color(0xFF13136A)),
                     ),
                     controller: TextEditingController(
                       text: "${_user.dob.year.toString().padLeft(4, '0')}-${_user.dob.month.toString().padLeft(2, '0')}-${_user.dob.day.toString().padLeft(2, '0')}",
@@ -247,7 +257,7 @@ class _SignupPageState extends State<SignupPage> {
                           return Theme(
                             data: ThemeData.light().copyWith(
                               colorScheme: ColorScheme.light(
-                                primary: Colors.blue,
+                                primary: Color(0xFF13136A),
                                 onPrimary: Colors.white,
                               ),
                               dialogBackgroundColor: Colors.white,
@@ -270,7 +280,7 @@ class _SignupPageState extends State<SignupPage> {
                       labelText: 'Phone number',
                       labelStyle: TextStyle(color: Colors.black),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Color(0xFF13136A)),
                       ),
                       border: OutlineInputBorder(),
                     ),
@@ -301,7 +311,7 @@ class _SignupPageState extends State<SignupPage> {
                       labelText: 'Password',
                       labelStyle: TextStyle(color: Colors.black),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Color(0xFF13136A)),
                       ),
                       border: OutlineInputBorder(),
                     ),
@@ -328,7 +338,7 @@ class _SignupPageState extends State<SignupPage> {
                   //     });
                   //   },
                   //   controlAffinity: ListTileControlAffinity.leading,
-                  //   activeColor: Colors.blue,
+                  //   activeColor: Color(0xFF13136A),
                   // ),
                   // SizedBox(height: 20),
                   CheckboxListTile(
@@ -340,7 +350,7 @@ class _SignupPageState extends State<SignupPage> {
                       });
                     },
                     controlAffinity: ListTileControlAffinity.leading,
-                    activeColor: Colors.blue,
+                    activeColor: Color(0xFF13136A),
                   ),
                   SizedBox(height: 20),
                   Align(
@@ -348,7 +358,7 @@ class _SignupPageState extends State<SignupPage> {
                     child: ElevatedButton(
                       onPressed: _signup,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Color(0xFF13136A),
                         padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                       ),
                       child: Text(

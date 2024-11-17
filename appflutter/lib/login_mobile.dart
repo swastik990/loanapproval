@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'signup_mobile.dart';
-import 'homepage.dart';
+import 'Pages/homepage.dart';
 import 'forgot_password.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     // Change status bar color
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.blue, // Adjusted color for visibility
+      statusBarColor: Color(0xFF13136A), // Adjusted color for visibility
       statusBarIconBrightness: Brightness.light, // For dark status bar background
     ));
 
@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Login', style: TextStyle(color: Colors.white)),
-          backgroundColor: Colors.blue,
+          backgroundColor: Color(0xFF13136A),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
@@ -188,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                       'Welcome!',
                       style: TextStyle(
                         fontSize: 30,
-                        color: Colors.blue,
+                        color: Color(0xFF13136A),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -199,7 +199,7 @@ class _LoginPageState extends State<LoginPage> {
                         labelText: 'Email',
                         labelStyle: TextStyle(color: Colors.black),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Color(0xFF13136A)),
                         ),
                         border: OutlineInputBorder(),
                       ),
@@ -217,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                         labelText: 'Password',
                         labelStyle: TextStyle(color: Colors.black),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Color(0xFF13136A)),
                         ),
                         border: OutlineInputBorder(),
                       ),
@@ -233,7 +233,7 @@ class _LoginPageState extends State<LoginPage> {
                     ElevatedButton(
                       onPressed: _login,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Color(0xFF13136A),
                         padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                       ),
                       child: Text(
@@ -268,11 +268,11 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 20),
                     TextButton(
                       onPressed: _navigateToSignup,
-                      child: Text('Don\'t have an account? Sign Up', style: TextStyle(color: Colors.blue)),
+                      child: Text('Don\'t have an account? Sign Up', style: TextStyle(color: Color(0xFF13136A))),
                     ),
                     TextButton(
                       onPressed: _navigateToForgotPassword,
-                      child: Text('Forgot Password?', style: TextStyle(color: Colors.blue)),
+                      child: Text('Forgot Password?', style: TextStyle(color: Color(0xFF13136A))),
                     ),
                   ],
                 ),

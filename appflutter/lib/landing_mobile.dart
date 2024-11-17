@@ -52,7 +52,7 @@ class _LandingPageState extends State<LandingPage> {
               ),
             ],
           ),
-          backgroundColor: Colors.blue,
+          backgroundColor: Color(0xFF13136A),
           actions: [
             PopupMenuButton<int>(
               icon: Icon(Icons.info_outline, color: Colors.white, size: 40),
@@ -114,7 +114,7 @@ class _LandingPageState extends State<LandingPage> {
         body: _isLoading
             ? const Center(
                 child: SpinKitFadingCircle(
-                  color: Colors.blue,
+                  color: Color(0xFF13136A),
                   size: 50.0,
                 ),
               )
@@ -131,7 +131,7 @@ class _LandingPageState extends State<LandingPage> {
                           style: TextStyle(
                             fontSize: 35,
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue,
+                            color: Color(0xFF13136A),
                           ),
                         ),
                       ),
@@ -150,7 +150,7 @@ class _LandingPageState extends State<LandingPage> {
                             ElevatedButton(
                               onPressed: () => _navigateToPage(LoginPage()),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
+                                backgroundColor: Color(0xFF13136A),
                                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                                 minimumSize: Size(140, 50),
                               ),
@@ -165,7 +165,7 @@ class _LandingPageState extends State<LandingPage> {
                             ElevatedButton(
                               onPressed: () => _navigateToPage(SignupPage()),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
+                                backgroundColor: Color(0xFF13136A),
                                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                                 minimumSize: Size(140, 50),
                               ),

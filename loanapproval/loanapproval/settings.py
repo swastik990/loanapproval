@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 from datetime import timedelta
 
@@ -64,7 +65,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",  # For iOS simulator
     "http://127.0.0.1:8000"   # For local development
 ]
- 
 
 ROOT_URLCONF = 'loanapproval.urls'
 
@@ -102,6 +102,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'loanapprovaldb',
         'USER': 'root',
+        # 'PASSWORD': 'Infiniti@111',
         'PASSWORD': 'binesh9845998009',
         'HOST': '127.0.0.1',
         'PORT': '3306',
@@ -145,6 +146,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+#media routs for pictures and videos
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -165,8 +171,8 @@ SIMPLE_JWT = {
 
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
+    'USER_ID_FIELD': 'user_id',
+    'USER_ID_CLAIM': 'users_id',
     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
 
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
@@ -175,6 +181,17 @@ SIMPLE_JWT = {
 
     'JTI_CLAIM': 'jti',
 
+}
+
+# Ensure sessions are correctly configured
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Store sessions in the database
+SESSION_COOKIE_AGE = 1209600  # 2 weeks, adjust as needed
+
+# In settings.py, for development
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
 }
 
 PASSWORD_RESET_TIMEOUT=900          # 900 Sec = 15 Min
