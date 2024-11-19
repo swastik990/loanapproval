@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_protect
 from joblib import load
 import numpy as np
 import pandas as pd
-from sklearn.compose import ColumnTransformer
+from rest_framework.parsers import MultiPartParser, FormParser
 from sklearn.preprocessing import OneHotEncoder
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
@@ -16,7 +16,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserLoginSerializer, UserSignupSerializer
+from .serializers import UserLoginSerializer, UserUpdateSerializer
 from rest_framework.views import APIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -436,3 +436,20 @@ class FeedbackView(APIView):
             serializer.save()  # Save feedback
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]  # Add multipart parser for handling file uploads
+
+    def get(self, request):
+        # Retrieve the current user's profile data
+        serializer = UserUpdateSerializer(request.user, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        # Update the user's profile data, including the picture if provided
+        serializer = UserUpdateSerializer(request.user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Profile updated successfully."}, status=status.HTTP_200_OK)

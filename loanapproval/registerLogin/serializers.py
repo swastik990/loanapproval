@@ -28,3 +28,26 @@ class FeedbackSerializer(serializers.ModelSerializer):
         user = self.context['request'].user  # Get the logged-in user
         validated_data['user'] = user       # Assign the user to feedback
         return super().create(validated_data)
+
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'user_id', 'first_name', 'last_name', 'phone', 'dob', 'email',
+            'pictures',  'agree_terms', 'check_in_time'
+        ]
+        read_only_fields = ['user_id', 'email', 'check_in_time']  # Make these fields read-only
+
+    def update(self, instance, validated_data):
+        # Update each field with validated data if provided
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.phone = validated_data.get('phone', instance.phone)
+        instance.dob = validated_data.get('dob', instance.dob)
+        instance.pictures = validated_data.get('pictures', instance.pictures)
+        instance.agree_terms = validated_data.get('agree_terms', instance.agree_terms)
+        
+        instance.save()
+        return instance

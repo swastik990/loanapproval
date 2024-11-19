@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from . import views
-from .views import form_view ,  UserLoginView,UserSignupView,loan_prediction
+from .views import form_view ,  UserLoginView,UserSignupView,loan_prediction,UserProfileView,FeedbackView, ChangePasswordView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -24,5 +24,7 @@ urlpatterns = [
     path('signup/', UserSignupView.as_view(), name='signup'),
     path('login/', UserLoginView.as_view(), name='login'),
      path('api/loan-prediction/', views.loan_prediction, name='loan_prediction'),
+      path('feedback/', FeedbackView.as_view(), name='feedback'),
+      path('profile/', UserProfileView.as_view(), name='user-profile'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
