@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 import pytz
 from django.contrib.auth import get_user_model
+
 # function to show nepali time
 NEPAL_TZ = pytz.timezone('Asia/Kathmandu')
 
@@ -101,9 +102,14 @@ class Navbar(models.Model):
 
 class Feedback(models.Model):
     fb_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), to_field='user_id', on_delete=models.CASCADE)
     feedback = models.TextField()
+    rating = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=True)  # Allow null and blank
     feedback_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.feedback[:30]} ({self.rating})"
+
 
 class Profile(models.Model):
     profile_id = models.AutoField(primary_key=True)

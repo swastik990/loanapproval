@@ -43,6 +43,8 @@ from rest_framework import status
 from .models import Application
 import pandas as pd
 from rest_framework.permissions import IsAuthenticated
+from .models import Feedback
+from .serializers import FeedbackSerializer
 
 User = get_user_model()
 
@@ -422,3 +424,15 @@ def loan_prediction(request):
         return Response({'error': f'Invalid data: {e}'}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         return Response({'error': f'An unexpected error occurred: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+# moblie feedback
+
+class FeedbackView(APIView):
+    permission_classes = [IsAuthenticated]  # Require authentication
+
+    def post(self, request):
+        serializer = FeedbackSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()  # Save feedback
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
