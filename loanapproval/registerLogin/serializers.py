@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import User,Feedback
 from django.contrib.auth.hashers import make_password
-
+from django.contrib.auth.password_validation import validate_password
 from rest_framework.authtoken.models import Token
 
 class UserSignupSerializer(serializers.ModelSerializer):
@@ -51,3 +51,24 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         
         instance.save()
         return instance
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    confirm_new_password = serializers.CharField(required=True)
+
+    def validate(self, data):
+        # Ensure new passwords match
+        if data['new_password'] != data['confirm_new_password']:
+            raise serializers.ValidationError({"confirm_new_password": "New passwords must match."})
+        
+        # Validate new password against Django's validators
+        validate_password(data['new_password'])
+
+        # Check if new password is not the same as the old one
+        user = self.context['request'].user
+        if user.check_password(data['new_password']):
+            raise serializers.ValidationError({"new_password": "New password cannot be the same as the old password."})
+        
+        return data

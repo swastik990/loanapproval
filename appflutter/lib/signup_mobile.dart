@@ -56,6 +56,7 @@ class _SignupPageState extends State<SignupPage> {
     password: '',
   );
 
+ bool _isPasswordVisible = false;
   void _signup() async {
     if (_formKey.currentState!.validate() && _user.agreeTerms) {
       ApiService apiService = ApiService();
@@ -86,7 +87,7 @@ class _SignupPageState extends State<SignupPage> {
               Navigator.of(context).pop();
               _navigateToLogin(); // Navigate to login after closing the dialog
             },
-            child: Text('Login'),
+            child: Text('Login', style: TextStyle(color: Colors.black)),
           ),
         ],
       ),
@@ -113,7 +114,7 @@ class _SignupPageState extends State<SignupPage> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('OK'),
+            child: Text('OK',style: TextStyle(color: Colors.black)),
           ),
         ],
       ),
@@ -314,8 +315,22 @@ class _SignupPageState extends State<SignupPage> {
                         borderSide: BorderSide(color: Color(0xFF13136A)),
                       ),
                       border: OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Color(0xFF13136A),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      ),
                     ),
-                    obscureText: true,
+                    
+                    obscureText: !_isPasswordVisible, 
                     onChanged: (value) {
                       setState(() {
                         _user.password = value;

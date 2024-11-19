@@ -23,8 +23,9 @@ urlpatterns = [
     #mobile routes
     path('signup/', UserSignupView.as_view(), name='signup'),
     path('login/', UserLoginView.as_view(), name='login'),
-     path('api/loan-prediction/', views.loan_prediction, name='loan_prediction'),
-      path('feedback/', FeedbackView.as_view(), name='feedback'),
-      path('profile/', UserProfileView.as_view(), name='user-profile'),
+    path('api/loan-prediction/', views.loan_prediction, name='loan_prediction'),
+    path('feedback/', FeedbackView.as_view(), name='feedback'),
+    path('profile/', UserProfileView.as_view(), name='user-profile'),
+    path('change-password/', ChangePasswordView.as_view(), name='change-password')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

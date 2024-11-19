@@ -18,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isPasswordVisible = false; // Boolean to toggle password visibility
 
   @override
   void dispose() {
@@ -72,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('OK'),
+            child: Text('OK', style: TextStyle(color: Color(0xFF13136A))),
           ),
         ],
       ),
@@ -97,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     // Change status bar color
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Color(0xFF13136A), // Adjusted color for visibility
+      statusBarColor: Color.fromARGB(255, 0, 0, 0), // Adjusted color for visibility
       statusBarIconBrightness: Brightness.light, // For dark status bar background
     ));
 
@@ -129,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text('Close'),
+                              child: Text('Close',style: TextStyle(color: Colors.black)),
                             ),
                           ],
                         );
@@ -213,6 +214,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 20),
                     TextFormField(
                       controller: _passwordController,
+                      obscureText: !_isPasswordVisible, // Toggle visibility based on boolean
                       decoration: InputDecoration(
                         labelText: 'Password',
                         labelStyle: TextStyle(color: Colors.black),
@@ -220,8 +222,20 @@ class _LoginPageState extends State<LoginPage> {
                           borderSide: BorderSide(color: Color(0xFF13136A)),
                         ),
                         border: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility // Show password icon
+                                : Icons.visibility_off, // Hide password icon
+                            color: Color(0xFF13136A),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible; // Toggle visibility
+                            });
+                          },
+                        ),
                       ),
-                      obscureText: true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your password';

@@ -16,7 +16,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserLoginSerializer, UserUpdateSerializer
+from .serializers import UserLoginSerializer, UserUpdateSerializer,ChangePasswordSerializer
 from rest_framework.views import APIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -454,3 +454,27 @@ class UserProfileView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({"message": "Profile updated successfully."}, status=status.HTTP_200_OK)
+    
+
+# change Password   
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        print(request.data) 
+        serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
+
+        if serializer.is_valid():
+            # Check if the old password matches
+            if not user.check_password(serializer.validated_data['old_password']):
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Set the new password
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+
+            return Response({"message": "Password updated successfully."}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
