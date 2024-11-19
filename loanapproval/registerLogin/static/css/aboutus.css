@@ -73,6 +73,11 @@ body {
   color: rgba(245, 245, 245, 0.778) !important;
 }
 
+.nav-link.active {
+  color: #ffcc00 !important;
+  
+}
+
 .nav-link:hover {
   color: #ffcc00; 
 }

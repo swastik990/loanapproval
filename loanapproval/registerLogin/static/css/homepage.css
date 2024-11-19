@@ -23,9 +23,9 @@ body {
 
 #navbar1 {
  
-  padding: 15px 50px; /* Adjust padding for a more spacious look */
+  padding: 15px 50px; 
   display: flex;
-  justify-content: space-between; /* Space out the brand and menu */
+  justify-content: space-between; 
   align-items: center; /* Center vertically */
   background: linear-gradient( #062d9ad8, #101550 );
 }
@@ -57,7 +57,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  display: none; /* Hidden on larger screens */
+  display: none; 
 }
 
 /* Navbar links in row on desktop mode */
@@ -88,6 +88,11 @@ body {
 .navbar-toggler{
   color: rgba(245, 245, 245, 0.778) !important;
 }
+
+.nav-link.active {
+  color: #ffcc00 !important;
+}
+
 
 /* Change color on hover */
 .nav-link:hover {
