@@ -7,7 +7,9 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/registerLogin.css' %}">
 </head>
-<body>
+<body data-signup-messages="{{ signup_messages|length }}" 
+data-signin-messages="{{ signin_messages|length }}">
+
 <div class="container" id="container">
     <div class="form-container sign-up">
         <form id="signUpForm" method="post" action="{% url 'user_action' %}">
@@ -28,7 +30,16 @@
             <label>
                 <input type="checkbox" name="agree_terms" required> I agree to the terms and conditions
             </label>
-            
+
+        <!-- SignUp Messages -->
+        {% if signup_messages %}
+        <ul>
+            {% for message in signup_messages %}
+            <li style="color: red; font-size: 14px; font-weight: bold; margin-top: 10px;">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
             <button type="submit" >SignUp</button>
         </form>
     </div>
@@ -40,6 +51,16 @@
             <span>Use your email and password</span>
             <input type="email" name="Lemail" placeholder="Email" required>
             <input type="password" name="Lpassword" placeholder="Password" required>
+           
+        <!-- SignIn Messages -->
+        {% if signin_messages %}
+        <ul>
+            {% for message in signin_messages %}
+            <li style="color: red; font-size: 14px; font-weight: bold; margin-top: 10px;">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
             <a href="#">Forget Your Password?</a>
             <button type="submit">SignIn</button>
         </form>
