@@ -322,6 +322,7 @@ def formInfo(request):
 def form_view(request):
     return render(request, 'form.html')
 
+
 # mobile loan approval System
 model1= load('./predictionModel/model.pkl')
 
@@ -382,17 +383,17 @@ def loan_prediction(request):
         # Create the application instance and save it
         application = Application(
             user=user,
-            loan_amount= loan_amount,
-            loan_terms= loan_term,
-            credit_score= cibil_score,
-            no_of_dependents= no_of_dependents,
-            education= education_bool,
-            self_employed= self_employed_bool,
-            annual_income= annual_income,
-            residential_asset= residential_asset,
-            commercial_asset= commercial_asset,
-            luxury_asset= luxury_asset,
-            bank_asset= bank_asset,
+             loan_amount= loan_amount,
+             loan_terms= loan_term,
+             credit_score= cibil_score,
+             no_of_dependents= no_of_dependents,
+             education= education_bool,
+             self_employed= self_employed_bool,
+             annual_income= annual_income,
+             residential_asset= residential_asset,
+             commercial_asset= commercial_asset,
+             luxury_asset= luxury_asset,
+             bank_asset= bank_asset,
             submitted_time=pd.Timestamp.now()
         )
         application.save()
@@ -400,13 +401,13 @@ def loan_prediction(request):
         # Prediction (ensure `model` is defined and imported)
         prediction = model1.predict_proba(input_data)[:, 1]
         threshold = 0.5
-
         loan_status = LoanStatus(
-            user=request.user,  # Linking the loan status to the logged-in user
-            application=application,  # Link to the application
-            status=prediction == 1,  # If prediction is 1 (approved), status is True
+            user=request.user,
+            application=application,
+            status=prediction[0] > threshold  # If probability > threshold, approve
         )
         loan_status.save()
+
         prediction_text = (
             "Congratulations, your loan is approved!" if prediction[0] > threshold
             else "Sorry, your loan application is rejected."
@@ -437,7 +438,7 @@ class FeedbackView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-
+# mobile user profile
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]  # Add multipart parser for handling file uploads
