@@ -10,7 +10,7 @@ class NavbarAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('user_id', 'first_name', 'last_name', 'phone', 'dob', 'email', 'user_type', 'agree_terms', 'check_in_time')
+    list_display = ('user_id', 'first_name', 'last_name', 'phone', 'dob', 'email','pictures' ,'user_type', 'agree_terms', 'check_in_time')
     search_fields = ('first_name', 'last_name', 'email', 'phone')
     list_filter = ('user_type', 'agree_terms')
 

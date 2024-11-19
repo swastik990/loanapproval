@@ -384,6 +384,13 @@ def loan_prediction(request):
         # Prediction (ensure `model` is defined and imported)
         prediction = model1.predict_proba(input_data)[:, 1]
         threshold = 0.5
+
+        loan_status = LoanStatus(
+            user=request.user,  # Linking the loan status to the logged-in user
+            application=application,  # Link to the application
+            status=prediction == 1,  # If prediction is 1 (approved), status is True
+        )
+        loan_status.save()
         prediction_text = (
             "Congratulations, your loan is approved!" if prediction[0] > threshold
             else "Sorry, your loan application is rejected."
