@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User,Feedback,LoanStatus,AboutUs
+from .models import User,Feedback,LoanStatus,AboutUs,FAQ
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.authtoken.models import Token
@@ -94,3 +94,9 @@ class AboutUsSerializer(serializers.ModelSerializer):
     class Meta:
         model = AboutUs
         fields = ['about_id', 'title', 'details', 'pictures']
+
+
+class FAQSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FAQ
+        fields = ['faq_id', 'question', 'answer']  

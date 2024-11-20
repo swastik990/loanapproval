@@ -165,3 +165,8 @@ class CMSLog(models.Model):
     old_data = models.TextField()
     updated_at = models.DateTimeField(auto_now=True)
     updated_by = models.CharField(max_length=255)
+
+class FAQ(models.Model):
+    faq_id = models.AutoField(primary_key=True)  # Auto-incrementing primary key
+    question = models.TextField()               # Field to store the FAQ question
+    answer = models.TextField()                 # Field to store the FAQ answer

@@ -16,7 +16,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserLoginSerializer, UserUpdateSerializer,ChangePasswordSerializer, LoanStatusSerializer,AboutUsSerializer
+from .serializers import UserLoginSerializer, UserUpdateSerializer,ChangePasswordSerializer, LoanStatusSerializer,AboutUsSerializer,FAQSerializer
 from rest_framework.views import APIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -43,7 +43,7 @@ from rest_framework import status
 from .models import Application
 import pandas as pd
 from rest_framework.permissions import IsAuthenticated
-from .models import Feedback
+from .models import Feedback,FAQ
 from .serializers import FeedbackSerializer
 
 User = get_user_model()
@@ -509,3 +509,10 @@ class AboutUsView(APIView):
                 {"message": f"An error occurred: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+        
+
+class FAQView(APIView):
+    def get(self, request):
+        faqs = FAQ.objects.all()  # Fetch all FAQs
+        serializer = FAQSerializer(faqs, many=True)
+        return Response(serializer.data)

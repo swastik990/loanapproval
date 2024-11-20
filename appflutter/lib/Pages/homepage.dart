@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'history.dart';
 import 'settings.dart';
-import 'loanform.dart'; // Ensure the correct import for the LoanForm page
+import 'faq.dart';
+import 'loanform.dart'; 
+import 'loan_terms.dart'; 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter/services.dart';
 // User model
 class User {
   final int userId;
@@ -105,7 +107,13 @@ class _HomeScreenState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Color.fromARGB(255, 0, 0, 0), // Adjusted color for visibility
+      statusBarIconBrightness: Brightness.light, // For dark status bar background
+    ));
+    
     return SafeArea(
+      
       
       child: Scaffold(
         
@@ -183,19 +191,34 @@ class HomePageContent extends StatelessWidget {
                           ),
                           child: Text('Apply', style: TextStyle(color: Colors.white)),
                         ),
-                      if (title == 'Know about loan Terms' || title == 'Some FAQs')
-                        ElevatedButton(
-                          onPressed: () {
-                            _onReadButtonTap(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          child: Text('Read', style: TextStyle(color: Colors.white)),
-                        ),
+                         if (title == 'Know about loan Terms' || title == 'Some FAQs')
+                      ElevatedButton(
+  onPressed: () {
+    if (title == 'Know about loan Terms') {
+      // Navigate to the Loan Terms page
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoanTermsPage()),
+      );
+    } else if (title == 'Some FAQs') {
+      // Navigate to the FAQs page
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => FAQPage()),
+      );
+    } else {
+      // Optional: handle other cases or do nothing
+    }
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.green,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15),
+    ),
+  ),
+  child: Text('Read', style: TextStyle(color: Colors.white)),
+),
+
                     ],
                   ),
                 ],
