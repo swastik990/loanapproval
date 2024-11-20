@@ -61,3 +61,8 @@ class CMSLogAdmin(admin.ModelAdmin):
     list_display = ('cms_id', 'table', 'value', 'old_data', 'updated_at', 'updated_by')
     search_fields = ('table', 'value', 'old_data', 'updated_by')
     list_filter = ('updated_at',)
+
+@admin.register(FAQ)
+class FAQAdmin(admin.ModelAdmin):
+    list_display = ('faq_id', 'question', 'answer')  # Show these fields in the list view
+    search_fields = ('question',)  # Enable search functionality

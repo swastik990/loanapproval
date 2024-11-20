@@ -258,16 +258,16 @@ class HomePageContent extends StatelessWidget {
                               Text('Hi ${user.firstName}', style: TextStyle(color: Colors.white)),
                             ],
                           ),
-                          actions: [
-                            IconButton(
-                              icon: Icon(Icons.notifications, color: Colors.white),
-                              onPressed: () {},
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.info_outline, color: Colors.white),
-                              onPressed: () {},
-                            ),
-                          ],
+                          // actions: [
+                          //   IconButton(
+                          //     icon: Icon(Icons.notifications, color: Colors.white),
+                          //     onPressed: () {},
+                          //   ),
+                          //   IconButton(
+                          //     icon: Icon(Icons.info_outline, color: Colors.white),
+                          //     onPressed: () {},
+                          //   ),
+                          // ],
                           flexibleSpace: Container(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(

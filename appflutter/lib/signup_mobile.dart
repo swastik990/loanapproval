@@ -140,20 +140,20 @@ class _SignupPageState extends State<SignupPage> {
             Navigator.of(context).pop();
           },
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.info, color: Colors.white),
-            onPressed: () {
-              // Show information dialog
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.settings, color: Colors.white),
-            onPressed: () {
-              // Show settings page
-            },
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.info, color: Colors.white),
+        //     onPressed: () {
+        //       // Show information dialog
+        //     },
+        //   ),
+        //   IconButton(
+        //     icon: Icon(Icons.settings, color: Colors.white),
+        //     onPressed: () {
+        //       // Show settings page
+        //     },
+        //   ),r
+        // ],
       ),
       body: Center(
         child: SingleChildScrollView(

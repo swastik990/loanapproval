@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User,Feedback,LoanStatus,AboutUs,FAQ
+from .models import User,Feedback,LoanStatus,AboutUs,FAQ,TermsAndConditions
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.authtoken.models import Token
@@ -100,3 +100,8 @@ class FAQSerializer(serializers.ModelSerializer):
     class Meta:
         model = FAQ
         fields = ['faq_id', 'question', 'answer']  
+
+class TermsAndConditionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TermsAndConditions
+        fields = ['terms_id', 'title', 'details']

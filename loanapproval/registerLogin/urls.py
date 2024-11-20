@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from . import views
-from .views import form_view ,  UserLoginView,UserSignupView,loan_prediction,UserProfileView,FeedbackView, ChangePasswordView,LoanHistoryView,AboutUsView, FAQView
+from .views import form_view ,  UserLoginView,UserSignupView,loan_prediction,UserProfileView,FeedbackView, ChangePasswordView,LoanHistoryView,AboutUsView, FAQView, TermsAndConditionsView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -29,6 +29,7 @@ urlpatterns = [
     path('change-password/', ChangePasswordView.as_view(), name='change-password'),
     path('api/loan-history/', LoanHistoryView.as_view(), name='loan-history'),
     path('about-us/', AboutUsView.as_view(), name='about_us'),
+    path('terms/', TermsAndConditionsView.as_view(), name='terms-list'),
     path('faqs/', FAQView.as_view(), name='faq-list')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

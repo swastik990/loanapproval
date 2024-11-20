@@ -117,14 +117,14 @@ class SettingsPage extends StatelessWidget {
                             ),
                           ),
         automaticallyImplyLeading: false, // This removes the back arrow
-        actions: [
-          IconButton(
-            icon: Icon(Icons.info_outline),
-            onPressed: () {
-              // Info button action
-            },
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.info_outline),
+        //     onPressed: () {
+        //       // Info button action
+        //     },
+        //   ),
+        // ],
       ),
       body: FutureBuilder<User>(
         future: settingsUser.fetchUser(), // Fetch the user data

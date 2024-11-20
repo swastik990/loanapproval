@@ -35,7 +35,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 import pandas as pd
-from .models import Application, User
+from .models import Application, User, TermsAndConditions
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -44,7 +44,7 @@ from .models import Application
 import pandas as pd
 from rest_framework.permissions import IsAuthenticated
 from .models import Feedback,FAQ
-from .serializers import FeedbackSerializer
+from .serializers import FeedbackSerializer,TermsAndConditionsSerializer
 
 User = get_user_model()
 
@@ -510,9 +510,16 @@ class AboutUsView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         
-
+#mobile frequently ask question
 class FAQView(APIView):
     def get(self, request):
         faqs = FAQ.objects.all()  # Fetch all FAQs
         serializer = FAQSerializer(faqs, many=True)
+        return Response(serializer.data)
+
+#mobile terms api    
+class TermsAndConditionsView(APIView):
+    def get(self, request):
+        terms = TermsAndConditions.objects.all()  # Fetch all terms and conditions
+        serializer = TermsAndConditionsSerializer(terms, many=True)
         return Response(serializer.data)

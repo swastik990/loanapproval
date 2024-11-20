@@ -113,63 +113,63 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.of(context).pop();
             },
           ),
-          actions: [
-            PopupMenuButton<int>(
-              icon: Icon(Icons.info_outline, color: Colors.white, size: 40),
-              onSelected: (value) {
-                switch (value) {
-                  case 0:
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('About Us'),
-                          content: Text('Information about the Loan Approval System by GROUP 30.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('Close',style: TextStyle(color: Colors.black)),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    break;
-                  case 1:
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('This Page'),
-                          content: Text('This is the Login page.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('Close'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    break;
-                }
-              },
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: 0,
-                  child: Text('About Us'),
-                ),
-                const PopupMenuItem(
-                  value: 1,
-                  child: Text('This Page'),
-                ),
-              ],
-            ),
-          ],
+          // actions: [
+          //   PopupMenuButton<int>(
+          //     icon: Icon(Icons.info_outline, color: Colors.white, size: 40),
+          //     onSelected: (value) {
+          //       switch (value) {
+          //         case 0:
+          //           showDialog(
+          //             context: context,
+          //             builder: (context) {
+          //               return AlertDialog(
+          //                 title: Text('About Us'),
+          //                 content: Text('Information about the Loan Approval System by GROUP 30.'),
+          //                 actions: [
+          //                   TextButton(
+          //                     onPressed: () {
+          //                       Navigator.of(context).pop();
+          //                     },
+          //                     child: Text('Close',style: TextStyle(color: Colors.black)),
+          //                   ),
+          //                 ],
+          //               );
+          //             },
+          //           );
+          //           break;
+          //         case 1:
+          //           showDialog(
+          //             context: context,
+          //             builder: (context) {
+          //               return AlertDialog(
+          //                 title: Text('This Page'),
+          //                 content: Text('This is the Login page.'),
+          //                 actions: [
+          //                   TextButton(
+          //                     onPressed: () {
+          //                       Navigator.of(context).pop();
+          //                     },
+          //                     child: Text('Close'),
+          //                   ),
+          //                 ],
+          //               );
+          //             },
+          //           );
+          //           break;
+          //       }
+          //     },
+          //     itemBuilder: (context) => [
+          //       const PopupMenuItem(
+          //         value: 0,
+          //         child: Text('About Us'),
+          //       ),
+          //       const PopupMenuItem(
+          //         value: 1,
+          //         child: Text('This Page'),
+          //       ),
+          //     ],
+          //   ),
+          // ],
         ),
         body: Center(
           child: SingleChildScrollView(
@@ -284,10 +284,10 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: _navigateToSignup,
                       child: Text('Don\'t have an account? Sign Up', style: TextStyle(color: Color(0xFF13136A))),
                     ),
-                    TextButton(
-                      onPressed: _navigateToForgotPassword,
-                      child: Text('Forgot Password?', style: TextStyle(color: Color(0xFF13136A))),
-                    ),
+                    // TextButton(
+                    //   onPressed: _navigateToForgotPassword,
+                    //   child: Text('Forgot Password?', style: TextStyle(color: Color(0xFF13136A))),
+                    // ),
                   ],
                 ),
               ),
