@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'edit_profile.dart';
+import 'about.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -214,6 +215,10 @@ class SettingsPage extends StatelessWidget {
                     trailing: Icon(Icons.arrow_forward_ios),
                     onTap: () {
                       // About Us action
+                      Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => AboutUsPage()),
+                                  );
                     },
                   ),
                   // Log Out

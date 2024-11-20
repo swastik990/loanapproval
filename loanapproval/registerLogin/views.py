@@ -16,7 +16,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserLoginSerializer, UserUpdateSerializer,ChangePasswordSerializer, LoanStatusSerializer
+from .serializers import UserLoginSerializer, UserUpdateSerializer,ChangePasswordSerializer, LoanStatusSerializer,AboutUsSerializer
 from rest_framework.views import APIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -488,3 +488,24 @@ class LoanHistoryView(APIView):
         loan_statuses = LoanStatus.objects.filter(user=user)   # Fetch the user's loan history      
         serializer = LoanStatusSerializer(loan_statuses, many=True)  # Serialize the data
         return Response(serializer.data)
+    
+# AboutUSmobile 
+class AboutUsView(APIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            about_us_objects = AboutUs.objects.all()
+            if not about_us_objects.exists():
+                return Response(
+                    {"message": "No About Us data available."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            serializer = AboutUsSerializer(about_us_objects, many=True)
+            return Response(
+                {"message": "Data fetched successfully!", "data": serializer.data},
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return Response(
+                {"message": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

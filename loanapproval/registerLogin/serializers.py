@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User,Feedback,LoanStatus
+from .models import User,Feedback,LoanStatus,AboutUs
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.authtoken.models import Token
@@ -88,3 +88,9 @@ class LoanStatusSerializer(serializers.ModelSerializer):
             return round(float(obj.application.loan_amount), 2)
         except (TypeError, ValueError, InvalidOperation):
             return None
+
+
+class AboutUsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AboutUs
+        fields = ['about_id', 'title', 'details', 'pictures']
