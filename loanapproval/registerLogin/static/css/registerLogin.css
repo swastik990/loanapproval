@@ -35,6 +35,7 @@ body {
 
 .container span {
     font-size: 12px;
+    margin: 10px;
 }
 
 .container a {

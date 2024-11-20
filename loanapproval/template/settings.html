@@ -14,7 +14,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg" id="navbar1">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">LOAN APPROVAL</a>
+        <a class="navbar-brand" href="#">{{user.first_name}}'s Setting Page</a>
         <!-- Toggler button for mobile view -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           ☰ <!-- Simple icon for the toggler -->
@@ -23,21 +23,29 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto d-flex flex-row">
             <li class="nav-item">
-              <a class="nav-link" href="homepage.html">Home</a>
+              <a class="nav-link" href="{% url 'home' %}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="aboutus.html">About Us</a>
+              <a class="nav-link" href="{% url 'aboutus' %}">About Us</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="feedback.html">Feedback</a>
+              <a class="nav-link" href="{% url 'feedback' %}">Feedback</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="settings.html">Settings</a>
+              <a class="nav-link" href="{% url 'settings' %}">Settings</a>
             </li>
           </ul>
         </div>
       </div>
     </nav>
+
+    {% for message in messages %}
+    <div class="alert alert-{{ message.level_tag|default:'danger' }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+
 
   <div class="settings-page">
     <div class="settings-header">
@@ -60,51 +68,51 @@
         <!-- Account Settings -->
         <div class="section-content" id="account-settings">
           <h3 class="section-title"> <label class="text-white">Account </label> Settings</h3>
-          <form id="accountForm">
-            <!-- Profile Picture Section -->
+          <form method="post" enctype="multipart/form-data" id="accountForm" action="{% url 'settings' %}">
+            {% csrf_token %}
+            
+            <!-- Profile Picture -->
             <div class="profile-pic-container">
-              <div class="profile-pic">
-                <img src="{{ user.pictures.url }}" alt="Profile Picture" id="profileImage">
-                <div>
-                  <label for="profilePicUpload" id="changephoto"><i class="fas fa-camera"></i> Change Profile Picture</label>
-                  <input type="file"id="profilePicUpload" accept="image/*" onchange="loadFile(event)">
+                <div class="profile-pic">
+                    <img src="{{ user.pictures.url }}" alt="Profile Picture" id="profileImage">
+                    <label for="profilePicUpload" name="update" id="changephoto">Change Profile Picture</label>
+                    <input type="file" id="profilePicUpload" name="pictures" accept="image/*" onchange="loadFile(event)">
                 </div>
-              </div>
             </div>
-
-            <!-- Personal Information Form -->
+        
+            <!-- Personal Information -->
             <div class="row mb-3">
-              <div class="col-md-6">
-                <label for="firstName" class="form-label">First Name</label>
-                <input type="text" class="form-control" id="firstName" placeholder="{{ first_name }}">
-              </div>
-              <div class="col-md-6" id="name-margin">
-                <label for="lastName" class="form-label">Last Name</label>
-                <input type="text" class="form-control" id="lastName" placeholder="{{ last_name }}">
-              </div>
-           
+                <div class="col-md-6">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="firstName" name="first_name" value="{{ user.first_name }}">
+                </div>
+                <div class="col-md-6" id="name-margin">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" name="last_name" value="{{ user.last_name }}">
+                </div>
             </div>
-
+        
             <div class="row mb-3">
-              <div class="col-md-6">
-                <label for="email" class="form-label">Email Address</label>
-                <input type="email" class="form-control" id="email" placeholder="{{ email }}">
-              </div>
-              <div class="col-md-6"  id="num-margin">
-                <label for="phone" class="form-label">Phone Number</label>
-                <input type="number" class="form-control" id="phone" placeholder="{{ phone }}">
-              </div>
-              <div class="col-md-6"  id="num-margin">
-                <label for="phone" class="form-label">D.O.B</label>
-                <input type="date" class="form-control" id="dob" name="dob" value="dob" placeholder="{{ user.dob|date:"y-" }}">
-              </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+                </div>
+                <div class="col-md-6" id="num-margin">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="number" class="form-control" id="phone" name="phone" value="{{ user.phone }}">
+                </div>
+                <div class="col-md-6" id="num-margin">
+                    <label for="dob" class="form-label">D.O.B</label>
+                    <input type="date" class="form-control" id="dob" name="dob" value="{{ user.dob|date:'Y-m-d' }}">
+                </div>
+                
             </div>
-
+            <!-- Buttons -->
             <div class="d-flex justify-content-center">
-              <button type="submit" class="btn btn-save" id="updateBtn" onclick="updateForm('accountForm')" >Update</button>
-              <button type="button" class="btn btn-cancel" onclick="resetForm('accountForm')">Cancel</button>
-            </div>
-          </form>
+                <button type="submit" class="btn btn-save" name="update" id="updateBtn">Update</button>
+                <button type="button" class="btn btn-cancel" onclick="resetForm('accountForm')">Cancel</button>
+              </div>
+        </form>
         </div>
 
         <!-- Security Settings -->
@@ -124,12 +132,13 @@
             </div>
           </div>
         
-          <form id="securityForm">
+          <form id="securityForm" method="post" action="{% url 'settings' %}">
+            {%csrf_token %}
             <div class="row mb-3">
               <div class="col-md-6 position-relative">
                 <label for="currentPassword" class="form-label">Current Password</label>
                 <div class="input-group">
-                  <input type="password" class="form-control" id="currentPassword" placeholder="Enter your current password" required>
+                  <input type="password" class="form-control" name="currentPassword" id="currentPassword" placeholder="Enter your current password" required>
                   <span class="input-group-text toggle-password">
                     <i class="fa-solid fa-eye-slash" id="toggleCurrentPassword" style="cursor: pointer;"></i>
                   </span>
@@ -141,7 +150,7 @@
               <div class="col-md-6 position-relative">
                 <label for="newPassword" class="form-label">New Password</label>
                 <div class="input-group">
-                  <input type="password" class="form-control" id="newPassword" placeholder="Enter new password" required>
+                  <input type="password" class="form-control" name="newPassword" id="newPassword" placeholder="Enter new password" required>
                   <span class="input-group-text toggle-password">
                     <i class="fa-solid fa-eye-slash" 
                     id="toggleNewPassword" style="cursor: pointer;"></i>
@@ -154,7 +163,7 @@
               <div class="col-md-6 position-relative">
                 <label for="confirmPassword" class="form-label">Confirm New Password</label>
                 <div class="input-group">
-                  <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm new password" required>
+                  <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Confirm new password" required>
                   <span class="input-group-text toggle-password">
                     <i class="fa-solid fa-eye-slash" id="toggleConfirmPassword" style="cursor: pointer;"></i>
                   </span>
@@ -162,7 +171,7 @@
               </div>
             </div>
             <div class="d-flex justify-content-center">
-              <button type="submit" class="btn btn-save" id="updateBtn" onclick="updateForm('securityForm')" >Update</button>
+              <button type="submit" class="btn btn-save" name="change" id="updateBtn">Update</button>
               <button type="button" class="btn btn-cancel" onclick="resetForm('securityForm')">Cancel</button>
             </div>
 
