@@ -1,8 +1,9 @@
 from rest_framework import serializers
-from .models import User,Feedback
+from .models import User,Feedback,LoanStatus
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.authtoken.models import Token
+from decimal import Decimal, InvalidOperation
 
 class UserSignupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -72,3 +73,18 @@ class ChangePasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError({"new_password": "New password cannot be the same as the old password."})
         
         return data
+    
+
+class LoanStatusSerializer(serializers.ModelSerializer):
+    loan_amount = serializers.SerializerMethodField()
+
+    class Meta:
+        model = LoanStatus
+        fields = ['loan_amount', 'status', 'time_updated']
+
+    def get_loan_amount(self, obj):
+        try:
+            # Round to 2 decimal places
+            return round(float(obj.application.loan_amount), 2)
+        except (TypeError, ValueError, InvalidOperation):
+            return None

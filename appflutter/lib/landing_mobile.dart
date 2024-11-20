@@ -38,13 +38,14 @@ class _LandingPageState extends State<LandingPage> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor:Color(0xFFFEFEFE),
         appBar: AppBar(
           title: Row(
             children: [
-              Image.asset(
-                'lib/assets/logo.png',
-                height: 30,
-              ),
+              CircleAvatar(
+  radius: 20, // Adjust the size of the circle
+  backgroundImage: AssetImage('lib/assets/logo.png'),
+),
               const SizedBox(width: 10),
               const Text(
                 'Loan Approval System',
@@ -70,7 +71,7 @@ class _LandingPageState extends State<LandingPage> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text('Close'),
+                              child: Text('Close', style: TextStyle(color: Colors.black),),
                             ),
                           ],
                         );
@@ -89,7 +90,7 @@ class _LandingPageState extends State<LandingPage> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text('Close'),
+                              child: Text('Close', style: TextStyle(color: Colors.black)),
                             ),
                           ],
                         );
@@ -137,10 +138,15 @@ class _LandingPageState extends State<LandingPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Image.asset(
-                          'lib/assets/loan_approval.png',
-                          height: 300,
-                        ),
+                        child: ClipRRect(
+                borderRadius: BorderRadius.circular(20), // Set radius value here
+                child: Image.asset(
+                  'lib/assets/LoanApprovalGIF.gif', // Replace PNG with GIF
+                  height: 250,
+                  width: 250, // Optional: Set width if needed
+                  fit: BoxFit.cover, // Optional: To maintain aspect ratio while filling the container
+                ),
+              ),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16.0, 90.0, 16.0, 16.0),

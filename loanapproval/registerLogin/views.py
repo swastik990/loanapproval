@@ -16,7 +16,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserLoginSerializer, UserUpdateSerializer,ChangePasswordSerializer
+from .serializers import UserLoginSerializer, UserUpdateSerializer,ChangePasswordSerializer, LoanStatusSerializer
 from rest_framework.views import APIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -478,3 +478,13 @@ class ChangePasswordView(APIView):
             return Response({"message": "Password updated successfully."}, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+# loanhistorymobile  
+class LoanHistoryView(APIView):
+    permission_classes = [IsAuthenticated]  # Ensures only logged-in users can access
+
+    def get(self, request):
+        user = request.user        
+        loan_statuses = LoanStatus.objects.filter(user=user)   # Fetch the user's loan history      
+        serializer = LoanStatusSerializer(loan_statuses, many=True)  # Serialize the data
+        return Response(serializer.data)

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'feedback.dart';
+import 'history.dart';
 import 'settings.dart';
 import 'loanform.dart'; // Ensure the correct import for the LoanForm page
 import 'package:http/http.dart' as http;
@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomePage> {
 
   final List<Widget> _screens = [
     HomePageContent(),
-    FeedbackScreen(),
+    LoanHistoryScreen(),
     SettingsPage(),
   ];
 
@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomePage> {
           animationDuration: const Duration(milliseconds: 300),
           items: const <Widget>[
             Icon(Icons.home, size: 30, color: Colors.white),
-            Icon(Icons.feedback, size: 30, color: Colors.white),
+            Icon(Icons.history, size: 30, color: Colors.white),
             Icon(Icons.settings, size: 30, color: Colors.white),
           ],
           onTap: (index) {

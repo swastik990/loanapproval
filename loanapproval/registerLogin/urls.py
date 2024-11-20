@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from . import views
-from .views import form_view ,  UserLoginView,UserSignupView,loan_prediction,UserProfileView,FeedbackView, ChangePasswordView
+from .views import form_view ,  UserLoginView,UserSignupView,loan_prediction,UserProfileView,FeedbackView, ChangePasswordView,LoanHistoryView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -26,6 +26,7 @@ urlpatterns = [
     path('api/loan-prediction/', views.loan_prediction, name='loan_prediction'),
     path('feedback/', FeedbackView.as_view(), name='feedback'),
     path('profile/', UserProfileView.as_view(), name='user-profile'),
-    path('change-password/', ChangePasswordView.as_view(), name='change-password')
+    path('change-password/', ChangePasswordView.as_view(), name='change-password'),
+    path('api/loan-history/', LoanHistoryView.as_view(), name='loan-history'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

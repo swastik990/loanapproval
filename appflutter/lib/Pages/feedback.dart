@@ -101,7 +101,12 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                               ),
                             ),
                           ),
-          automaticallyImplyLeading: false, // Disable the back button
+           leading: IconButton(
+        icon: Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ), // Disable the back button
         ),
         body: isSubmitting
             ? Center(child: CircularProgressIndicator()) // Show loader during submission

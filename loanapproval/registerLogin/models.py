@@ -59,7 +59,7 @@ class User(AbstractBaseUser):
     password = models.CharField(max_length=255)
     pictures = models.ImageField(upload_to='uploads/')
     user_type = models.IntegerField(choices=USER_TYPE_CHOICES, default=NORMAL_USER)
-    agree_terms = models.BooleanField(default=False)
+    agree_terms = models.BooleanField(default=True)
     # nepali time function call gareko
     def get_nepal_time():
     # Get current datetime in Nepal timezone
@@ -142,7 +142,10 @@ class LoanStatus(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     application = models.ForeignKey(Application, on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
-    time_updated = models.TimeField(auto_now=True)
+    def get_nepal_time():
+        nepal_time = timezone.now().astimezone(NEPAL_TZ)
+        return nepal_time.strftime("%Y-%m-%d, %A %H:%M:%S")
+    time_updated = models.CharField(max_length=50, default=get_nepal_time)
 
 class AboutUs(models.Model):
     about_id = models.AutoField(primary_key=True)
