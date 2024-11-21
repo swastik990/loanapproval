@@ -4,28 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loan Approval Website</title>
+  {% load static %}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/loanapproval/registerLogin/static/css/landingpage.css">
+  <!-- <link rel="stylesheet" href="/loanapproval/registerLogin/static/css/landingpage.css"> -->
+  <link rel="stylesheet" href="{% static 'css/landingpage.css' %}">
 
 </head>
 <body>
   <!-- Header Section -->
 
   <header id="heading1">
-    <img src="/loanapproval/registerLogin/static/image/image.png" alt="Logo" class="header-logo">
+    <img src="{% static 'image/image.png' %}" alt="Logo" class="header-logo">
     Loan Approval System
   </header>
-  <div class="hero d-flex align-items-center justify-content-center text-center">
-    
+  <div class="hero">
     <div class="container">
-      <img src="/loanapproval/registerLogin/static/image/LoanApprovalGIF.gif" alt="LoanApproval" id="gif-image"> 
+      <img src="{% static 'image/LoanApprovalGIF.gif' %}" alt="LoanApproval" id="gif-image" name="gif-image" class="rounded-image"> 
     <div class="row justify-content-center" id="row">
-        <p id="p-text" class="display-5 fw-bold text-start">Welcome to Fast & Reliable <label class="heading-blue"> Loan Approval System </label> </p>
+        <p id="p-text" class="display-5 fw-bold text-start">Welcome to Fast & Reliable <label class="heading-blue"> Using Machine Learning </label> </p>
         <p class="p-edit" id="p1">Apply for loans with ease and experience our quick, secure, and professional service.</p>
         <p class="p-edit" id="p2">Get your totally free loan pre-approval and start making your dreams a reality.</p>
         <p class="p-edit" id="p3">Our dedicated team is here to support you every step of the way toward achieving your <br>financial goals.</p>
         <div class="button-container"> 
-        <a href="/signinpage.html" class="btn btn-primary btn-lg" id="button">Login/Signup</a>
+        <a href="{% url 'user_action' %}" class="btn btn-primary btn-lg" id="button">Login/Signup</a>
       </div>
       
     </div>

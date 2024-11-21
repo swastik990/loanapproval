@@ -4,14 +4,15 @@ body {
 .about-us img {
     max-width: 100%;
     height: auto;
+    border-radius: 50px;
   }
   
-  .our-values .value-box {
-    background-color: #fff;
+.our-values .value-box {
+    background-color: #e9e9e9;
     transition: transform 0.3s ease;
   }
   
-  .our-values .value-box:hover {
+.our-values .value-box:hover {
     transform: translateY(-10px);
   }
     
@@ -106,7 +107,7 @@ footer h5 {
 
 #section{
   padding-top: 50px !important;
-  background: linear-gradient( #FFFFFF, #2f3ccd );
+  background-color: #d6d6d6;
 }
 
 

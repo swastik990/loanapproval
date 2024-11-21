@@ -6,7 +6,7 @@
   <title>About Us - Loan Approval System</title>
   {% load static %}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/loanapproval/registerLogin/static/css/aboutus.css">
+  <!-- <link rel="stylesheet" href="/loanapproval/registerLogin/static/css/aboutus.css"> -->
   <link rel="stylesheet" href="{% static 'css/aboutus.css'%}">
 </head>
 <body>
@@ -14,7 +14,7 @@
  <!-- Navbar -->
 <nav class="navbar navbar-expand-lg" id="navbar1">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">LOAN APPROVAL</a>
+    <a class="navbar-brand" href="#">About Us</a>
     <!-- Toggler button for mobile view -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       ☰ <!-- Simple icon for the toggler -->
@@ -45,13 +45,11 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-6 d-flex align-items-center" id="img-section">
-          <img src="{% static 'image/aboutus.jpg' %}" alt="About Us Image" class="img-fluid rounded">
+          <img src="{{ about_us.pictures.url }}" alt="About Us Image" class="img-fluid rounded">
         </div>
         <div class="col-lg-6" id="description">
-          <h2>About <label id="label-aboutus">US</label> </h2>
-          <p>We are dedicated to providing a reliable loan approval system that ensures seamless processing for individuals and businesses alike. Our platform uses advanced technology to streamline loan approvals, reducing delays and simplifying the overall experience for applicants and lenders.</p>
-          <p>With a commitment to innovation, security, and transparency, our goal is to make financial services accessible to everyone while maintaining the highest standards of service.</p>
-            <p>Our team consists of industry experts who understand the complexities of financial systems, and we work tirelessly to improve the efficiency and effectiveness of loan approvals. Whether you're an individual looking for a personal loan or a business seeking financing, our platform is designed to make the process straightforward and user-friendly. We believe in empowering our clients with the tools they need to succeed financially.</p>
+          <h2>{{ about_us.title }}</h2>
+          <p>{{ about_us.details }}</p>
           </div>
           
         </div>
@@ -130,6 +128,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
   <script src="{% static 'js/aboutus.js'%}"></script>
-  <script src="/loanapproval/registerLogin/static/js/aboutus.js"></script>
+  <!-- <script src="/loanapproval/registerLogin/static/js/aboutus.js"></script> -->
 </body>
 </html>

@@ -138,6 +138,24 @@ body {
   color: rgb(13, 13, 228) !important;
 }
 
+
+.logout-icon-btn img {
+  background: none;
+  border: none;
+  display: inline-block;
+  margin-top: 10px;
+  margin-left: 20px;;
+  filter: invert(22%) sepia(93%) saturate(5438%) hue-rotate(0deg) brightness(100%) contrast(101%);
+}
+
+
+.logout-icon-btn {
+  background: none; /* Ensure the button itself has no background */
+  border: none;     /* Remove border from the button */
+  cursor: pointer;
+}
+
+
 #card-section{
   padding-bottom: 20px !important;
 }
