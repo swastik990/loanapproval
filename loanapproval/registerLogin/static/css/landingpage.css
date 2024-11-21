@@ -1,4 +1,3 @@
-/* Reset some default styling */
 * {
   margin: 0;
   padding: 0;
@@ -11,13 +10,45 @@ body {
   background-color: #f5f5f5;
 }
 
-/* Header Section Styling */
-
-.container{
-  margin-left: 10px !important;
-  padding-bottom: 10px !important;
- 
+#heading1{
+  padding: 15px 15px !important;
+  align-items: center !important;
+  justify-content: center;
+  display: flex;
+  background: linear-gradient( #062d9ad8, #101550 );
+  font-size: 23px;
+  color: white;
 }
+
+.header-logo {
+  height: 72px; 
+  margin-right: 15px; 
+  border-radius: 50%;
+  
+}
+
+
+.container {
+  display: flex;
+  align-items: center; 
+  gap: 15px; 
+  margin-left: 0px !important;
+  background-color: rgb(180, 175, 175);
+  max-width: 100% !important;
+}
+
+#gif-image {
+  max-width: 50%; 
+  height: 48vh !important;
+  width: 40% !important;
+}
+
+#row{
+  display: flex !important;
+  width: 55% !important;
+  margin-left: auto;
+}
+
 
 .container2{
   margin-left: 20px !important;
@@ -27,29 +58,23 @@ body {
   width: 95% !important;
 }
 
-#row{
-  display: flex !important;
-  width: 35% !important;
-  justify-items: left !important;
-}
-
 
 
 .p-edit {
   font-size: 18px !important;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
   text-align: left;
-  color: rgb(255, 254, 254);
+  padding-right: 0 !important;
+  color: black;
   
 }
 
 #p-text{
-  color: white;
+  color: black;
   font-size: 22px !important;
   font-weight: bold;
   margin-bottom: 18px !important;
 }
-
 #button {
   background-color:  rgb(15, 15, 200);
   border-radius: 7px;
@@ -107,19 +132,8 @@ footer {
   padding-left: 4.5% !important;
 }
 
-footer h5 {
-    font-size: 20px;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  footer p {
-    font-size: 16px;
-  }
 
-
-@media (max-width: 1093px) {
+@media (max-width: 1302px) {
  
   #p-text{
     font-size: 18px !important;
@@ -132,118 +146,76 @@ footer h5 {
   }
 
   .container{
-    margin-left: 10px !important;
-    padding-bottom: 20px !important;
-  }
-
-  #row{
-    width: 50% !important;
-  }
-}
-
-
-@media (max-width: 868px) and (min-width:670px) {
-  #row{
-    width: 40% !important;
-    
-  }
-
-  #button{
-    padding: 7px 11px; 
-    font-size: 14px;
-  }
-
-  .container{
-    margin-left: 10px !important;
-  }
-
-  #p-text {
-    font-size: 14px !important;
-  }
-
-  .p-edit {
-    font-size: 13px !important;
-    margin-bottom: 10px;
-    color: white;
-    
-  }
-
-}
-
-@media (max-width: 669px) {
-  .hero {
-    display: flex !important;
-    width: 100% !important;
-  }
-
-  #row{
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 30% !important;
-  }
- 
-  #p-text {
-    font-size: 14px !important;
-  }
-
-  .p-edit {
-    font-size: 12px !important;
-    margin-bottom: 10px;
-    color: white;
-    
-  }
-
-  #button {
-    padding: 7px 11px;
-    font-size: 13px;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
   }
 
   
 }
 
 
-@media (max-width: 668px) {
-
-.container{
-  margin-bottom: 2% !important;
-  padding-bottom: 2% !important;
-  bottom: 0 !important ;
-  position: absolute !important;
-  margin-left: 0 !important;
-
-}
-
-#card-section{
-  padding-left: 2% !important;
-}
-
-}
-
-
-@media (max-width: 450px) {
+@media (max-width: 981px) {
   #row{
-    width: 50% !important;
+    width: 55% !important;
+    margin-left: 0px !important;
+    padding-right: 10px !important;
+    
   }
 
-  .p-edit{
-    margin-bottom: 5px !important;
-  }    #button {
-    padding: 5px 9px;
-    font-size: 12px;
-}
+  .container{
+    margin-left: 0px !important;
+  }
 
-#card-section{
-  padding-left: 0 !important;
-}
+  #gif-image {
+    height: 70vh !important;
+    width: 75% !important;
+  }
 
-#p-text{
-  margin-bottom: 8px !important;
-}
-
-.button-container {
-  text-align: left !important;
-  margin-top: 10px !important;
-}
+  .container{
+    gap: 0 !important;
+  }
 
 }
+
+@media (max-width: 620px) {
+  #gif-image {
+    height: 80vh !important;
+    width: 80% !important;
+  }
+
+  }
+
+  @media (max-width: 550px) {
+    .container {
+      flex-direction: column; 
+      align-items: center; 
+      gap: 10px; 
+    }
+  
+    #row {
+      width: 95% !important; 
+      text-align: center; 
+    }
+  
+
+    #gif-image{
+      max-width: 100% !important;
+    }
+
+    .p-edit{
+      padding-left: 0 !important;
+    }
+
+    .button-container{
+      padding-left: 0 !important;
+    }
+
+    #p-text{
+      padding-left: 0 !important;
+    }
+
+    #card-1, #card-2, #card-3{
+      padding-left: 0 !important;
+    }
+
+  }
