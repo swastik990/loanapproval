@@ -106,7 +106,15 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Login', style: TextStyle(color: Colors.white)),
-          backgroundColor: Color(0xFF13136A),
+          flexibleSpace: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], // Gradient colors
+                                begin: Alignment.bottomRight, // Start from top-left
+                                end: Alignment.topLeft, // End at bottom-right
+                              ),
+                            ),
+                          ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
@@ -180,10 +188,16 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      'lib/assets/loan_approval.png', // Ensure this path is correct
-                      height: 200,
-                    ),
+                    ClipRRect(
+  borderRadius: BorderRadius.circular(16.0), // Adjust the radius as needed
+  child: Image.asset(
+    'lib/assets/homebanner.png', // Ensure this path is correct
+    height: 200,
+    width: 200, // Optional: Set width if needed
+    fit: BoxFit.cover, // Optional: Adjust how the image fits
+  ),
+),
+
                     SizedBox(height: 20),
                     Text(
                       'Welcome!',

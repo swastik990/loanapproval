@@ -255,7 +255,7 @@ class HomePageContent extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(width: 10),
-                              Text('Hi ${user.firstName}', style: TextStyle(color: Colors.white)),
+                              Text('Welcome ${user.firstName}', style: TextStyle(color: Colors.white)),
                             ],
                           ),
                           // actions: [

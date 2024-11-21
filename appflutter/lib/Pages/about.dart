@@ -85,9 +85,25 @@ class _AboutUsPageState extends State<AboutUsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+   return SafeArea(
+      child: Scaffold(
       appBar: AppBar(
-        title: Text('About Us'),
+        title: Text('About Us',  style: TextStyle(color: Colors.white)),
+        flexibleSpace: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], // Gradient colors
+                                begin: Alignment.bottomRight, // Start from top-left
+                                end: Alignment.topLeft, // End at bottom-right
+                              ),
+                            ),
+                          ),
+                          leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -117,7 +133,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
         // Image Section
         item['pictures'] != null
             ? Image.network(
-                'http://10.0.2.2:8000${item['pictures']}', // Prepend base URL
+                'http://192.168.1.69:8000${item['pictures']}', // Prepend base URL
                 height: 200,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -150,6 +166,6 @@ class _AboutUsPageState extends State<AboutUsPage> {
 },
 
                 ),
-    );
+    ));
   }
 }

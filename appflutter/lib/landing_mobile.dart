@@ -53,7 +53,15 @@ class _LandingPageState extends State<LandingPage> {
               ),
             ],
           ),
-          backgroundColor: Color(0xFF13136A),
+          flexibleSpace: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], // Gradient colors
+                                begin: Alignment.bottomRight, // Start from top-left
+                                end: Alignment.topLeft, // End at bottom-right
+                              ),
+                            ),
+                          ),
           actions: [
             PopupMenuButton<int>(
               icon: Icon(Icons.info_outline, color: Colors.white, size: 40),

@@ -133,7 +133,15 @@ class _SignupPageState extends State<SignupPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign Up', style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFF13136A),
+        flexibleSpace: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], // Gradient colors
+                                begin: Alignment.bottomRight, // Start from top-left
+                                end: Alignment.topLeft, // End at bottom-right
+                              ),
+                            ),
+                          ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
