@@ -102,8 +102,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'loanapprovaldb',
         'USER': 'root',
-        # 'PASSWORD': 'Infiniti@111',
-        'PASSWORD': 'binesh9845998009',
+        'PASSWORD': 'Infiniti@111',
+        # 'PASSWORD': 'binesh9845998009',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }

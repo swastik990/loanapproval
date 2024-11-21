@@ -9,11 +9,12 @@ from django.conf.urls.static import static
 urlpatterns = [
   #web routes
     path('landing/', views.landing_page, name='landing_page'),
-    path('home/', views.home_page, name='home'),
     path('register/', views.user_action, name='user_action'),
-    path('success/', views.success_page, name='success'),
-    path('form/', views.predictor, name = 'form'),
+    path('home/', views.home_page, name='home'),
+    path('aboutus/', views.aboutus_page, name = 'aboutus'),
+    path('feedback/', views.feedback_page, name = 'feedback'),
     path('settings/', views.settings_page, name='settings'),
+    path('form/', views.predictor, name = 'form'),
     path('formInfo/', views.formInfo, name = 'formInfo'),
 
     path('logout/', LogoutView.as_view(next_page='register_login'), name='logout'),

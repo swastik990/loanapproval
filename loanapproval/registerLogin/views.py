@@ -1,22 +1,18 @@
 from venv import logger
 from django.shortcuts import render, redirect
-import mysql.connector as sql
 from rest_framework import status
 from django.views.decorators.csrf import csrf_protect
 from joblib import load
 import numpy as np
 import pandas as pd
-from rest_framework.parsers import MultiPartParser, FormParser
-from sklearn.preprocessing import OneHotEncoder
 from rest_framework.response import Response
-from django.views.decorators.csrf import csrf_exempt
 from .models import *
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserLoginSerializer, UserUpdateSerializer,ChangePasswordSerializer, LoanStatusSerializer,AboutUsSerializer,FAQSerializer
+from .serializers import UserLoginSerializer, UserSignupSerializer
 from rest_framework.views import APIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -35,7 +31,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 import pandas as pd
-from .models import Application, User, TermsAndConditions
+from .models import Application, User
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -43,8 +39,27 @@ from rest_framework import status
 from .models import Application
 import pandas as pd
 from rest_framework.permissions import IsAuthenticated
-from .models import Feedback,FAQ
-from .serializers import FeedbackSerializer,TermsAndConditionsSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import update_session_auth_hash
+
+
+#for password validation
+from django.core.exceptions import ValidationError
+import re
+
+def validate_password_strength(password):
+    # Ensure the password contains at least one uppercase letter, one lowercase letter, and one number
+    if not re.search(r'[A-Z]', password):  # Uppercase letter
+        raise ValidationError("Password must contain at least one uppercase letter.")
+    if not re.search(r'[a-z]', password):  # Lowercase letter
+        raise ValidationError("Password must contain at least one lowercase letter.")
+    if not re.search(r'[0-9]', password):  # Number
+        raise ValidationError("Password must contain at least one number.")
+    if len(password) < 8:
+        raise ValidationError("Password must be at least 8 characters long.")
+    return password
+
 
 User = get_user_model()
 
@@ -63,6 +78,7 @@ def user_action(request):
     # Initialize context for separate messages
     context = {
         'signup_messages': [],
+        'signup_messages_success': [],
         'signin_messages': []
     }
 
@@ -77,11 +93,18 @@ def user_action(request):
             phone = request.POST.get('phone', '').strip()
             password = request.POST.get('Rpassword', '').strip()
             agree_terms = request.POST.get('agree_terms') == 'on'
-
+            
             try:
                 # Check if email is already registered
                 if User.objects.filter(email=email).exists():
                     context['signup_messages'].append("An account with this email already exists.")
+                    return render(request, 'registerLogin.html', context)
+                
+                # make password strong
+                try:
+                    validate_password_strength(password)
+                except ValidationError as e:
+                    context['signup_messages'].append(str(e))
                     return render(request, 'registerLogin.html', context)
 
                 # Create and save the user
@@ -93,13 +116,16 @@ def user_action(request):
                     dob=dob,
                     password=password,
                     agree_terms=agree_terms,
+                    check_in_time=pd.Timestamp.now()  # Store current time as submission time
                 )
                 user.save()
-                context['signin_messages'].append("Account created successfully!")
+                context['signup_messages_success'].append("Account created successfully! Now Sign In.")
+                return render(request, 'registerLogin.html', context)
+
 
             except Exception as e:
                 print(f"Error during signup: {e}")
-                context['signup_messages'].append("An error occurred while creating your account. Please try again.")
+                context['signup_messages'].append("An error occurred. Please try again.")
                 return render(request, 'registerLogin.html', context)
 
         elif action == 'SignIn':
@@ -116,7 +142,7 @@ def user_action(request):
             if user:
         # If authentication is successful, log the user in
                 login(request, user)
-                context['signin_messages'].append("Logged in successfully!")
+                messages.success(request, "You've Successfully Logged In!")
                 return redirect('home')  # Redirect to the home page
             else:
         # If authentication fails, show a generic error message
@@ -128,8 +154,11 @@ def user_action(request):
 
 
 
-def success_page(request):
-    return render(request, 'success.html')
+def aboutus_page(request):
+    return render(request, 'aboutus.html')
+
+def feedback_page(request):
+    return render(request, 'feedback.html')
 
 #For Home Page
 @login_required
@@ -141,18 +170,84 @@ def home_page(request):
     return render(request, 'homepage.html')
 
 #For Settings Page
+@login_required
 @csrf_protect
 def settings_page(request):
+    # Display user's information in the settings page
     user = request.user
     context = {
-        'profile_picture': user.pictures.url if user.pictures.url else 'https://via.placeholder.com/130',  # Default image if no profile picture
+        'profile_picture': user.pictures.url if user.pictures else None,  # Default image if no profile picture
         'first_name': user.first_name,
         'last_name': user.last_name,
         'email': user.email,
         'phone': user.phone,
         'dob': user.dob,
-    }  
+    }
+
+    # Handle form submission for updating user information
+    if request.method == "POST":
+        if 'update' in request.POST:
+
+            # Update fields individually if provided
+            first_name = request.POST.get('first_name')
+            if first_name:
+                user.first_name = first_name
+
+            last_name = request.POST.get('last_name')
+            if last_name:
+                user.last_name = last_name
+
+            email = request.POST.get('email')
+            if email:
+                user.email = email
+
+            phone = request.POST.get('phone')
+            if phone:
+                user.phone = phone
+
+            dob = request.POST.get('dob')
+            if dob:
+                user.dob = dob
+
+            # Handle profile picture upload
+            if 'pictures' in request.FILES:
+                user.pictures = request.FILES['pictures']
+
+            # Save the updated user object
+            user.save()
+
+            # Add a success message
+            messages.success(request, "Account information has been updated successfully.")
+
+            return redirect('settings')
+
+        elif 'change' in request.POST:
+            current_password = request.POST.get('currentPassword')
+            new_password = request.POST.get('newPassword')
+            confirm_password = request.POST.get('confirmPassword')
+
+            # Validate current password
+            if not check_password(current_password, request.user.password):
+                messages.error(request, "Current password is incorrect.")
+                return redirect('settings')
+
+            # Validate new password and confirmation
+            if new_password != confirm_password:
+                messages.error(request, "Passwords do not match.")
+                return redirect('settings')
+
+            # Update the password
+            user.set_password(new_password)
+            user.save()
+
+            # Update the session to avoid logout
+            update_session_auth_hash(request, user)
+            messages.success(request, "Your password has been updated successfully.")
+            return redirect('settings')
+
+    # Render the settings page with the updated context
     return render(request, 'settings.html', context)
+
 
 
 
@@ -235,6 +330,7 @@ model = load('./predictionModel/model.joblib')
 
 def predictor(request):
     return render(request, 'form.html')
+
 @login_required
 def formInfo(request):
     try:
@@ -322,7 +418,6 @@ def formInfo(request):
 def form_view(request):
     return render(request, 'form.html')
 
-
 # mobile loan approval System
 model1= load('./predictionModel/model.pkl')
 
@@ -383,17 +478,17 @@ def loan_prediction(request):
         # Create the application instance and save it
         application = Application(
             user=user,
-             loan_amount= loan_amount,
-             loan_terms= loan_term,
-             credit_score= cibil_score,
-             no_of_dependents= no_of_dependents,
-             education= education_bool,
-             self_employed= self_employed_bool,
-             annual_income= annual_income,
-             residential_asset= residential_asset,
-             commercial_asset= commercial_asset,
-             luxury_asset= luxury_asset,
-             bank_asset= bank_asset,
+            loan_amount= loan_amount,
+            loan_terms= loan_term,
+            credit_score= cibil_score,
+            no_of_dependents= no_of_dependents,
+            education= education_bool,
+            self_employed= self_employed_bool,
+            annual_income= annual_income,
+            residential_asset= residential_asset,
+            commercial_asset= commercial_asset,
+            luxury_asset= luxury_asset,
+            bank_asset= bank_asset,
             submitted_time=pd.Timestamp.now()
         )
         application.save()
