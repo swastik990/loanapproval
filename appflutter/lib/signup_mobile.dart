@@ -56,6 +56,7 @@ class _SignupPageState extends State<SignupPage> {
     password: '',
   );
 
+ bool _isPasswordVisible = false;
   void _signup() async {
     if (_formKey.currentState!.validate() && _user.agreeTerms) {
       ApiService apiService = ApiService();
@@ -86,7 +87,7 @@ class _SignupPageState extends State<SignupPage> {
               Navigator.of(context).pop();
               _navigateToLogin(); // Navigate to login after closing the dialog
             },
-            child: Text('Login'),
+            child: Text('Login', style: TextStyle(color: Colors.black)),
           ),
         ],
       ),
@@ -113,7 +114,7 @@ class _SignupPageState extends State<SignupPage> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('OK'),
+            child: Text('OK',style: TextStyle(color: Colors.black)),
           ),
         ],
       ),
@@ -132,27 +133,35 @@ class _SignupPageState extends State<SignupPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign Up', style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFF13136A),
+        flexibleSpace: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], // Gradient colors
+                                begin: Alignment.bottomRight, // Start from top-left
+                                end: Alignment.topLeft, // End at bottom-right
+                              ),
+                            ),
+                          ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.info, color: Colors.white),
-            onPressed: () {
-              // Show information dialog
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.settings, color: Colors.white),
-            onPressed: () {
-              // Show settings page
-            },
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.info, color: Colors.white),
+        //     onPressed: () {
+        //       // Show information dialog
+        //     },
+        //   ),
+        //   IconButton(
+        //     icon: Icon(Icons.settings, color: Colors.white),
+        //     onPressed: () {
+        //       // Show settings page
+        //     },
+        //   ),r
+        // ],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -314,8 +323,22 @@ class _SignupPageState extends State<SignupPage> {
                         borderSide: BorderSide(color: Color(0xFF13136A)),
                       ),
                       border: OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Color(0xFF13136A),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      ),
                     ),
-                    obscureText: true,
+                    
+                    obscureText: !_isPasswordVisible, 
                     onChanged: (value) {
                       setState(() {
                         _user.password = value;

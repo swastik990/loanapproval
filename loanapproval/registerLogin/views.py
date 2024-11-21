@@ -1,15 +1,11 @@
 from venv import logger
 from django.shortcuts import render, redirect
-import mysql.connector as sql
 from rest_framework import status
 from django.views.decorators.csrf import csrf_protect
 from joblib import load
 import numpy as np
 import pandas as pd
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder
 from rest_framework.response import Response
-from django.views.decorators.csrf import csrf_exempt
 from .models import *
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate, login as auth_login
@@ -43,6 +39,27 @@ from rest_framework import status
 from .models import Application
 import pandas as pd
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import update_session_auth_hash
+
+
+#for password validation
+from django.core.exceptions import ValidationError
+import re
+
+def validate_password_strength(password):
+    # Ensure the password contains at least one uppercase letter, one lowercase letter, and one number
+    if not re.search(r'[A-Z]', password):  # Uppercase letter
+        raise ValidationError("Password must contain at least one uppercase letter.")
+    if not re.search(r'[a-z]', password):  # Lowercase letter
+        raise ValidationError("Password must contain at least one lowercase letter.")
+    if not re.search(r'[0-9]', password):  # Number
+        raise ValidationError("Password must contain at least one number.")
+    if len(password) < 8:
+        raise ValidationError("Password must be at least 8 characters long.")
+    return password
+
 
 User = get_user_model()
 
@@ -61,6 +78,7 @@ def user_action(request):
     # Initialize context for separate messages
     context = {
         'signup_messages': [],
+        'signup_messages_success': [],
         'signin_messages': []
     }
 
@@ -75,11 +93,18 @@ def user_action(request):
             phone = request.POST.get('phone', '').strip()
             password = request.POST.get('Rpassword', '').strip()
             agree_terms = request.POST.get('agree_terms') == 'on'
-
+            
             try:
                 # Check if email is already registered
                 if User.objects.filter(email=email).exists():
                     context['signup_messages'].append("An account with this email already exists.")
+                    return render(request, 'registerLogin.html', context)
+                
+                # make password strong
+                try:
+                    validate_password_strength(password)
+                except ValidationError as e:
+                    context['signup_messages'].append(str(e))
                     return render(request, 'registerLogin.html', context)
 
                 # Create and save the user
@@ -91,13 +116,16 @@ def user_action(request):
                     dob=dob,
                     password=password,
                     agree_terms=agree_terms,
+                    check_in_time=pd.Timestamp.now()  # Store current time as submission time
                 )
                 user.save()
-                context['signin_messages'].append("Account created successfully!")
+                context['signup_messages_success'].append("Account created successfully! Now Sign In.")
+                return render(request, 'registerLogin.html', context)
+
 
             except Exception as e:
                 print(f"Error during signup: {e}")
-                context['signup_messages'].append("An error occurred while creating your account. Please try again.")
+                context['signup_messages'].append("An error occurred. Please try again.")
                 return render(request, 'registerLogin.html', context)
 
         elif action == 'SignIn':
@@ -114,7 +142,7 @@ def user_action(request):
             if user:
         # If authentication is successful, log the user in
                 login(request, user)
-                context['signin_messages'].append("Logged in successfully!")
+                messages.success(request, "You've Successfully Logged In!")
                 return redirect('home')  # Redirect to the home page
             else:
         # If authentication fails, show a generic error message
@@ -126,8 +154,11 @@ def user_action(request):
 
 
 
-def success_page(request):
-    return render(request, 'success.html')
+def aboutus_page(request):
+    return render(request, 'aboutus.html')
+
+def feedback_page(request):
+    return render(request, 'feedback.html')
 
 #For Home Page
 @login_required
@@ -139,18 +170,84 @@ def home_page(request):
     return render(request, 'homepage.html')
 
 #For Settings Page
+@login_required
 @csrf_protect
 def settings_page(request):
+    # Display user's information in the settings page
     user = request.user
     context = {
-        'profile_picture': user.pictures.url if user.pictures.url else 'https://via.placeholder.com/130',  # Default image if no profile picture
+        'profile_picture': user.pictures.url if user.pictures else None,  # Default image if no profile picture
         'first_name': user.first_name,
         'last_name': user.last_name,
         'email': user.email,
         'phone': user.phone,
         'dob': user.dob,
-    }  
+    }
+
+    # Handle form submission for updating user information
+    if request.method == "POST":
+        if 'update' in request.POST:
+
+            # Update fields individually if provided
+            first_name = request.POST.get('first_name')
+            if first_name:
+                user.first_name = first_name
+
+            last_name = request.POST.get('last_name')
+            if last_name:
+                user.last_name = last_name
+
+            email = request.POST.get('email')
+            if email:
+                user.email = email
+
+            phone = request.POST.get('phone')
+            if phone:
+                user.phone = phone
+
+            dob = request.POST.get('dob')
+            if dob:
+                user.dob = dob
+
+            # Handle profile picture upload
+            if 'pictures' in request.FILES:
+                user.pictures = request.FILES['pictures']
+
+            # Save the updated user object
+            user.save()
+
+            # Add a success message
+            messages.success(request, "Account information has been updated successfully.")
+
+            return redirect('settings')
+
+        elif 'change' in request.POST:
+            current_password = request.POST.get('currentPassword')
+            new_password = request.POST.get('newPassword')
+            confirm_password = request.POST.get('confirmPassword')
+
+            # Validate current password
+            if not check_password(current_password, request.user.password):
+                messages.error(request, "Current password is incorrect.")
+                return redirect('settings')
+
+            # Validate new password and confirmation
+            if new_password != confirm_password:
+                messages.error(request, "Passwords do not match.")
+                return redirect('settings')
+
+            # Update the password
+            user.set_password(new_password)
+            user.save()
+
+            # Update the session to avoid logout
+            update_session_auth_hash(request, user)
+            messages.success(request, "Your password has been updated successfully.")
+            return redirect('settings')
+
+    # Render the settings page with the updated context
     return render(request, 'settings.html', context)
+
 
 
 
@@ -233,6 +330,7 @@ model = load('./predictionModel/model.joblib')
 
 def predictor(request):
     return render(request, 'form.html')
+
 @login_required
 def formInfo(request):
     try:
@@ -398,6 +496,13 @@ def loan_prediction(request):
         # Prediction (ensure `model` is defined and imported)
         prediction = model1.predict_proba(input_data)[:, 1]
         threshold = 0.5
+        loan_status = LoanStatus(
+            user=request.user,
+            application=application,
+            status=prediction[0] > threshold  # If probability > threshold, approve
+        )
+        loan_status.save()
+
         prediction_text = (
             "Congratulations, your loan is approved!" if prediction[0] > threshold
             else "Sorry, your loan application is rejected."
@@ -415,3 +520,101 @@ def loan_prediction(request):
         return Response({'error': f'Invalid data: {e}'}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         return Response({'error': f'An unexpected error occurred: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+# moblie feedback
+
+class FeedbackView(APIView):
+    permission_classes = [IsAuthenticated]  # Require authentication
+
+    def post(self, request):
+        serializer = FeedbackSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()  # Save feedback
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+# mobile user profile
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]  # Add multipart parser for handling file uploads
+
+    def get(self, request):
+        # Retrieve the current user's profile data
+        serializer = UserUpdateSerializer(request.user, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        # Update the user's profile data, including the picture if provided
+        serializer = UserUpdateSerializer(request.user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Profile updated successfully."}, status=status.HTTP_200_OK)
+    
+
+# change Password   
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        print(request.data) 
+        serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
+
+        if serializer.is_valid():
+            # Check if the old password matches
+            if not user.check_password(serializer.validated_data['old_password']):
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Set the new password
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+
+            return Response({"message": "Password updated successfully."}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+# loanhistorymobile  
+class LoanHistoryView(APIView):
+    permission_classes = [IsAuthenticated]  # Ensures only logged-in users can access
+
+    def get(self, request):
+        user = request.user        
+        loan_statuses = LoanStatus.objects.filter(user=user)   # Fetch the user's loan history      
+        serializer = LoanStatusSerializer(loan_statuses, many=True)  # Serialize the data
+        return Response(serializer.data)
+    
+# AboutUSmobile 
+class AboutUsView(APIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            about_us_objects = AboutUs.objects.all()
+            if not about_us_objects.exists():
+                return Response(
+                    {"message": "No About Us data available."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            serializer = AboutUsSerializer(about_us_objects, many=True)
+            return Response(
+                {"message": "Data fetched successfully!", "data": serializer.data},
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return Response(
+                {"message": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+#mobile frequently ask question
+class FAQView(APIView):
+    def get(self, request):
+        faqs = FAQ.objects.all()  # Fetch all FAQs
+        serializer = FAQSerializer(faqs, many=True)
+        return Response(serializer.data)
+
+#mobile terms api    
+class TermsAndConditionsView(APIView):
+    def get(self, request):
+        terms = TermsAndConditions.objects.all()  # Fetch all terms and conditions
+        serializer = TermsAndConditionsSerializer(terms, many=True)
+        return Response(serializer.data)

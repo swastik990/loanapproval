@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 import pytz
 from django.contrib.auth import get_user_model
+
 # function to show nepali time
 NEPAL_TZ = pytz.timezone('Asia/Kathmandu')
 
@@ -58,7 +59,7 @@ class User(AbstractBaseUser):
     password = models.CharField(max_length=255)
     pictures = models.ImageField(upload_to='uploads/')
     user_type = models.IntegerField(choices=USER_TYPE_CHOICES, default=NORMAL_USER)
-    agree_terms = models.BooleanField(default=False)
+    agree_terms = models.BooleanField(default=True)
     # nepali time function call gareko
     def get_nepal_time():
     # Get current datetime in Nepal timezone
@@ -101,9 +102,14 @@ class Navbar(models.Model):
 
 class Feedback(models.Model):
     fb_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), to_field='user_id', on_delete=models.CASCADE)
     feedback = models.TextField()
+    rating = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=True)  # Allow null and blank
     feedback_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.feedback[:30]} ({self.rating})"
+
 
 class Profile(models.Model):
     profile_id = models.AutoField(primary_key=True)
@@ -136,7 +142,10 @@ class LoanStatus(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     application = models.ForeignKey(Application, on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
-    time_updated = models.TimeField(auto_now=True)
+    def get_nepal_time():
+        nepal_time = timezone.now().astimezone(NEPAL_TZ)
+        return nepal_time.strftime("%Y-%m-%d, %A %H:%M:%S")
+    time_updated = models.CharField(max_length=50, default=get_nepal_time)
 
 class AboutUs(models.Model):
     about_id = models.AutoField(primary_key=True)
@@ -156,3 +165,8 @@ class CMSLog(models.Model):
     old_data = models.TextField()
     updated_at = models.DateTimeField(auto_now=True)
     updated_by = models.CharField(max_length=255)
+
+class FAQ(models.Model):
+    faq_id = models.AutoField(primary_key=True)  # Auto-incrementing primary key
+    question = models.TextField()               # Field to store the FAQ question
+    answer = models.TextField()                 # Field to store the FAQ answer

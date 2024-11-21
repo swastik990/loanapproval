@@ -18,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isPasswordVisible = false; // Boolean to toggle password visibility
 
   @override
   void dispose() {
@@ -72,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('OK'),
+            child: Text('OK', style: TextStyle(color: Color(0xFF13136A))),
           ),
         ],
       ),
@@ -97,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     // Change status bar color
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Color(0xFF13136A), // Adjusted color for visibility
+      statusBarColor: Color.fromARGB(255, 0, 0, 0), // Adjusted color for visibility
       statusBarIconBrightness: Brightness.light, // For dark status bar background
     ));
 
@@ -105,70 +106,78 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Login', style: TextStyle(color: Colors.white)),
-          backgroundColor: Color(0xFF13136A),
+          flexibleSpace: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], // Gradient colors
+                                begin: Alignment.bottomRight, // Start from top-left
+                                end: Alignment.topLeft, // End at bottom-right
+                              ),
+                            ),
+                          ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
-          actions: [
-            PopupMenuButton<int>(
-              icon: Icon(Icons.info_outline, color: Colors.white, size: 40),
-              onSelected: (value) {
-                switch (value) {
-                  case 0:
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('About Us'),
-                          content: Text('Information about the Loan Approval System by GROUP 30.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('Close'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    break;
-                  case 1:
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('This Page'),
-                          content: Text('This is the Login page.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('Close'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    break;
-                }
-              },
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: 0,
-                  child: Text('About Us'),
-                ),
-                const PopupMenuItem(
-                  value: 1,
-                  child: Text('This Page'),
-                ),
-              ],
-            ),
-          ],
+          // actions: [
+          //   PopupMenuButton<int>(
+          //     icon: Icon(Icons.info_outline, color: Colors.white, size: 40),
+          //     onSelected: (value) {
+          //       switch (value) {
+          //         case 0:
+          //           showDialog(
+          //             context: context,
+          //             builder: (context) {
+          //               return AlertDialog(
+          //                 title: Text('About Us'),
+          //                 content: Text('Information about the Loan Approval System by GROUP 30.'),
+          //                 actions: [
+          //                   TextButton(
+          //                     onPressed: () {
+          //                       Navigator.of(context).pop();
+          //                     },
+          //                     child: Text('Close',style: TextStyle(color: Colors.black)),
+          //                   ),
+          //                 ],
+          //               );
+          //             },
+          //           );
+          //           break;
+          //         case 1:
+          //           showDialog(
+          //             context: context,
+          //             builder: (context) {
+          //               return AlertDialog(
+          //                 title: Text('This Page'),
+          //                 content: Text('This is the Login page.'),
+          //                 actions: [
+          //                   TextButton(
+          //                     onPressed: () {
+          //                       Navigator.of(context).pop();
+          //                     },
+          //                     child: Text('Close'),
+          //                   ),
+          //                 ],
+          //               );
+          //             },
+          //           );
+          //           break;
+          //       }
+          //     },
+          //     itemBuilder: (context) => [
+          //       const PopupMenuItem(
+          //         value: 0,
+          //         child: Text('About Us'),
+          //       ),
+          //       const PopupMenuItem(
+          //         value: 1,
+          //         child: Text('This Page'),
+          //       ),
+          //     ],
+          //   ),
+          // ],
         ),
         body: Center(
           child: SingleChildScrollView(
@@ -179,10 +188,16 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      'lib/assets/loan_approval.png', // Ensure this path is correct
-                      height: 200,
-                    ),
+                    ClipRRect(
+  borderRadius: BorderRadius.circular(16.0), // Adjust the radius as needed
+  child: Image.asset(
+    'lib/assets/homebanner.png', // Ensure this path is correct
+    height: 200,
+    width: 200, // Optional: Set width if needed
+    fit: BoxFit.cover, // Optional: Adjust how the image fits
+  ),
+),
+
                     SizedBox(height: 20),
                     Text(
                       'Welcome!',
@@ -213,6 +228,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 20),
                     TextFormField(
                       controller: _passwordController,
+                      obscureText: !_isPasswordVisible, // Toggle visibility based on boolean
                       decoration: InputDecoration(
                         labelText: 'Password',
                         labelStyle: TextStyle(color: Colors.black),
@@ -220,8 +236,20 @@ class _LoginPageState extends State<LoginPage> {
                           borderSide: BorderSide(color: Color(0xFF13136A)),
                         ),
                         border: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility // Show password icon
+                                : Icons.visibility_off, // Hide password icon
+                            color: Color(0xFF13136A),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible; // Toggle visibility
+                            });
+                          },
+                        ),
                       ),
-                      obscureText: true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your password';
@@ -270,10 +298,10 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: _navigateToSignup,
                       child: Text('Don\'t have an account? Sign Up', style: TextStyle(color: Color(0xFF13136A))),
                     ),
-                    TextButton(
-                      onPressed: _navigateToForgotPassword,
-                      child: Text('Forgot Password?', style: TextStyle(color: Color(0xFF13136A))),
-                    ),
+                    // TextButton(
+                    //   onPressed: _navigateToForgotPassword,
+                    //   child: Text('Forgot Password?', style: TextStyle(color: Color(0xFF13136A))),
+                    // ),
                   ],
                 ),
               ),

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart'; // Import the SharedPreferences package
-
+import 'homepage.dart';
 
 
 class LoanApplication {
@@ -203,7 +203,10 @@ Future<void> _submitForm() async {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => HomePage()),
+                                  );
             },
             child: Text('Close'),
           ),
@@ -214,13 +217,23 @@ Future<void> _submitForm() async {
 
 @override
 Widget build(BuildContext context) {
-  return Scaffold(
+  return SafeArea(
+      child: Scaffold(
     appBar: AppBar(
       title: Text(
         'Loan Application Form',
         style: TextStyle(color: Colors.white),
+        
       ),
-      backgroundColor: Color(0xFF13136A),
+      flexibleSpace: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], // Gradient colors
+                                begin: Alignment.bottomRight, // Start from top-left
+                                end: Alignment.topLeft, // End at bottom-right
+                              ),
+                            ),
+                          ),
       leading: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () {
@@ -284,7 +297,7 @@ Widget build(BuildContext context) {
         },
       ),
     ),
-  );
+  ));
 }
 
 
