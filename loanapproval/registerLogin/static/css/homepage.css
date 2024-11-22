@@ -1,5 +1,6 @@
 body {
   font-family: Arial, sans-serif;
+  padding-top: 85px !important;
 }
 .homepage img {
     margin-left: 50px;
@@ -28,6 +29,9 @@ body {
   justify-content: space-between; 
   align-items: center; /* Center vertically */
   background: linear-gradient( #062d9ad8, #101550 );
+  position: fixed !important;
+  overflow: hidden !important;
+
 }
 
 .navbar-brand {
@@ -160,8 +164,11 @@ body {
   padding-bottom: 20px !important;
 }
 
+.card-body{
+  box-shadow: 0px 0px 5px 0px rgb(0, 0, 0) !important;
+}
+
 #section{
-  
   display: flex;
   padding-top: 50px !important;
   background: linear-gradient( #FFFFFF, #dfdfdf );
