@@ -6,8 +6,8 @@
 }
 
 body {
-    background-color: #a8c0ff;
-    background: linear-gradient(to right, #f8ffae, #1a49be);
+    background-color: #d7d7d7;
+    /* background: linear-gradient(to right, #f8ffae, #1a49be); */
     display: flex;
     align-items: center;
     justify-content: center;

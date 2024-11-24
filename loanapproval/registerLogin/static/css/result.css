@@ -1,6 +1,6 @@
 
         body {
-            color: #f1faee;
+            background-color: #e3e3e3;
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
@@ -11,7 +11,7 @@
         }
 
         .container {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(255, 255, 255, 0.7);
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
@@ -23,7 +23,7 @@
             font-weight: 700;
             margin-bottom: 20px;
             text-transform: uppercase;
-            color: #a8dadc;
+            color: #0546f9fa;
         }
 
         #info {
@@ -37,7 +37,7 @@
         }
 
         .btn {
-            background: linear-gradient(90deg, #457b9d, #1d3557);
+            background: linear-gradient(90deg, #5dceff, #227bff);
             border: none;
             color: white;
             font-size: 1rem;
@@ -47,10 +47,11 @@
             border-radius: 30px;
             transition: all 0.3s ease;
             width: auto;
+            margin: 20px;
         }
 
         .btn:hover {
-            background: linear-gradient(90deg, #1d3557, #457b9d);
+            background: linear-gradient(90deg, #144180, #28adff);
             transform: scale(1.1);
         }
 

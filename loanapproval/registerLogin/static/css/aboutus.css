@@ -1,5 +1,13 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: Arial, sans-serif;
+    padding-top: 85px; /* Adjust to the navbar's height */
+  
+  
 }
 .about-us img {
     max-width: 100%;
@@ -19,12 +27,12 @@ body {
 /* Style the navbar */
 
 #navbar1 {
- 
   padding: 15px 50px; 
-  display: flex;
-  justify-content: space-between; 
-  align-items: center; 
   background: linear-gradient( #062d9ad8, #101550 );
+  position: fixed !important;
+  width: 100%;
+  top: 0;
+  overflow: hidden !important;
 }
 
 .navbar-brand {
@@ -73,11 +81,6 @@ body {
   color: rgba(245, 245, 245, 0.778) !important;
 }
 
-.nav-link.active {
-  color: #ffcc00 !important;
-  
-}
-
 .nav-link:hover {
   color: #ffcc00; 
 }
@@ -107,6 +110,11 @@ footer h5 {
 #section{
   padding-top: 50px !important;
   background: linear-gradient( #FFFFFF, #2f3ccd );
+  
+}
+
+.custom-box{
+  box-shadow: 0px 0px 5px 0px rgb(0, 0, 0) !important;
 }
 
 
@@ -143,6 +151,14 @@ footer h5 {
     padding-left: 5px !important;
     padding-right: 5px !important;
   }
+
+  .custom-box{
+    margin-bottom: 35px !important;
+  }
+
+  #last-box{
+    margin-bottom: 0px !important;
+  }
 }
 
 @media (max-width: 445px) {
@@ -174,7 +190,14 @@ footer h5 {
   #description {
     margin-top: 10px !important;
   }
+
+  #about-h2{
+    margin-top: 10px !important;
+  }
+
 }
+
+
 
 @media (max-width: 700px) {
   .navbar-brand{
@@ -188,6 +211,7 @@ footer h5 {
     padding: 5px !important;
 
   }
+  
 }
 
 

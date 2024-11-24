@@ -18,7 +18,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
-from django.contrib.auth import login 
+from django.contrib.auth import login
+from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
@@ -152,13 +153,33 @@ def user_action(request):
     # Default rendering for GET requests
     return render(request, 'registerLogin.html', context)
 
-
+def logout_view(request):
+    logout(request)
+    return redirect('landing_page')
 
 def aboutus_page(request):
-    return render(request, 'aboutus.html')
+    about_us = AboutUs.objects.first()  # Assuming you only have one "About Us" entry
+    return render(request, 'aboutus.html', {'about_us': about_us})
 
+@login_required
 def feedback_page(request):
+    if request.method == 'POST':
+        
+        rating = request.POST.get('rating')
+        feedback = request.POST.get('feedback')
+        
+        if rating and feedback:
+            feedback_instance = Feedback(user=request.user, rating=rating, feedback=feedback)
+            feedback_instance.save()
+            messages.success(request, 'Thank you for your feedback!')
+            return redirect('feedback')
+        else:
+            messages.error(request, 'Please provide both rating and feedback.')
+        
     return render(request, 'feedback.html')
+
+
+
 
 #For Home Page
 @login_required

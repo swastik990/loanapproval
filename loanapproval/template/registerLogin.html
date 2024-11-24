@@ -51,6 +51,14 @@ data-signin-messages="{{ signin_messages|length }}">
             <span>Use your email and password</span>
             <input type="email" name="Lemail" placeholder="Email" required>
             <input type="password" name="Lpassword" placeholder="Password" required>
+
+            {% if signup_messages_success %}
+            <ul>
+                {% for message in signup_messages_success %}
+                <li style="color: rgb(0, 255, 17); font-size: 14px; font-weight: bold; margin-top: 10px;">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
            
         <!-- SignIn Messages -->
         {% if signin_messages %}

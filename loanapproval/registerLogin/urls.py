@@ -17,7 +17,7 @@ urlpatterns = [
     path('form/', views.predictor, name = 'form'),
     path('formInfo/', views.formInfo, name = 'formInfo'),
 
-    path('logout/', LogoutView.as_view(next_page='register_login'), name='logout'),
+    path('logout/', views.logout_view, name='logout'),
     # path('form/', form_view, name='form'), 
 
 

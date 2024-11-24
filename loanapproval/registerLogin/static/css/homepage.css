@@ -1,5 +1,6 @@
 body {
   font-family: Arial, sans-serif;
+  padding-top: 85px !important;
 }
 .homepage img {
     margin-left: 50px;
@@ -28,6 +29,11 @@ body {
   justify-content: space-between; 
   align-items: center; /* Center vertically */
   background: linear-gradient( #062d9ad8, #101550 );
+  position: fixed !important;
+  overflow: hidden !important;
+  width: 100%;
+  top: 0 !important;
+
 }
 
 .navbar-brand {
@@ -138,12 +144,33 @@ body {
   color: rgb(13, 13, 228) !important;
 }
 
+
+.logout-icon-btn img {
+  background: none;
+  border: none;
+  display: inline-block;
+  margin-top: 10px;
+  margin-left: 20px;;
+  filter: invert(22%) sepia(93%) saturate(5438%) hue-rotate(0deg) brightness(100%) contrast(101%);
+}
+
+
+.logout-icon-btn {
+  background: none; /* Ensure the button itself has no background */
+  border: none;     /* Remove border from the button */
+  cursor: pointer;
+}
+
+
 #card-section{
   padding-bottom: 20px !important;
 }
 
+.box-shadow{
+  box-shadow: 0px 0px 5px 0px rgb(0, 0, 0) !important;
+}
+
 #section{
-  
   display: flex;
   padding-top: 50px !important;
   background: linear-gradient( #FFFFFF, #dfdfdf );
