@@ -51,7 +51,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       return; // No token, exit function
     }
 
-    final url = Uri.parse('http://10.0.2.2:8000/feedback/'); // For Android emulator
+    final url = Uri.parse('http://10.0.2.2:8000/feed_back/'); // For Android emulator
 
     setState(() {
       isSubmitting = true; // Show the loader while submitting

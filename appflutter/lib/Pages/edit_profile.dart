@@ -75,7 +75,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
       var request = http.MultipartRequest(
         'PUT',
-        Uri.parse('http://10.0.2.2:8000/profile/'), // Replace with your API URL
+        Uri.parse('http://10.0.2.2:8000/profile/'), 
       );
       request.headers['Authorization'] = 'Bearer $token';
       request.fields['first_name'] = _firstNameController.text;
@@ -97,7 +97,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           SnackBar(content: Text('Profile updated successfully!')),
         );
         Navigator.pop(context);
-        Navigator.pop(context); // Close Edit Profile page
+        Navigator.pop(context); 
       } else {
         final error = await response.stream.bytesToString();
         ScaffoldMessenger.of(context).showSnackBar(

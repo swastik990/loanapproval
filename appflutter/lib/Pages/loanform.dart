@@ -102,7 +102,7 @@ class _LoanFormState extends State<LoanForm> {
           isActive: _activeStepIndex >= 0,
           title: Text(
                       'Personal Info',
-                      style: TextStyle(color: Colors.black), // Set the title color to black
+                      style: TextStyle(color: Colors.black), 
                     ),
           content: _buildGeneralInformationPage(),
         ),
@@ -111,7 +111,7 @@ class _LoanFormState extends State<LoanForm> {
           isActive: _activeStepIndex >= 1,
           title: Text(
                       'Apply For Loan',
-                      style: TextStyle(color: Colors.black), // Set the title color to black
+                      style: TextStyle(color: Colors.black), 
                     ),
           content: _buildLoanApplicationPage(),
         ),
@@ -120,7 +120,7 @@ class _LoanFormState extends State<LoanForm> {
           isActive: _activeStepIndex >= 2,
          title: Text(
                       'Asset Information',
-                      style: TextStyle(color: Colors.black), // Set the title color to black
+                      style: TextStyle(color: Colors.black), 
                     ),
           content: _buildAssetInformationPage(),
         ),

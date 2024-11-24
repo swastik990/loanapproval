@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isPasswordVisible = false; // Boolean to toggle password visibility
+  bool _isPasswordVisible = false; 
 
   @override
   void dispose() {
@@ -42,12 +42,12 @@ class _LoginPageState extends State<LoginPage> {
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
 
-          // Save authentication tokens
+          
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('refresh_token', data['refresh']);
           await prefs.setString('access_token', data['access']);
 
-          // Navigate to the home page
+          
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => HomePage()),
@@ -96,12 +96,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Change status bar color
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Color.fromARGB(255, 0, 0, 0), // Adjusted color for visibility
-      statusBarIconBrightness: Brightness.light, // For dark status bar background
+      statusBarColor: Color.fromARGB(255, 0, 0, 0), 
+      statusBarIconBrightness: Brightness.light, 
     ));
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -109,9 +107,9 @@ class _LoginPageState extends State<LoginPage> {
           flexibleSpace: Container(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], // Gradient colors
-                                begin: Alignment.bottomRight, // Start from top-left
-                                end: Alignment.topLeft, // End at bottom-right
+                                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], 
+                                begin: Alignment.bottomRight, 
+                                end: Alignment.topLeft, 
                               ),
                             ),
                           ),
@@ -121,63 +119,6 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.of(context).pop();
             },
           ),
-          // actions: [
-          //   PopupMenuButton<int>(
-          //     icon: Icon(Icons.info_outline, color: Colors.white, size: 40),
-          //     onSelected: (value) {
-          //       switch (value) {
-          //         case 0:
-          //           showDialog(
-          //             context: context,
-          //             builder: (context) {
-          //               return AlertDialog(
-          //                 title: Text('About Us'),
-          //                 content: Text('Information about the Loan Approval System by GROUP 30.'),
-          //                 actions: [
-          //                   TextButton(
-          //                     onPressed: () {
-          //                       Navigator.of(context).pop();
-          //                     },
-          //                     child: Text('Close',style: TextStyle(color: Colors.black)),
-          //                   ),
-          //                 ],
-          //               );
-          //             },
-          //           );
-          //           break;
-          //         case 1:
-          //           showDialog(
-          //             context: context,
-          //             builder: (context) {
-          //               return AlertDialog(
-          //                 title: Text('This Page'),
-          //                 content: Text('This is the Login page.'),
-          //                 actions: [
-          //                   TextButton(
-          //                     onPressed: () {
-          //                       Navigator.of(context).pop();
-          //                     },
-          //                     child: Text('Close'),
-          //                   ),
-          //                 ],
-          //               );
-          //             },
-          //           );
-          //           break;
-          //       }
-          //     },
-          //     itemBuilder: (context) => [
-          //       const PopupMenuItem(
-          //         value: 0,
-          //         child: Text('About Us'),
-          //       ),
-          //       const PopupMenuItem(
-          //         value: 1,
-          //         child: Text('This Page'),
-          //       ),
-          //     ],
-          //   ),
-          // ],
         ),
         body: Center(
           child: SingleChildScrollView(
@@ -189,15 +130,14 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ClipRRect(
-  borderRadius: BorderRadius.circular(16.0), // Adjust the radius as needed
+  borderRadius: BorderRadius.circular(16.0), 
   child: Image.asset(
-    'lib/assets/homebanner.png', // Ensure this path is correct
+    'lib/assets/homebanner.png', 
     height: 200,
-    width: 200, // Optional: Set width if needed
-    fit: BoxFit.cover, // Optional: Adjust how the image fits
+    width: 200, 
+    fit: BoxFit.cover, 
   ),
 ),
-
                     SizedBox(height: 20),
                     Text(
                       'Welcome!',
@@ -228,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 20),
                     TextFormField(
                       controller: _passwordController,
-                      obscureText: !_isPasswordVisible, // Toggle visibility based on boolean
+                      obscureText: !_isPasswordVisible, 
                       decoration: InputDecoration(
                         labelText: 'Password',
                         labelStyle: TextStyle(color: Colors.black),
@@ -239,13 +179,13 @@ class _LoginPageState extends State<LoginPage> {
                         suffixIcon: IconButton(
                           icon: Icon(
                             _isPasswordVisible
-                                ? Icons.visibility // Show password icon
-                                : Icons.visibility_off, // Hide password icon
+                                ? Icons.visibility 
+                                : Icons.visibility_off, 
                             color: Color(0xFF13136A),
                           ),
                           onPressed: () {
                             setState(() {
-                              _isPasswordVisible = !_isPasswordVisible; // Toggle visibility
+                              _isPasswordVisible = !_isPasswordVisible; 
                             });
                           },
                         ),
@@ -279,7 +219,7 @@ class _LoginPageState extends State<LoginPage> {
                           icon: SizedBox(
                             width: 40,
                             height: 40,
-                            child: Image.asset('lib/assets/facebook.png'), // Ensure this path is correct
+                            child: Image.asset('lib/assets/facebook.png'), 
                           ),
                           onPressed: () {},
                         ),
@@ -287,7 +227,7 @@ class _LoginPageState extends State<LoginPage> {
                           icon: SizedBox(
                             width: 40,
                             height: 40,
-                            child: Image.asset('lib/assets/google.png'), // Ensure this path is correct
+                            child: Image.asset('lib/assets/google.png'), 
                           ),
                           onPressed: () {},
                         ),
@@ -312,3 +252,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+
