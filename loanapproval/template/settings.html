@@ -32,7 +32,7 @@
               <a class="nav-link" href="{% url 'feedback' %}">Feedback</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'settings' %}">Settings</a>
+              <a class="nav-link active" href="{% url 'settings' %}">Settings</a>
             </li>
           </ul>
         </div>
@@ -102,7 +102,7 @@
                     <input type="number" class="form-control" id="phone" name="phone" value="{{ user.phone }}">
                 </div>
                 <div class="col-md-6" id="num-margin">
-                    <label for="dob" class="form-label">D.O.B</label>
+                    <label for="dob" class="form-label" id="label-dob">D.O.B</label>
                     <input type="date" class="form-control" id="dob" name="dob" value="{{ user.dob|date:'Y-m-d' }}">
                 </div>
                 
@@ -237,13 +237,13 @@
       <div class="row">
         <!-- About Section -->
         <div class="col-md-4">
-          <h5>About Us</h5>
+          <h5>ABOUT US </h5>
           <p>We provide fast and reliable loan approval services to help you achieve your financial goals. Our team is dedicated to offering the best experience with quick processing and easy application steps.</p>
         </div>
         
         <!-- Contact Information -->
         <div class="col-md-4">
-          <h5>Contact Us</h5>
+          <h5>CONTACT US </h5>
           <p>Email: support@loanapproval.com</p>
           <p>Phone: 9860953027</p>
           <p>Address: Putalisadak, Nepal, City, Country</p>
@@ -251,7 +251,7 @@
         
         <!-- Links Section -->
         <div class="col-md-4">
-          <h5>Quick Links</h5>
+          <h5>QUICK LINKS </h5>
           <ul class="list-unstyled">
             <li><a href="#" class="text-white">Privacy Policy</a></li>
             <li><a href="#" class="text-white">Terms of Service</a></li>

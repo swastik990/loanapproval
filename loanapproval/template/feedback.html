@@ -29,7 +29,7 @@
               <a class="nav-link" href="{% url 'aboutus' %}">About Us</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'feedback' %}">Feedback</a>
+              <a class="nav-link active" href="{% url 'feedback' %}">Feedback</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'settings' %}">Settings</a>
@@ -72,7 +72,7 @@
       </form>
 
       {% if messages %}
-    <div class="alert" style="color: green">
+    <div class="alert" style="color: rgb(27, 227, 27)">
         {% for message in messages %}
             <p>{{ message }}</p>
         {% endfor %}
@@ -87,13 +87,13 @@
       <div class="row">
         <!-- About Section -->
         <div class="col-md-4">
-          <h5>ABOUT <label class="heading-blue"> US </label> </h5>
+          <h5>ABOUT US </h5>
           <p>We provide fast and reliable loan approval services to help you achieve your financial goals. Our team is dedicated to offering the best experience with quick processing and easy application steps.</p>
         </div>
         
         <!-- Contact Information -->
         <div class="col-md-4">
-          <h5>CONTACT <label class="heading-blue"> US </label> </h5>
+          <h5>CONTACT US </h5>
           <p>Email: support@loanapproval.com</p>
           <p>Phone: +977 9860953027</p>
           <p>Address: Putalisadak, Nepal, City, Country</p>
@@ -101,7 +101,7 @@
         
         <!-- Links Section -->
         <div class="col-md-4">
-          <h5>QUICK <label class="heading-blue"> LINKS </label> </h5> 
+          <h5>QUICK LINKS </h5> 
           <ul class="list-unstyled">
             <li><a href="#" class="text-white">Privacy Policy</a></li>
             <li><a href="#" class="text-white">Terms of Service</a></li>

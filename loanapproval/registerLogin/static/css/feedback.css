@@ -77,8 +77,14 @@ body {
 
 .feedback-container {
   max-width: 600px;
-  margin: 0 auto;
+  margin: 50px auto;
+  background: linear-gradient(#0631a5fa, #101550);
+  padding: 35px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 3px rgb(10, 10, 183);
+
 }
+
 
 .stars {
   display: flex;
@@ -127,8 +133,8 @@ body {
     background-color: #007bffa5;
     color: white;
     transition: background-color 0.3s;
-    margin-top: 10px !important;
-    margin-bottom: 30px;
+    margin-top: 15px !important;
+    margin-bottom: 20px;
   }
   
   .btn-submit:hover {
@@ -142,17 +148,23 @@ body {
   }
 
   .text-center{
-    color: #003cff;
+    color: #ffcc00;
     font-weight: bold;
-    margin-top: 30px;
+    margin-bottom: 12px !important;
   }
   
   #p-text{
-    color: rgb(0, 0, 0);
+    color: white;
+    margin-bottom: 8px !important;
   }
 
   .form-label{
-    color: rgb(13, 13, 228);
+    color: #ffcc00;
+  }
+
+  .alert{
+    padding: 10px 16px !important;
+    margin-bottom: 0px !important;
   }
 
   footer h5 {

@@ -19,6 +19,7 @@ body {
   font-size: 25px;
   color: #0a1aff;
   font-weight: bold;
+  margin-bottom: 7px !important;
 }
 
 .header-logo {
@@ -30,16 +31,16 @@ body {
 
 .hero {
   display: flex;
-  justify-content: flex-start; /* Centers content horizontally */
-  align-items: center; /* Centers content vertically */
-  padding: 0 15px; /* Centers text within the hero section */
+  justify-content: center !important; 
+  align-items: center; 
+  padding: 0 15px; 
 }
 
 .container {
   flex: 1; /* Make the container take up remaining space */
   display: flex;
-  justify-content: flex-start; /* Align content to the left */
-  align-items: center; /* Vertically center the image */
+  justify-content: flex-start; 
+  align-items: center; 
   background-color: rgb(255, 255, 255);
   border-radius: 20px;
   box-shadow: 5px 5px 10px rgb(156, 156, 156);
@@ -48,8 +49,9 @@ body {
 }
 
 #gif-image {
-  max-width: 50%; /* Limit the width of the GIF to 50% of its container */
-  height: 60vh; /* Maintain aspect ratio */
+  max-width: 50%;
+  height: 60vh; 
+  height: fit-content !important;
 }
 
 
@@ -60,11 +62,11 @@ body {
 
 #row {
   display: flex;
-  flex-direction: column; /* Stack the text vertically */
-  justify-content: center; /* Vertically center the text */
-  align-items: flex-start; /* Align text to the left */
-  text-align: left; /* Align text to the left */
-  padding-left: 20px; /* Adds space between text and image */
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: flex-start; 
+  text-align: left; 
+  padding-left: 20px; 
 }
 
 
@@ -172,8 +174,13 @@ footer {
     padding-bottom: 15px !important;
   }
 
-  
+
+ #gif-image {
+   height: 60vh !important;
+   
+  }  
 }
+
 
 
 @media (max-width: 981px) {
@@ -191,10 +198,13 @@ footer {
   #gif-image {
     height: 70vh !important;
     width: 75% !important;
+
   }
 
   .container{
     gap: 0 !important;
+    height: 30% !important;
+    margin-right: 0 !important;
   }
 
 }
@@ -222,6 +232,7 @@ footer {
 
     #gif-image{
       max-width: 100% !important;
+      height: fit-content !important;
     }
 
     .p-edit{
@@ -240,4 +251,23 @@ footer {
       padding-left: 0 !important;
     }
 
+  }
+
+
+  @media (max-width: 382px) {
+    #heading1{
+      font-size: 20px !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    #gif-image{
+      width: 80% !important;
+    }
+  }
+
+  @media (max-width: 1440px) and (min-width: 1302px) { 
+    #gif-image {
+      height: 65vh !important;
+    }
   }
