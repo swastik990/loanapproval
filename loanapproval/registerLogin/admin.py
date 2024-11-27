@@ -1,7 +1,9 @@
+from django.urls import path
 from django.contrib import admin
-
-from django.contrib import admin
+from django.shortcuts import render
 from .models import *
+import plotly.graph_objects as go
+
 
 @admin.register(Navbar)
 class NavbarAdmin(admin.ModelAdmin):
@@ -28,11 +30,6 @@ class FeedbackAdmin(admin.ModelAdmin):
     search_fields = ('feedback',)
     list_filter = ('user', 'feedback_time')
 
-@admin.register(Profile)
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('profile_id', 'user', 'profile_picture', 'created_at')
-    search_fields = ('user__email',)
-    list_filter = ('created_at',)
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):

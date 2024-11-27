@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+from .juzmin import JAZZMIN_SETTINGS
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,6 +34,12 @@ ALLOWED_HOSTS = ["10.0.2.2","127.0.0.1","192.168.1.69"]
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_tools_stats',
+    'django_nvd3',
+    # 'adminlte3',
+    # 'adminlte3_theme',
+    'jazzmin',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
+    # 'admin_tools',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +63,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
+
+JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
+
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
@@ -86,6 +98,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'loanapproval.wsgi.application'
 
+# LOGIN_URL = '/login/'  # admin login path
+
+
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -102,10 +117,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'loanapprovaldb',
         'USER': 'root',
-        'PASSWORD': 'yamahar15v3',
-        #'PASSWORD': 'Infiniti@111',
+        # 'PASSWORD': 'yamahar15v3',
+        'PASSWORD': 'Infiniti@111',
         # 'PASSWORD': 'binesh9845998009',
-        
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -147,6 +161,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
 
 #media routs for pictures and videos
 MEDIA_URL = '/media/'
@@ -207,3 +222,5 @@ PASSWORD_RESET_TIMEOUT=900          # 900 Sec = 15 Min
 #     'registerLogin.backends.EmailBackend',
 #     'django.contrib.auth.backends.ModelBackend',  # Keep the default backend
 # ]
+
+LOGIN_REDIRECT_URL='/'

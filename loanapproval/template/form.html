@@ -10,7 +10,7 @@
         {% load static %}
         <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="/loanapproval/registerLogin/static/css/form.css">
+    <!-- <link rel="stylesheet" href="/loanapproval/registerLogin/static/css/form.css"> -->
 </head>
 
 <body>
@@ -30,7 +30,6 @@
                         <li><strong>Income:</strong> Documented proof of sufficient annual income.</li>
                         <li><strong>Credit Score:</strong> A minimum credit score is required.</li>
                     </ul>
-                    <a href="#" class="btn btn-primary mt-3 d-block mx-auto text-center" id="button">Learn More</a>
                 </div>
             </div>
 
@@ -67,7 +66,7 @@
 
                                     <div class="mb-3">
                                         <label for="inputcountry" class="form-label">Country</label>
-                                        <input type="text" class="form-control" id="inputcountry" placeholder="eg- Nepal">
+                                        <input type="text" class="form-control" id="inputcountry" name="country" placeholder="eg-Nepal">
                                     </div>
 
                                     <div class="mb-3">
@@ -76,30 +75,23 @@
                                             <span class="input-group-text">
                                                 <i class="fa-solid fa-location-dot"></i>
                                             </span>
-                                            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                                            <input type="text" class="form-control" id="inputAddress" placeholder="eg-Putalisadak">
                                         </div>
                                     </div>
 
                                     <div class="mb-3"> 
                                         <label for="inputState" class="form-label">State</label>
-                                        <select id="inputState" class="form-select" name="state">
-                                            <option selected>Choose...</option>
-                                            <option>...</option>
-                                        </select>
+                                        <input type="text" class="form-control" id="inputState" class="form-select" name="state" placeholder="eg-Bagmati">
                                     </div>
 
                                     <div class="mb-3"> 
                                         <label for="inputStreet" class="form-label">Street</label>
-                                        <select id="Street" class="form-select" name="street">
-                                            <option value="" selected>eg- Freak Street...</option>
-                                            <option value="Patan">Patan</option>
-                                            <option value="Ikache">Ikache</option>
-                                        </select>
+                                        <input type="text" class="form-control" id="Street" name="street" placeholder=" eg-Durbar Marg">
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="inputZip" class="form-label">Zip</label>
-                                        <input type="text" class="form-control" id="inputZip" name="zip_code">
+                                        <input type="text" class="form-control" id="inputZip" name="zip_code" placeholder=" eg-44600 for kathmandu.">
                                     </div>
                                 </div>
 
@@ -125,22 +117,23 @@
 
                                     <div class="mb-3">
                                         <label for="Loanamount" class="form-label">Loan Amount</label>
-                                        <input type="number" class="form-control" id="Loanamount" name="Loanamount">
+                                        <input type="number" class="form-control" id="Loanamount" name="Loanamount" min="1000" max="100000000" placeholder="Enter loan amount (max: $100,000,000)">
+
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="Loanterm" class="form-label">Loan Term</label>
-                                        <input type="number" class="form-control" id="Loanterm" name="Loanterm">
+                                        <label for="Loanterm" class="form-label">Loan Term (In Years)</label>
+                                        <input type="number" class="form-control" id="Loanterm" name="Loanterm" min="1" max="30" placeholder="(max:30 years)">
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="dependers" class="form-label">No of Dependers</label>
-                                        <input type="number" class="form-control" id="dependers" name="dependers">
+                                        <input type="number" class="form-control" id="dependers" name="dependers" min="1" max="10" placeholder="(max: 10 Dependers)">
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="credit" class="form-label">Credit Score</label>
-                                        <input type="number" class="form-control" id="credit" name="credit">
+                                        <input type="number" class="form-control" id="credit" name="credit" min="300" max="850" placeholder="(max: 850)">
                                     </div>
                                 </div>
 

@@ -15,12 +15,12 @@
 <nav class="navbar navbar-expand-lg" id="navbar1">
   <div class="container-fluid">
     {% if user.is_authenticated %}
-    <a class="navbar-brand d-flex align-items-center" href="#">
+    <a class="navbar-brand d-flex align-items-center" href="{% url 'user' %}" >
       <img src="{% if user.pictures %}{{ user.pictures.url }}{% else %}{% static 'image/default_profile.png' %}{% endif %}" alt="User's Profile Picture" class="rounded-circle" width="30" height="30">
-      <span class="ms-2">Welcome, {{ user.first_name }}</span>
+      <span class="ms-2" >Welcome, {{ user.first_name }}</span>
     </a>
   {% else %}
-    <a class="navbar-brand" href="#">LOAN APPROVAL</a>
+    <a class="navbar-brand" >LOAN APPROVAL</a>
   {% endif %}   
     <!-- Toggler button for mobile view -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,6 +31,9 @@
       <ul class="navbar-nav ms-auto d-flex flex-row">
         <li class="nav-item">
           <a class="nav-link active" href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'history' %}">History</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'aboutus' %}">About Us</a>
@@ -78,7 +81,7 @@
                 <h3>Join <span id="registeredUsers" class="text-warning">0</span> people who have already registered!</h3>
                 <form method="post" action="{% url 'form' %}">
                 {% csrf_token %}
-                <button type="submit" name="action" value="applyforaloan" class="btn btn-primary btn-lg" id="button">Apply For a Loan</button>
+                <button type="submit" name="action" value="applyforaloan" class="btn btn-primary btn-lg" id="button">Check Eligibility</button>
         
               </div>
             </div>
@@ -124,9 +127,16 @@
   <!-- Frequently Asked Questions Heading -->
 <h1 class="text-center my-5" id="h1">Frequently <label id="h1-blue"> Asked Questions </label> </h1>
 
-  <div class="faq-section">
-    <div class="faq-item">
-      <h3>What is the loan approval system?</h3>
+{% for faq in faqs %}
+<div class="faq-section">
+  <div class="faq-item">
+                  <h3>{{ faq.question }}</h3>
+                  <p class="answer">{{ faq.answer }}</p>
+  </div>
+</div>
+{% endfor %}
+
+      <!-- <h3>What is the loan approval system?</h3>
       <p class="answer"> The loan approval system is a user-friendly platform that simplifies applying for and tracking loan applications. It allows applicants to submit their information online, check their loan status in real-time, and receive quick updates, making the entire process faster and more efficient. </p>
     </div>
     <div class="faq-item">
@@ -148,9 +158,9 @@
     <div class="faq-item">
       <h3>How can I check my loan application status?</h3>
       <p class="answer">You can check the status of your application through our online portal...</p>
-    </div>
-    
-  </div>
+    </div> -->
+    <!-- </div>
+  </div> -->
   
 
   <!-- Footer -->

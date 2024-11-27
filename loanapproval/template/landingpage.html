@@ -12,29 +12,28 @@
 </head>
 <body>
   <!-- Header Section -->
-
+<!-- 
   <header id="heading1">
     <img src="{% static 'image/image.png' %}" alt="Logo" class="header-logo">
     Loan Approval System
-  </header>
+  </header> -->
   
    
   <section class="hero-section">
     <div class="content">
-      <p id="p-heading" class="display-5 fw-bold text-start">Welcome to Fast & Reliable <label class="heading-blue"> Using Machine Learning </label> </p>
+      <p id="p-heading" class="display-5 fw-bold text-start">Loan Approval System <label class="heading-blue"> Using Machine Learning </label> </p>
       <p id="head-p">
-        From application to decision, our system simplifies every step. 
-        Track your status, receive instant feedback, and get tailored recommendations for your financial needs. 
-        Experience efficient and transparent approvals with LoanPro. Apply for loans with ease and experience our quick, secure, and professional service.
-        Get your totally free loan pre-approval and start making your dreams a reality.
-        Our dedicated team is here to support you every step of the way toward achieving your financial goals.
+        From application to decision, our system simplifies every step
+        Experience efficient and transparent approvals
+        Get your totally free loan pre-approval and start making your dreams a reality
+        Our dedicated team is here to support you every step of the way toward achieving your financial goals
       </p>
       <div class="button-container"> 
         <a href="{% url 'user_action' %}" class="btn btn-primary btn-lg" id="button">Login/Signup</a>
       </div>
     </div>
     <div class="hero-image">
-      <img src="/loanapproval/registerLogin/static/image/aiimage.jpg" alt="Loan Approval System">
+      <img src="{%static 'image/homebanner.png' %}" alt="Loan Approval System">
     </div>
   </section>
 
