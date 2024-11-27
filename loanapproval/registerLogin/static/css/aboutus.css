@@ -17,6 +17,7 @@ body {
   .our-values .value-box {
     background-color: #fff;
     transition: transform 0.3s ease;
+    box-shadow: 0px 0px 10px 3px rgb(187, 184, 184) !important;
   }
   
   .our-values .value-box:hover {
@@ -102,6 +103,7 @@ body {
 
 .heading-blue{
   color: rgb(13, 13, 228) !important;
+  font-weight: bold !important;
   
 }
 

@@ -1,7 +1,7 @@
 body {
   font-family: Arial, sans-serif;
   padding-top: 85px !important;
-  background: rgb(215, 213, 213)!important;
+  
 }
 .homepage img {
     margin-left: 50px;
@@ -108,6 +108,9 @@ body {
 
 .features .card {
   transition: transform 0.2s;
+  box-shadow: 0px 0px 10px 3px rgb(187, 184, 184) !important;
+  overflow: hidden !important;
+  
 }
 
 .features .card:hover {
@@ -142,6 +145,12 @@ body {
 
 #h1-blue{
   color: rgb(13, 13, 228) !important;
+  
+}
+
+.heading-blue-h1{
+  color: rgb(13, 13, 228) !important;
+  font-weight: bold;
 }
 
 
@@ -164,14 +173,19 @@ body {
 
 #card-section{
   padding-bottom: 20px !important;
+  
 }
 
-
+.card-title{
+  font-weight: bold;
+}
 
 #section{
   display: flex;
   padding-top: 50px !important;
-  background: linear-gradient(to bottom, #d4d4d4e9, #dfdfdf );
+  /*background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(195, 201, 206, 0.3), rgb(51, 20, 187, 0.9));*/
+  /*background: linear-gradient(to right, rgb(25, 33, 121) 40%, rgb(255, 255, 255) 60%);*/
+  /*background: linear-gradient(#FFFFFF, #2f3ccd);*/
 }
 
 .lead{
@@ -264,11 +278,13 @@ footer h5 {
 
 .faq-item {
   background: #f8f9fa;
+  box-shadow: 0px 0px 10px 4px rgb(187, 184, 184) !important;
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 30px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  
 }
+
 
 .faq-item h3 {
   font-size: 1.2em;
