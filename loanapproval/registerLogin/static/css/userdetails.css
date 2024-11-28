@@ -111,7 +111,11 @@ body {
 
 
 
-
+#card-container{
+  box-shadow: 0px 0px 10px 6px rgb(187, 184, 184) !important;
+  border-radius: 10px !important;
+  margin-top: 10px !important;
+}  
 
 
 
@@ -139,11 +143,16 @@ footer h5 {
   }
 
   footer {
+      width: 100% !important;
     margin-top: 30px !important;
   }
 
   .card-box { 
     margin-top: 120px !important; /* Ensure card-box is pushed down below navbar */
+  }
+
+  .card-body{
+      box-shadow: 0px 0px 10px 6px rgb(187, 184, 184) !important;
   }
   
   #cardbox-middle{
