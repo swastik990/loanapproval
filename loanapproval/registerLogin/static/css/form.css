@@ -2,6 +2,10 @@
     margin: 0;
     padding: 0;
 }
+
+body{
+    background:#d7d7d7 !important;
+}
 .col-sm-8.col-md-7.col-lg-6 {
     /*border: solid 2px black;*/
     padding: 20px;
@@ -22,6 +26,7 @@
     border-radius: 8px;
     padding-top: 5px !important;
     padding-bottom: 5px !important;
+    box-shadow: 0px 0px 10px 5px rgb(187, 184, 184) !important;
 }
 
 
@@ -47,10 +52,7 @@
 #loan-info{
     box-shadow: 0px 0px 10px 3px rgb(187, 184, 184) !important;
 }
-/*body{
-   
-    background: linear-gradient(to right, #122c73, rgb(176, 175, 175));
-}*/
+
 
 .form-label{
     color: white;

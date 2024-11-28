@@ -1,23 +1,27 @@
 /* General page styles */
 body {
-    background-color: #f4f7f6;
+    background-color: #d7d7d7;
     font-family: 'Arial', sans-serif;
+    padding-top: 85px;
   }
 
   #navbar1 {
  
-    padding: 15px 50px; /* Adjust padding for a more spacious look */
+    padding: 15px 50px; 
     display: flex;
-    justify-content: space-between; /* Space out the brand and menu */
-    align-items: center; /* Center vertically */
+    justify-content: space-between; 
+    align-items: center; 
     background: linear-gradient( #062d9ad8, #101550 );
+    position: fixed;
+    width: 100%;
+    top: 0;
   }
   
   .navbar-brand {
     color: white;
-    font-size: 30px; /* Adjusted font size for prominence */
+    font-size: 30px; 
     text-decoration: none;
-    letter-spacing: 1.5px; /* Add spacing for a more elegant look */
+    letter-spacing: 1.5px; 
   }
   
   /* Toggler button styling */
@@ -40,7 +44,7 @@ body {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: flex; /* Make items in a row by default (desktop view) */
+    display: flex; 
   }
   
   .nav-item {
@@ -51,8 +55,8 @@ body {
     color: white;
     text-decoration: none;
     padding: 10px;
-    font-size: 18px; /* Adjust font size */
-    transition: color 0.3s; /* Smooth color transition */
+    font-size: 18px; 
+    transition: color 0.3s; 
   }
   
   .navbar-toggler{
@@ -83,7 +87,7 @@ body {
   .settings-header {
     text-align: center;
     margin-bottom: 30px;
-    color: #ffcc00;
+    color: #ffcc00; 
   }
   
   .section-title {
@@ -160,6 +164,10 @@ body {
   
   .form-label {
     color: white;
+  }
+
+  #label-dob{
+    margin-top: 10px;
   }
   
   .form-check-label {
@@ -255,10 +263,20 @@ ul{
 }
 
   /* Adjust Form Layout */
-  .col-md-9 {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.col-md-9 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  }
+
+  footer h5 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+  }
+
+  footer p {
+    font-size: 16px;
   }
 
 /*for navbar*/
@@ -271,8 +289,8 @@ ul{
   /* Initially hide the navbar links on small screens */
   .navbar-menu {
     display: none;
-    flex-direction: column; /* Stack menu items vertically */
-    width: 100%; /* Full width on mobile */
+    flex-direction: column;
+    width: 100%; 
   }
 
   /* Make navbar menu visible when toggler is clicked */
@@ -288,11 +306,15 @@ ul{
   }
 
   .nav-item {
-    margin: 10px 0; /* Adjust spacing for mobile */
+    margin: 10px 0;
   }
   #navbar1{
     padding-left: 5px !important;
     padding-right: 5px !important;
+  }
+
+  #label-dob{
+    margin-top: 0 !important;
   }
 }
 

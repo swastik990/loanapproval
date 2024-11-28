@@ -15,10 +15,17 @@ urlpatterns = [
     path('feedback/', views.feedback_page, name = 'feedback'),
     path('settings/', views.settings_page, name='settings'),
     path('form/', views.predictor, name = 'form'),
+    path('user/', views.user_page, name = 'user'),
+    path('history/', views.history_page, name = 'history'),
     path('formInfo/', views.formInfo, name = 'formInfo'),
+    path('download_pdf/<int:application_id>/', views.download_pdf, name='download_pdf'),
+
 
     path('logout/', views.logout_view, name='logout'),
     # path('form/', form_view, name='form'), 
+    
+    # path('dashboard/', self.admin_view(self.dashboard_view), name='dashboard'),
+
 
 
     #mobile routes

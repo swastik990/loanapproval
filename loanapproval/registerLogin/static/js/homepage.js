@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
+
 /*For navbar*/
 
 const togglerButton = document.getElementById('toggler-button');

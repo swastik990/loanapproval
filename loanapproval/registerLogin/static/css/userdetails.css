@@ -1,0 +1,509 @@
+body {
+  font-family: Arial, sans-serif;
+  padding-top: 120px !important;
+  background: rgb(215, 213, 213)!important;
+}
+/* Style the navbar */
+
+#navbar1 {
+ 
+  padding: 15px 50px; 
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; /* Center vertically */
+  background: linear-gradient( #062d9ad8, #101550 );
+  position: fixed !important;
+  overflow: hidden !important;
+  width: 100%;
+  top: 0 !important;
+  z-index: 1000;
+}
+
+.navbar-brand {
+  color: white;
+  font-size: 30px; /* Adjusted font size for prominence */
+  text-decoration: none;
+  letter-spacing: 1.5px; /* Add spacing for a more elegant look */
+}
+
+.navbar-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.navbar-brand span {
+  font-weight: bold;
+}
+
+
+/* Toggler button styling */
+#toggler-button {
+  font-size: 30px;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none; 
+}
+
+/* Navbar links in row on desktop mode */
+.navbar-menu {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex; 
+}
+
+.nav-item {
+  margin-left: 50px; 
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  font-size: 18px; 
+  transition: color 0.3s; 
+}
+
+.navbar-toggler{
+  color: rgba(245, 245, 245, 0.778) !important;
+}
+
+.nav-link.active {
+  color: #ffcc00 !important;
+}
+
+/* Change color on hover */
+.nav-link:hover {
+  color: #ffcc00; 
+}
+
+
+.container-fluid{ /*navbar*/
+  padding-right: 30px !important;
+}
+
+
+.logout-icon-btn img {
+  background: none;
+  border: none;
+  display: inline-block;
+  margin-top: 10px;
+  margin-left: 20px;;
+  filter: invert(22%) sepia(93%) saturate(5438%) hue-rotate(0deg) brightness(100%) contrast(101%);
+}
+
+
+.logout-icon-btn {
+  background: none; /* Ensure the button itself has no background */
+  border: none;     /* Remove border from the button */
+  cursor: pointer;
+}
+
+
+
+#card-container{
+  box-shadow: 0px 0px 10px 6px rgb(187, 184, 184) !important;
+  border-radius: 10px !important;
+  margin-top: 10px !important;
+}  
+
+
+
+
+
+
+footer h5 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  footer p {
+    font-size: 16px;
+  }
+  
+  .social-icons a {
+    font-size: 20px;
+    text-decoration: none;
+  }
+  
+  footer hr {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  footer {
+      width: 100% !important;
+    margin-top: 30px !important;
+  }
+
+  .card-box { 
+    margin-top: 120px !important; /* Ensure card-box is pushed down below navbar */
+  }
+
+  .card-body{
+      box-shadow: 0px 0px 10px 6px rgb(187, 184, 184) !important;
+  }
+  
+  #cardbox-middle{
+    padding-bottom: 35px !important;
+    padding-top: 20px !important;
+  }
+  
+
+  /*scroll animation*/
+#registeredUsers {
+  font-size: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+/* Show class for the number animation */
+#registeredUsers.show {
+  opacity: 1;
+  transform: translateY(0);
+  color: #3cff00 !important;
+  font-weight: bold;
+}
+
+
+/*new */
+
+.about-us img {
+  max-width: 100%;
+  height: auto;
+  
+}
+
+#img-section{
+  padding-right: 0 !important;
+}
+
+#label-aboutus{
+  color:  rgb(13, 13, 228);
+}
+
+#button{
+  background-color: rgb(15, 15, 200);
+  color: whitesmoke;
+  padding: 12px;
+  margin-top: 10px !important;
+  border: none;
+}
+
+#button:hover {
+  background-color: rgb(22, 22, 158);
+}
+
+
+/*for FAQs*/
+.faq-section {
+  max-width: 75%;
+  margin: 0 auto;
+  padding-bottom: 20px !important;
+}
+
+.faq-item {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.faq-item h3 {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.faq-item h3::before {
+  content: "▼";
+  font-size: 0.8em;
+  margin-right: 8px;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+.faq-item.open h3::before {
+  transform: rotate(-180deg);
+}
+
+.answer {
+  display: none;
+  padding-top: 10px;
+  font-size: 1em;
+  color: #666;
+}
+
+.faq-item.open .answer {
+  display: block;
+}
+
+
+
+
+/* Responsive - for nabars */
+@media (max-width: 768px) {
+  /* Show toggler button on small screens */
+  #toggler-button {
+    display: block;
+  }
+
+  /* Initially hide the navbar links on small screens */
+  .navbar-menu {
+    display: none;
+    flex-direction: column; 
+    width: 100%; 
+  }
+
+  /* Make navbar menu visible when toggler is clicked */
+  .navbar-menu.active {
+    display: flex;
+  }
+
+  /* Navbar links take full width on mobile */
+  .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-item {
+    margin: 10px 0; 
+  }
+  #navbar1{
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+}
+
+@media (max-width: 445px) {
+  .nav-link {
+    font-size: 12px !important;
+
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1091px) {
+
+  .nav-item{
+    margin-left: 30px !important;
+  }
+}
+
+
+@media (max-width: 700px) {
+  .navbar-brand{
+    font-size: 20px !important;
+  }
+}
+
+@media (max-width: 370px) {
+  .nav-link {
+    font-size: 11px !important;
+    padding: 5px !important;
+
+  }
+}
+
+
+@media (max-width: 829px) and  (min-width: 769px) {
+  .nav-item {
+    margin-left: 0 !important;
+  }
+}
+
+
+/*For content*/
+
+@media(max-width: 1399px) and (min-width: 992px) {
+  #section {
+    flex-direction: row;
+  }
+
+  #content1, .about-us img {
+    flex-basis: 100%; 
+    text-align: center;
+    margin-top: 15px !important;
+  }
+
+  .about-us img{
+    margin-top: 0 !important;
+  }
+
+  #content1 {
+    width: 400px !important;
+    flex: 0 0 550px !important; 
+    padding-right: 0 !important;
+    padding-left: 50px !important;
+}
+
+.container{
+      padding-right: 0 !important;
+}
+
+#img-section{
+  padding-left: 0 !important;
+  padding-right: 25px !important;
+}
+
+  .row{
+    width: 100% !important;
+
+  }
+
+  img{
+    width: 100% !important;
+  }
+
+  .card{
+    padding: 5px !important;
+  }
+
+  .card-body{
+    padding: 16px !important;
+  }
+
+  #cardbox-middle{
+    padding-bottom: 5px !important;
+    padding-top: 5px !important;
+  }
+}
+
+
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  #cardbox-first {
+      padding: 10px !important;
+  }
+
+  #card-1{
+    padding: 4px !important;
+    padding-bottom: 0px !important;
+  }
+
+  #content1 {
+    box-sizing: border-box; 
+    flex: 0 0 440px !important; 
+    padding-right: 0 !important;
+    padding-left: 50px !important;
+  }
+
+}
+
+
+
+
+
+@media (max-width: 992px){
+  .card{
+    margin-bottom: 28px !important;
+  }
+
+  #section{
+    display: flex;
+    justify-content: center !important;
+  }
+
+  .homepage img{
+    margin-left: 0 !important;
+  }
+
+}
+
+
+
+@media(max-width: 767px) { 
+  #button{
+    margin-top: 10px !important;
+  }
+
+  #content1{
+    margin-top: 15px !important;
+    padding: 0 !important;
+  }
+
+  .lead{
+    font-size: 18px !important;
+  }
+
+  h3{
+    font-size: 20px !important;
+  }
+
+  #h1{
+    margin-bottom: 35px !important;
+  }
+
+}
+
+@media(max-width: 575px) and (min-width: 320px){
+  #section{
+    padding-left: 15px !important;
+  }
+
+  .card-body{
+    padding: 10px !important;
+
+  }
+
+  #card-1, #card-2, #card-3{
+    padding-left: 22px !important;
+    width: 95% !important;
+  }
+
+  .lead{
+    font-size: 15px !important;
+    margin-bottom: 0 !important;
+  }
+
+  h3{
+    font-size: 15px !important;
+  }
+
+  .homepage img{
+    width: 95% !important;
+    
+  }
+
+  #section{
+    padding: 20px !important;
+  }
+
+  #h1{
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    margin-bottom: 30px !important;
+  }
+
+}
+
+
+@media(max-width: 992px) {
+  #content1{
+    flex: none !important;
+    box-sizing: none !important;
+    width: 100% !important;
+    margin-top: 15px !important;
+  }
+
+  img{
+    width: 100% !important;
+  }
+}
+

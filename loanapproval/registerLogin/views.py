@@ -140,6 +140,7 @@ def user_action(request):
 
                 # Authenticate user
             user = authenticate(request, username=login_email, password=login_password)
+            
             if user:
         # If authentication is successful, log the user in
                 login(request, user)
@@ -179,16 +180,182 @@ def feedback_page(request):
     return render(request, 'feedback.html')
 
 
-
-
 #For Home Page
 @login_required
 @csrf_protect
 def home_page(request):
-    if request.method == 'POST' and request.POST.get('action') == 'applyforaloan':
-            return redirect('formInfo')
+    if request.method == 'POST':
+        faq_id = request.POST.get('faq_id')
+        question = request.POST.get('question')
+        answer = request.POST.get('answer')
+        
 
-    return render(request, 'homepage.html')
+        # If faq_id is provided, update an existing FAQ; otherwise, create a new FAQ
+        if faq_id:
+            faq = get_object_or_404(FAQ, faq_id=faq_id)
+            faq.question = question
+            faq.answer = answer
+            faq.save()
+        else:
+            FAQ.objects.create(question=question, answer=answer)
+
+        # Redirect to the homepage after saving
+        return redirect('home')
+
+    # Fetch all FAQs from the database
+    faqs = FAQ.objects.all()    
+
+    return render(request, 'homepage.html', {'faqs': faqs})
+
+
+#for user page
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from .models import Application, LoanStatus
+from xhtml2pdf import pisa
+from io import BytesIO
+@login_required
+@csrf_protect    
+def user_page(request):
+    # Get all applications related to the logged-in user
+    applications = Application.objects.filter(user=request.user)
+    
+    application = None  # Initialize as None in case no application is selected
+    
+    # If application_id is passed via GET, fetch the corresponding application
+    application_id = request.GET.get('application_id', None)
+    
+    if application_id:
+        try:
+            application = Application.objects.get(application_id=application_id)
+        except Application.DoesNotExist:
+            application = None
+    
+    context = {
+        'applications': applications,
+        'application': application,
+        'application_id': application_id,
+    }
+    return render(request, 'userdetails.html', context)
+
+
+def download_pdf(request, application_id):
+    # Fetch the application details
+    application = get_object_or_404(Application, application_id=application_id)
+    user = request.user
+    
+    loan_status = LoanStatus.objects.filter(application=application).first()
+    if loan_status:
+        if loan_status.status:
+            status = 'Approved'
+        else:
+            status = 'Rejected'
+    else:
+        status = 'Pending'
+    # HTML content for the PDF with added company name and watermark
+    html_content = f"""
+    <html>
+    <head>
+        <style>
+            h1 {{
+                text-align: center;
+                color: #0066cc;  /* Company Blue */
+                font-size: 18px;
+                text-decoration: underline;
+            }}
+            .watermark {{
+                text-align: center;
+                font-size: 40px;
+                color: rgba(0, 102, 204, 0.1);  /* Light blue for watermark */
+                font-weight: bold;
+            }}
+            .section {{
+                margin: 15px 0;
+                padding: 10px;
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            }}
+            .section p {{
+                font-size: 15px;
+                margin: 3px 0;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="watermark">Loan Approval System</div>
+            <h1>Loan Application Details</h1>
+        <div class="content">
+            <div class="section">
+                <p><strong>User Name:</strong> {user.first_name} {user.last_name}</p>
+                <p><strong>User ID:</strong> {user.user_id}</p>
+                <p><strong>Application ID:</strong> {application.application_id}</p>
+                <p><strong>Loan Amount:</strong> {application.loan_amount}</p>
+                <p><strong>Loan Terms:</strong> {application.loan_terms} Year</p>
+                <p><strong>Credit Score:</strong> {application.credit_score}</p>
+                <p><strong>Number of Dependents:</strong> {application.no_of_dependents}</p>
+                <p><strong>Education:</strong> {'Yes' if application.education else 'No'}</p>
+                <p><strong>Self Employed:</strong> {'Yes' if application.self_employed else 'No'}</p>
+                <p><strong>Annual Income:</strong> {application.annual_income}</p>
+                <p><strong>Residential Asset:</strong> {application.residential_asset}</p>
+                <p><strong>Luxury Asset:</strong> {application.luxury_asset}</p>
+                <p><strong>Bank Asset:</strong> {application.bank_asset}</p>
+                <p><strong>Commercial Asset:</strong> {application.commercial_asset}</p>
+                <p><strong>Citizenship No:</strong> {application.citizenship_no}</p>
+                <p><strong>Zip Code:</strong> {application.zip_code}</p>
+                <p><strong>State:</strong> {application.state}</p>
+                <p><strong>Street:</strong> {application.street}</p>
+                <p><strong>Submitted Time:</strong> {application.submitted_time}</p>
+                <p><strong>Status:</strong> {status}</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    # Generate PDF from the HTML content
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="application_{application_id}.pdf"'
+
+    # Use xhtml2pdf to convert HTML to PDF
+    pisa_status = pisa.CreatePDF(html_content, dest=response)
+    
+    # If there were any errors in generating the PDF, show an error
+    if pisa_status.err:
+        return HttpResponse('Error generating PDF', status=500)
+
+    return response
+
+
+
+#for history page
+from django.db.models import F
+
+@login_required
+@csrf_protect
+def history_page(request):
+    # Get the logged-in user's ID
+    user_id = request.user.user_id
+
+    # Retrieve loan history with the related status field
+    loan_history = (
+        Application.objects.filter(user_id=user_id)
+        .select_related('loanstatus')  # Optimize related model queries
+        .annotate(
+            loan_status=F('loanstatus__status')  # Fetch the status from LoanStatus
+        )
+        .values(
+            'application_id',  # Application ID
+            'loan_terms',      # Loan Term
+            'loan_amount',     # Loan Amount
+            'loan_status',     # Loan Status from LoanStatus model
+        )
+        .order_by('-submitted_time')  # Sort by submission time
+    )
+
+    # Pass the data to the template
+    context = {'loan_history': loan_history}
+    return render(request, 'history.html', context)
 
 #For Settings Page
 @login_required
@@ -268,7 +435,6 @@ def settings_page(request):
 
     # Render the settings page with the updated context
     return render(request, 'settings.html', context)
-
 
 
 

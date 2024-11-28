@@ -5,10 +5,10 @@
 
 body {
   font-family: Arial, sans-serif;
-    padding-top: 85px; /* Adjust to the navbar's height */
-  
-  
+    padding-top: 85px; 
+    background-color: #d7d7d7;  
 }
+
 .about-us img {
     max-width: 100%;
     height: auto;
@@ -17,6 +17,7 @@ body {
   .our-values .value-box {
     background-color: #fff;
     transition: transform 0.3s ease;
+    box-shadow: 0px 0px 10px 3px rgb(187, 184, 184) !important;
   }
   
   .our-values .value-box:hover {
@@ -85,6 +86,10 @@ body {
   color: #ffcc00; 
 }
 
+.nav-link.active {
+  color: #ffcc00 !important;
+}
+
 .container-fluid{
   padding-right: 30px !important;
 }
@@ -98,6 +103,7 @@ body {
 
 .heading-blue{
   color: rgb(13, 13, 228) !important;
+  font-weight: bold !important;
   
 }
 
@@ -109,12 +115,8 @@ footer h5 {
 
 #section{
   padding-top: 50px !important;
-  background: linear-gradient( #FFFFFF, #2f3ccd );
+  background: linear-gradient( #FFFFFF, #d7d7d7 );
   
-}
-
-.custom-box{
-  box-shadow: 0px 0px 5px 0px rgb(0, 0, 0) !important;
 }
 
 

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan History</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/history.css' %}">
+  
+</head>
+<body>
+  
+   <!-- Navbar -->
+<nav class="navbar navbar-expand-lg" id="navbar1">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <span class="ms-2">History</span>
+    </a>  
+    <!-- Toggler button for mobile view -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      ☰ <!-- Simple icon for the toggler -->
+    </button>
+    <!-- Collapsible part of the navbar -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto d-flex flex-row">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'history' %}">History</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'aboutus' %}">About Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'feedback' %}">Feedback</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'settings' %}">Settings</a>
+        </li>
+        <div class="logout-container">
+          <form action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="logout-icon-btn" title="Logout">
+                  <img src="{% static 'image/logout.png' %}" alt="Logout" width="24" height="24">
+              </button>
+          </form>
+      </div>             
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  
+<div class="container mt-4">
+  <h2 class="text-center">Loan History</h2>
+  <div class="row">
+    <div class="col-12">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Application ID</th>
+            <th>Loan Term</th>
+            <th>Loan Amount</th>
+            <th>Loan Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for history in loan_history %}
+            <tr>
+              <td>{{ history.application_id }}</td>
+              <td>{{ history.loan_terms }} Years</td>
+              <td>${{ history.loan_amount }}</td>
+              <td>
+                {% if history.loan_status %}
+                  <span style="color: green; font-weight: bold;">Approved</span>
+                {% else %}
+                  <span style="color: red; font-weight: bold;">Rejected</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <!-- Footer -->
+  <footer class="text-center py-4 bg-dark text-white">
+    <div class="container">
+      <div class="row">
+        <!-- About Section -->
+        <div class="col-md-4">
+          <h5>ABOUT US </h5>
+          <p>We provide fast and reliable loan approval services to help you achieve your financial goals. Our team is dedicated to offering the best experience with quick processing and easy application steps.</p>
+        </div>
+        
+        <!-- Contact Information -->
+        <div class="col-md-4">
+          <h5>CONTACT US </h5>
+          <p>Email: support@loanapproval.com</p>
+          <p>Phone: +977 9860953027</p>
+          <p>Address: Putalisadak, Nepal, City, Country</p>
+        </div>
+        
+        <!-- Links Section -->
+        <div class="col-md-4">
+          <h5>QUICK LINKS </h5> 
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white">Privacy Policy</a></li>
+            <li><a href="#" class="text-white">Terms of Service</a></li>
+            <li><a href="#" class="text-white">FAQs</a></li>
+          </ul>
+          
+        </div>
+      </div>
+  
+      <hr class="my-4">
+      
+      <!-- Copyright Information -->
+      <p>&copy; 2024 Loan Approval System. All Rights Reserved.</p>
+    </div>
+  </footer>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

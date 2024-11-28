@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
 import pytz
@@ -38,7 +38,7 @@ class UserManager(BaseUserManager):
         
         return self.create_user(email, first_name, last_name, phone, dob, password, **extra_fields)
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
 
     NORMAL_USER = 0
     ADMIN_SUPERUSER = 1
@@ -60,6 +60,8 @@ class User(AbstractBaseUser):
     pictures = models.ImageField(upload_to='uploads/')
     user_type = models.IntegerField(choices=USER_TYPE_CHOICES, default=NORMAL_USER)
     agree_terms = models.BooleanField(default=True)
+    submitted_time = models.DateTimeField(auto_now_add=True)
+
     # nepali time function call gareko
     def get_nepal_time():
     # Get current datetime in Nepal timezone
@@ -111,12 +113,6 @@ class Feedback(models.Model):
         return f"{self.user.email} - {self.feedback[:30]} ({self.rating})"
 
 
-class Profile(models.Model):
-    profile_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    profile_picture = models.ImageField(upload_to='profiles/')
-    created_at = models.DateTimeField(auto_now_add=True)
-
 class Application(models.Model):
     application_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(get_user_model(), to_field='user_id', on_delete=models.CASCADE)
@@ -136,12 +132,18 @@ class Application(models.Model):
     submitted_time = models.DateTimeField(auto_now_add=True)
     state = models.CharField(max_length=255)
     street = models.CharField(max_length=255)
+    def get_nepal_time():
+        nepal_time = timezone.now().astimezone(NEPAL_TZ)
+        return nepal_time.strftime("%Y-%m-%d, %A %H:%M:%S")
+    time_updated = models.CharField(max_length=50, default=get_nepal_time)
 
 class LoanStatus(models.Model):
     status_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     application = models.ForeignKey(Application, on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
+    submitted_time = models.DateTimeField(auto_now_add=True)
+
     def get_nepal_time():
         nepal_time = timezone.now().astimezone(NEPAL_TZ)
         return nepal_time.strftime("%Y-%m-%d, %A %H:%M:%S")
@@ -170,3 +172,4 @@ class FAQ(models.Model):
     faq_id = models.AutoField(primary_key=True)  # Auto-incrementing primary key
     question = models.TextField()               # Field to store the FAQ question
     answer = models.TextField()                 # Field to store the FAQ answer
+
