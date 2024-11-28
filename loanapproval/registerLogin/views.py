@@ -197,18 +197,31 @@ def aboutus_page(request):
 @login_required
 def feedback_page(request):
     if request.method == 'POST':
-        
+        # Retrieve rating and feedback from POST request
         rating = request.POST.get('rating')
         feedback = request.POST.get('feedback')
-        
+
         if rating and feedback:
-            feedback_instance = Feedback(user=request.user, rating=rating, feedback=feedback)
-            feedback_instance.save()
+            # Save feedback
+            feedback_instance = Feedback.objects.create(
+                user=request.user, 
+                rating=rating, 
+                feedback=feedback
+            )
+
+            # Log the feedback submission in CMSLog
+            CMSLog.objects.create(
+                table="Feedback",
+                value=f"Feedback ID: {feedback_instance.fb_id}",
+                old_data=f"Rating: {rating}, Feedback: {feedback}",  # Storing new data representation
+                updated_by=request.user.email,  # Assuming email is the unique identifier
+            )
+
             messages.success(request, 'Thank you for your feedback!')
             return redirect('feedback')
         else:
             messages.error(request, 'Please provide both rating and feedback.')
-        
+
     return render(request, 'feedback.html')
 
 
@@ -868,7 +881,6 @@ class FeedbackView(APIView):
 
     
 # mobile user profile
-
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]  # Allow file uploads
