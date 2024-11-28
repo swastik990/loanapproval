@@ -526,6 +526,8 @@ class UserSignupView(APIView):
             )
             user.save()
 
+           
+
             # Create JWT tokens
             refresh = RefreshToken.for_user(user)
 
@@ -552,6 +554,12 @@ class UserLoginView(APIView):
             user = authenticate(request, email=email, password=password)
             
             if user is not None:
+                log_to_cms(
+                table='User',
+                value=f"User ID: {user.user_id}",
+                old_data='Logged In',
+                updated_by=user.email
+    )
                 # Create JWT tokens
                 refresh = RefreshToken.for_user(user)
                 return Response({
@@ -560,6 +568,13 @@ class UserLoginView(APIView):
                     'msg': 'Login successful'
                 }, status=status.HTTP_200_OK)
             else:
+                # Log failed login attempt to CMSLog
+                CMSLog.objects.create(
+                    table='User',
+                    value='Login Attempt',
+                    old_data=f'Failed login attempt for {email}',
+                    updated_by=email
+                )
                 return Response({'errors': {'non_field_errors': ['Invalid credentials']}}, status=status.HTTP_401_UNAUTHORIZED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -761,6 +776,14 @@ def loan_prediction(request):
         )
         application.save()
 
+        old_data = "Form submission: New application created"
+        log_to_cms(
+            table="Application",
+            value=f"Application ID: {application.application_id}",
+            old_data=str(old_data),
+            updated_by=request.user.email
+        )
+
         # Prediction (ensure `model` is defined and imported)
         prediction = model1.predict_proba(input_data)[:, 1]
         threshold = 0.5
@@ -770,6 +793,13 @@ def loan_prediction(request):
             status=prediction[0] > threshold  # If probability > threshold, approve
         )
         loan_status.save()
+        loan_status_data = f"Loan status updated: {'Approved' if prediction == 1 else 'Rejected'}"
+        log_to_cms(
+            table="LoanStatus",
+            value=f"LoanStatus ID: {loan_status.status_id}",
+            old_data=loan_status_data,
+            updated_by=request.user.email
+        )
 
         prediction_text = (
             "Congratulations, your loan is approved!" if prediction[0] > threshold
@@ -791,33 +821,87 @@ def loan_prediction(request):
     
 # moblie feedback
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from django.utils import timezone
+from .models import Feedback, CMSLog
+from .serializers import FeedbackSerializer
+
 class FeedbackView(APIView):
     permission_classes = [IsAuthenticated]  # Require authentication
 
     def post(self, request):
-        serializer = FeedbackSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()  # Save feedback
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # Retrieve rating and feedback from request data
+        rating = request.data.get('rating')
+        feedback_content = request.data.get('feedback')
+
+        if rating and feedback_content:
+            # Save feedback
+            feedback_instance = Feedback.objects.create(
+                user=request.user,
+                rating=rating,
+                feedback=feedback_content
+            )
+
+            # Log the feedback submission in CMSLog
+            CMSLog.objects.create(
+                table="Feedback",
+                value=f"Feedback ID: {feedback_instance.fb_id}", 
+                old_data=f"Rating: {rating}, Feedback: {feedback_content}",  
+                updated_by=request.user.email,  # Log user email
+                updated_at=timezone.now(),  # Timestamp when feedback was submitted
+            )
+
+            # Return success response
+            return Response(
+                {"message": "Thank you for your feedback!", "feedback_id": feedback_instance.fb_id},
+                status=status.HTTP_201_CREATED
+            )
+        else:
+            # Return error response if rating or feedback is missing
+            return Response(
+                {"error": "Please provide both rating and feedback."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
     
 # mobile user profile
+
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
-    parser_classes = [MultiPartParser, FormParser]  # Add multipart parser for handling file uploads
+    parser_classes = [MultiPartParser, FormParser]  # Allow file uploads
 
     def get(self, request):
-        # Retrieve the current user's profile data
+        """
+        Retrieve the current user's profile data.
+        """
         serializer = UserUpdateSerializer(request.user, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request):
-        # Update the user's profile data, including the picture if provided
-        serializer = UserUpdateSerializer(request.user, data=request.data, partial=True)
+        """
+        Update the user's profile data, including the picture if provided.
+        """
+        user = request.user
+        serializer = UserUpdateSerializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
+        old_data = {field: getattr(user, field) for field in serializer.fields if hasattr(user, field)}
+
         serializer.save()
+
+        
+        updated_data = serializer.validated_data
+        CMSLog.objects.create(
+            table='User',
+            value=f'User ID: {user.user_id}',
+            old_data=f"Old Data: {old_data}",
+            updated_at=user.user_id,  
+            updated_by=user.email  
+        )
+
         return Response({"message": "Profile updated successfully."}, status=status.HTTP_200_OK)
-    
 
 # change Password   
 class ChangePasswordView(APIView):

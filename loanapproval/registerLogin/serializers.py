@@ -1,9 +1,11 @@
 from rest_framework import serializers
-from .models import User,Feedback,LoanStatus,AboutUs,FAQ,TermsAndConditions
+from .models import User,Feedback,LoanStatus,AboutUs,FAQ,TermsAndConditions,  CMSLog 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.authtoken.models import Token
 from decimal import Decimal, InvalidOperation
+
+
 
 class UserSignupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,11 +39,21 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'user_id', 'first_name', 'last_name', 'phone', 'dob', 'email',
-            'pictures',  'agree_terms', 'check_in_time'
+            'pictures', 'agree_terms', 'check_in_time'
         ]
         read_only_fields = ['user_id', 'email', 'check_in_time']  # Make these fields read-only
 
     def update(self, instance, validated_data):
+        # Capture old data for logging
+        old_data = {
+            'first_name': instance.first_name,
+            'last_name': instance.last_name,
+            'phone': instance.phone,
+            'dob': instance.dob,
+            'pictures': instance.pictures,
+            'agree_terms': instance.agree_terms,
+        }
+
         # Update each field with validated data if provided
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
@@ -49,8 +61,11 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         instance.dob = validated_data.get('dob', instance.dob)
         instance.pictures = validated_data.get('pictures', instance.pictures)
         instance.agree_terms = validated_data.get('agree_terms', instance.agree_terms)
-        
+
+        # Save the updated instance
         instance.save()
+
+
         return instance
 
 
