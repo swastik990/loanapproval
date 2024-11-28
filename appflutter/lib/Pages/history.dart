@@ -309,7 +309,7 @@ Future<int> getUniqueUserCount() async {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      'Total Loan Amount: Rs $totalApprovedLoanAmount',
+                                      'Total Loan Amount: Rs. $totalApprovedLoanAmount',
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
@@ -353,7 +353,7 @@ Future<int> getUniqueUserCount() async {
                                               Icons.account_balance_wallet,
                                               color: Colors.green),
                                           title: Text(
-                                              'Loan Amount: Rs ${record['loan_amount']}'),
+                                              'Loan Amount: Rs. ${record['loan_amount']}'),
                                           subtitle: Text.rich(
                                             TextSpan(
                                               children: [
@@ -430,7 +430,7 @@ Future<int> getUniqueUserCount() async {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Total Loan Amount: Rs $totalApprovedLoanAmount',
+                                  'Total Loan Amount: Rs. $totalApprovedLoanAmount',
                                   style: const TextStyle(
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.bold,
@@ -471,7 +471,7 @@ Future<int> getUniqueUserCount() async {
                                           Icons.account_balance_wallet,
                                           color: Colors.green),
                                       title: Text(
-                                          'Loan Amount: Rs ${record['loan_amount']}'),
+                                          'Loan Amount: Rs. ${record['loan_amount']}'),
                                       subtitle: Text.rich(
                                         TextSpan(
                                           children: [

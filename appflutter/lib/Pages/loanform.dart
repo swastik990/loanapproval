@@ -314,9 +314,9 @@ Widget build(BuildContext context) {
            
             _buildTextField(controller: citizenshipNo, label: 'Citizenship Number', keyboardType: TextInputType.number,maxLength: 14,),
             
-            _buildTextField(controller: country, label: 'Country'),
-            _buildTextField(controller: state, label: 'State'),
-            _buildTextField(controller: street, label: 'Street Address'),
+            _buildTextField(controller: country, label: 'Country',keyboardType: TextInputType.text,maxLength: 50,),
+            _buildTextField(controller: state, label: 'State', keyboardType: TextInputType.text,maxLength: 50,),
+            _buildTextField(controller: street, label: 'Street Address', keyboardType: TextInputType.text,maxLength: 50,),
             _buildTextField(controller: zip, label: 'Zip Code', keyboardType: TextInputType.number),
           ],
         ),
@@ -332,7 +332,7 @@ Widget build(BuildContext context) {
           children: [
             _buildTextField(controller: loanAmount, label: 'Loan Amount', keyboardType: TextInputType.number,maxLength: 11,),
             _buildTextField(controller: loanTerm, label: 'Loan Term(in years)', keyboardType: TextInputType.number,maxDigits:30,maxLength:2),
-            _buildTextField(controller: creditScore, label: 'Credit Score(max 30yrs)', keyboardType: TextInputType.number,maxLength: 3,),
+            _buildTextField(controller: creditScore, label: 'Credit Score(max 850)', keyboardType: TextInputType.number,maxLength: 3,),
             _buildTextField(controller: dependents, label: 'Dependents(max 10 dependents)', keyboardType: TextInputType.number,maxLength: 2,maxDigits:10,),
             SwitchListTile(
               title: Text('Graduate'),
@@ -380,10 +380,9 @@ Widget build(BuildContext context) {
   required TextEditingController controller,
   required String label,
   TextInputType keyboardType = TextInputType.text,
-  int? maxLength, 
+  int? maxLength,
   int? maxDigits,
 }) {
-  // If both maxLength and maxDigits are provided, prefer maxDigits for limiting the number of digits
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
     child: TextField(
@@ -391,22 +390,24 @@ Widget build(BuildContext context) {
       keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: Colors.black),
-        enabledBorder: OutlineInputBorder(
+        labelStyle: const TextStyle(color: Colors.black),
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Color(0xFF13136A)),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Color(0xFF13136A), width: 2.0),
         ),
       ),
       inputFormatters: [
-        if (maxDigits != null) 
-          LengthLimitingTextInputFormatter(maxDigits), // Apply max digits limit if specified
+        if (maxDigits != null && keyboardType == TextInputType.number)
+          LengthLimitingTextInputFormatter(maxDigits), // Apply maxDigits limit for numeric input
         if (maxLength != null)
-          LengthLimitingTextInputFormatter(maxLength), // Apply max length limit if specified
-        FilteringTextInputFormatter.digitsOnly, // Ensures only numeric input
+          LengthLimitingTextInputFormatter(maxLength), // Apply maxLength limit
+        if (keyboardType == TextInputType.number)
+          FilteringTextInputFormatter.digitsOnly, // Restrict to digits only for numeric input
       ],
     ),
   );
 }
+
 }

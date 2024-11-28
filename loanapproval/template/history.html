@@ -72,7 +72,7 @@
             <tr>
               <td>{{ history.application_id }}</td>
               <td>{{ history.loan_terms }} Years</td>
-              <td>${{ history.loan_amount }}</td>
+              <td>Rs. {{ history.loan_amount }}</td>
               <td>
                 {% if history.loan_status %}
                   <span style="color: green; font-weight: bold;">Approved</span>
