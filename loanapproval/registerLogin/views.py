@@ -49,6 +49,35 @@ from django.contrib.auth import update_session_auth_hash
 from django.core.exceptions import ValidationError
 import re
 
+from .models import CMSLog
+from django.contrib.auth.models import User
+
+def log_to_cms(table, value, old_data, updated_by):
+    """
+    Logs changes to the CMSLog table.
+    :param table: The table where the change occurred.
+    :param value: The specific value/record modified.
+    :param old_data: A string representation of the old data.
+    :param updated_by: The user responsible for the update.
+    """
+    CMSLog.objects.create(
+        table=table,
+        value=value,
+        old_data=old_data,
+        updated_by=updated_by
+    )
+
+from django.dispatch import receiver
+from django.contrib.auth.signals import user_logged_in
+@receiver(user_logged_in)
+def log_login(sender, request, user, **kwargs):
+    log_to_cms(
+        table='User',
+        value=f"User ID: {user.user_id}",
+        old_data='Logged In',
+        updated_by=user.email
+    )
+
 def validate_password_strength(password):
     # Ensure the password contains at least one uppercase letter, one lowercase letter, and one number
     if not re.search(r'[A-Z]', password):  # Uppercase letter
@@ -144,6 +173,8 @@ def user_action(request):
             if user:
         # If authentication is successful, log the user in
                 login(request, user)
+                                # Optional: Generate JWT tokens for API compatibility
+                refresh = RefreshToken.for_user(user)
                 messages.success(request, "You've Successfully Logged In!")
                 return redirect('home')  # Redirect to the home page
             else:
@@ -219,24 +250,37 @@ from io import BytesIO
 def user_page(request):
     # Get all applications related to the logged-in user
     applications = Application.objects.filter(user=request.user)
-    
+
     application = None  # Initialize as None in case no application is selected
-    
+    loan_status = None  # Initialize as None to handle cases where no loan status is found
+    status = 'Pending'  # Default status if no loan status is found or set
+
     # If application_id is passed via GET, fetch the corresponding application
     application_id = request.GET.get('application_id', None)
-    
+
     if application_id:
         try:
-            application = Application.objects.get(application_id=application_id)
+            application = Application.objects.get(application_id=application_id, user=request.user)
+            loan_status = LoanStatus.objects.filter(application=application).first()
         except Application.DoesNotExist:
             application = None
-    
+
+    # Determine the status
+    if loan_status:
+        if loan_status.status:
+            status = 'Approved'
+        else:
+            status = 'Rejected'
+
     context = {
         'applications': applications,
         'application': application,
         'application_id': application_id,
+        'loan_status': status,  # Pass the determined status to the template
     }
+
     return render(request, 'userdetails.html', context)
+
 
 
 def download_pdf(request, application_id):
@@ -355,7 +399,7 @@ def history_page(request):
 
     # Pass the data to the template
     context = {'loan_history': loan_history}
-    return render(request, 'history.html', context)
+    return render(request,'history.html', context)
 
 #For Settings Page
 @login_required
@@ -372,6 +416,12 @@ def settings_page(request):
         'dob': user.dob,
     }
 
+    old_data = {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "phone": user.phone,
+        }
     # Handle form submission for updating user information
     if request.method == "POST":
         if 'update' in request.POST:
@@ -404,6 +454,12 @@ def settings_page(request):
             # Save the updated user object
             user.save()
 
+            log_to_cms(
+                table="User",
+                value=f"User ID: {user.user_id}",
+                old_data=str(old_data),
+                updated_by=user.email
+            )
             # Add a success message
             messages.success(request, "Account information has been updated successfully.")
 
@@ -582,6 +638,15 @@ def formInfo(request):
             submitted_time=pd.Timestamp.now()  # Store current time as submission time
         )
         application.save()
+        
+                # Log the form submission to CMSLog
+        old_data = "Form submission: New application created"
+        log_to_cms(
+            table="Application",
+            value=f"Application ID: {application.application_id}",
+            old_data=str(old_data),
+            updated_by=request.user.email
+        )
 
         prediction = model.predict(input_data)
         
@@ -592,6 +657,14 @@ def formInfo(request):
             status=prediction == 1,  # If approved, status is True
         )
         loan_status.save()
+        
+        loan_status_data = f"Loan status updated: {'Approved' if prediction == 1 else 'Rejected'}"
+        log_to_cms(
+            table="LoanStatus",
+            value=f"LoanStatus ID: {loan_status.status_id}",
+            old_data=loan_status_data,
+            updated_by=request.user.email
+        )
 
         # Convert the prediction into a human-readable format
         prediction_text = "Congratulations, your loan is approved!" if prediction == 1 else "Sorry, your loan application is rejected."
@@ -600,6 +673,13 @@ def formInfo(request):
         return render(request, 'result.html', {'prediction': prediction_text})
 
     except Exception as e:
+        error_data = f"Error during form submission: {str(e)}"
+        log_to_cms(
+            table="Error",
+            value="Form Submission",
+            old_data=error_data,
+            updated_by=request.user.email
+        )
         return render(request, 'result.html', {'prediction': f"An error occurred: {str(e)}"})
     
 def form_view(request):
