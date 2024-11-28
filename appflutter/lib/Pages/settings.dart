@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../change_password.dart'; 
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:intl/intl.dart';
 
 // User model class
 class User {
@@ -94,9 +96,208 @@ class SettingsUser {
     }
   }
 }
+class SettingsPage extends StatefulWidget {
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
 
-class SettingsPage extends StatelessWidget {
+class _SettingsPageState extends State<SettingsPage> {
   final SettingsUser settingsUser = SettingsUser();
+
+  final GlobalKey _settingKey = GlobalKey();
+  final GlobalKey _viewProfileKey = GlobalKey();
+  final GlobalKey _editProfileKey = GlobalKey();
+  final GlobalKey _changePasswordKey = GlobalKey();
+  final GlobalKey _outKey = GlobalKey();
+
+void initState() {
+    
+    super.initState();
+    _initializeTutorial();
+  }
+
+  void _initializeTutorial() async {
+  try {
+    User user = await SettingsUser().fetchUser();
+
+    // Preprocess checkInTime to remove the day name
+    String preprocessedTime = user.checkInTime.replaceAll(RegExp(r', [A-Za-z]+'), '');
+
+    // Define the date format
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+
+    // Parse the cleaned date string
+    DateTime checkInDateTime = dateFormat.parse(preprocessedTime);
+
+    await _checkAndShowTutorial(user.userId, checkInDateTime);
+  } catch (e) {
+    print('Error during tutorial initialization: $e');
+  }
+}
+
+Future<void> _checkAndShowTutorial(int userId, DateTime checkInTime) async {
+  final prefs = await SharedPreferences.getInstance();
+
+  try {
+    // Force reset the 'hasSeenTutorial' flag for testing purposes (REMOVE THIS in production!)
+    await prefs.setBool('hasSeenTutorial', false);  // Temporary reset
+
+    // Get the current Nepali time
+    DateTime currentTimeNepali = DateTime.now().add(Duration(hours: 0, minutes: 00));
+
+    // Calculate the difference between the current time and checkInTime
+    Duration timeDifference = currentTimeNepali.difference(checkInTime).abs();
+
+    // Log debugging information
+    debugPrint('User ID: $userId');
+    debugPrint('Check-In Time: $checkInTime');
+    debugPrint('Current Nepali Time: $currentTimeNepali');
+    debugPrint('Time Difference: ${timeDifference.inMinutes} minutes');
+
+    // Check if the tutorial has been shown
+    bool hasSeenTutorial = prefs.getBool('hasSeenTutorial') ?? false;
+
+    // Only show the tutorial if the time difference is within 5 minutes and it hasn't been shown before
+    if (!hasSeenTutorial && timeDifference.inMinutes <= 1) {
+      _createTutorial();
+
+      // Update the flag so the tutorial won't be shown again
+      await prefs.setBool('hasSeenTutorial', true);
+      debugPrint('Tutorial displayed.');
+    } else {
+      debugPrint('Conditions not met for showing tutorial.');
+    }
+  } catch (e) {
+    debugPrint('Error during tutorial initialization: $e');
+  }
+}
+Future<void> trackUserCount(int userId) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  // Load the existing set of user IDs (or initialize an empty set if it doesn't exist)
+  List<String>? userIdList = prefs.getStringList('unique_user_ids');
+  Set<String> userIds = userIdList?.toSet() ?? {};
+
+  // Add the current user ID
+  userIds.add(userId.toString());
+
+  // Save the updated set back to SharedPreferences
+  await prefs.setStringList('unique_user_ids', userIds.toList());
+
+  // Print the current unique user count
+  print('Unique user count: ${userIds.length}');
+}
+
+Future<int> getUniqueUserCount() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  List<String>? userIdList = prefs.getStringList('unique_user_ids');
+  return userIdList?.length ?? 0;
+}
+ Future<void> _createTutorial() async {
+    final targets = [
+      TargetFocus(
+        identify: 'settingKey',
+        keyTarget: _settingKey,
+        shape: ShapeLightFocus.RRect,
+        alignSkip: Alignment.bottomCenter,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) => Text(
+              'This is Setting page where you can edit profile or change password.',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+      
+      TargetFocus(
+        identify: 'viewProfile',
+        keyTarget: _viewProfileKey,
+        
+        alignSkip: Alignment.bottomCenter,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) => Text(
+              'You can view your Profile.',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+       TargetFocus(
+        identify: 'editProfile',
+        keyTarget: _editProfileKey,
+        shape: ShapeLightFocus.RRect,
+        alignSkip: Alignment.bottomCenter,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) => Text(
+              'You can edit your Profile.',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'changePword',
+        keyTarget: _changePasswordKey,
+        shape: ShapeLightFocus.RRect,
+        alignSkip: Alignment.bottomCenter,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) => Text(
+              'You can change password.',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'logout',
+        keyTarget: _outKey,
+        shape: ShapeLightFocus.RRect,
+        alignSkip: Alignment.bottomCenter,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) => Text(
+              'Or, You can logout.',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+      
+    ]
+    
+    ;
+
+    final tutorial = TutorialCoachMark(targets: targets);
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+      tutorial.show(context: context);
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +305,7 @@ class SettingsPage extends StatelessWidget {
       child: Scaffold(
       appBar: AppBar(
         title: Text(
+          key:_settingKey,
           'Settings',
           style: TextStyle(color: Colors.white),
         ),
@@ -155,7 +357,7 @@ class SettingsPage extends StatelessWidget {
                     child: Center(
                       child: Column(
                         children: [
-                          CircleAvatar(
+                          CircleAvatar(key:_viewProfileKey,   
                             radius: 50,
                             backgroundImage: NetworkImage(
                                user.pictures ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s', // Use the fetched user's picture
@@ -183,7 +385,7 @@ class SettingsPage extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => EditProfilePage(user:user)),
                       );
                     },
-                    child: Text(
+                    child: Text(key: _editProfileKey,
                       'Edit Profile',
                       style: TextStyle(color: Colors.white), // Set text color to white
                     ),
@@ -196,7 +398,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   // Change password
-                  ListTile(
+                  ListTile(key: _changePasswordKey,
                     leading: Icon(Icons.lock_outline, color: Color(0xFF13136A)),
                     title: Text('Change password'),
                     trailing: Icon(Icons.arrow_forward_ios),
@@ -222,7 +424,7 @@ class SettingsPage extends StatelessWidget {
                     },
                   ),
                   // Log Out
-                  ListTile(
+                  ListTile(key:_outKey,
                     leading: Icon(Icons.logout, color: Colors.red),
                     title: Text('LogOut'),
                     trailing: Icon(Icons.arrow_forward_ios),
@@ -250,84 +452,123 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     return SafeArea(
+    return SafeArea(
       child: Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Profile',
-          style: TextStyle(color: Colors.white),
-        ),
-        flexibleSpace: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], // Gradient colors
-                                begin: Alignment.bottomRight, // Start from top-left
-                                end: Alignment.topLeft, // End at bottom-right
-                              ),
-                            ),
-                          ),
-                          leading: IconButton(
+        appBar: AppBar(
+          title: Text(
+            'Profile',
+            style: TextStyle(color: Colors.white),
+          ),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], 
+                begin: Alignment.bottomRight,
+                end: Alignment.topLeft,
+              ),
+            ),
+          ),
+          leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Enlarged profile picture with edit icon
-            CircleAvatar(
-              radius: 70, // Increased radius for a larger profile image
-              backgroundImage: NetworkImage( user.pictures ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s',), // Use the user's picture
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Hero animation for profile picture
+                Hero(
+                  tag: 'profile-picture',
+                  child: CircleAvatar(
+                    radius: 70,
+                    backgroundImage: NetworkImage(
+                      user.pictures ?? 'https://via.placeholder.com/150',
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                // User information fields with animation
+                AnimatedProfileField(label: "First Name                        :", value: user.firstName),
+                AnimatedProfileField(label: "Last Name                        :", value: user.lastName),
+                AnimatedProfileField(label: "Email                                 :", value: user.email),
+                AnimatedProfileField(label: "D.O.B                                 :", value: user.dob),
+                AnimatedProfileField(label: "Phone number                 :", value: user.phone),
+              ],
             ),
-            SizedBox(height: 20),
-
-            // User information fields
-            buildProfileField("First Name:", user.firstName),
-            buildProfileField("Last Name:", user.lastName),
-            buildProfileField("Email:", user.email),
-            buildProfileField("D.O.B:", user.dob),
-            buildProfileField("Phone number:", user.phone),
-          ],
+          ),
         ),
       ),
-    )));
+    );
   }
+}
 
-  // Helper widget to create each field
-  Widget buildProfileField(String label, String value) {
+// Animated profile field
+class AnimatedProfileField extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const AnimatedProfileField({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 199, 199, 199),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+      child: TweenAnimationBuilder(
+        duration: Duration(milliseconds: 500),
+        tween: Tween<double>(begin: 0, end: 1),
+        builder: (context, double opacity, child) {
+          return Opacity(
+            opacity: opacity,
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+                border: Border.all(
+                  color: Colors.grey,
+                  width: 2.0,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade200,
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                  )
+                ],
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Label text with normal weight
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal, // Set label to normal weight
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    // Value text with bold weight
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold, // Keep value bold
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                value,
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

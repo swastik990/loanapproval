@@ -78,7 +78,8 @@ class _FAQPageState extends State<FAQPage> {
           flexibleSpace: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)],
+                // colors: [Color(0xFF13136A), Color(0xff281537)],
+                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], 
                 begin: Alignment.bottomRight,
                 end: Alignment.topLeft,
               ),

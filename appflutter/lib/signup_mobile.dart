@@ -130,15 +130,17 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
       appBar: AppBar(
         title: Text('Sign Up', style: TextStyle(color: Colors.white)),
         flexibleSpace: Container(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], // Gradient colors
-                                begin: Alignment.bottomRight, // Start from top-left
-                                end: Alignment.topLeft, // End at bottom-right
+                                // colors: [Color(0xFF13136A), Color(0xff281537)],  
+                                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], 
+                                begin: Alignment.bottomRight, 
+                                end: Alignment.topLeft, 
                               ),
                             ),
                           ),
@@ -165,7 +167,19 @@ class _SignupPageState extends State<SignupPage> {
       ),
       body: Center(
         child: SingleChildScrollView(
-          child: Padding(
+          child: Column(
+      children: [
+          ClipRRect(
+  borderRadius: BorderRadius.circular(16.0), 
+  child: Image.asset(
+    'lib/assets/homebanner.png', 
+    height: 150,
+    width: 150, 
+    fit: BoxFit.cover, 
+  ),
+),
+          
+          Padding(
             padding: const EdgeInsets.all(16.0),
             child: Form(
               key: _formKey,
@@ -394,9 +408,9 @@ class _SignupPageState extends State<SignupPage> {
               ),
             ),
           ),
-        ),
+        ]),
       ),
-    );
+    )));
   }
 }
 

@@ -42,7 +42,7 @@ class SplashScreen extends StatelessWidget {
         // Gradient background with custom colors and direction
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF13136A), const Color.fromARGB(255, 114, 107, 152)], // Blue to White gradient
+            colors: [Color(0xFF13136A), Color(0xff281537)], // Blue to White gradient
             begin: Alignment.topRight, // Gradient starts from the top-right
             end: Alignment.bottomLeft, // Gradient ends at the bottom-left
           ),

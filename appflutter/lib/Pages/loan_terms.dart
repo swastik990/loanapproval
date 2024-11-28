@@ -52,7 +52,8 @@ class _LoanTermsPageState extends State<LoanTermsPage> {
           flexibleSpace: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], // Gradient colors
+                // colors: [Color(0xFF13136A), Color(0xff281537)], 
+                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], 
                 begin: Alignment.bottomRight,
                 end: Alignment.topLeft,
               ),

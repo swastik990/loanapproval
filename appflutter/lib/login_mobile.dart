@@ -107,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
           flexibleSpace: Container(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
+                                // colors: [Color(0xFF13136A), Color(0xff281537)], 
                                 colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], 
                                 begin: Alignment.bottomRight, 
                                 end: Alignment.topLeft, 
@@ -210,28 +211,28 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Text('OR SIGN IN WITH', style: TextStyle(color: Colors.grey)),
+                    // Text('OR SIGN IN WITH', style: TextStyle(color: Colors.grey)),
                     SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          icon: SizedBox(
-                            width: 40,
-                            height: 40,
-                            child: Image.asset('lib/assets/facebook.png'), 
-                          ),
-                          onPressed: () {},
-                        ),
-                        IconButton(
-                          icon: SizedBox(
-                            width: 40,
-                            height: 40,
-                            child: Image.asset('lib/assets/google.png'), 
-                          ),
-                          onPressed: () {},
-                        ),
-                      ],
+                      // children: [
+                      //   IconButton(
+                      //     icon: SizedBox(
+                      //       width: 40,
+                      //       height: 40,
+                      //       child: Image.asset('lib/assets/facebook.png'), 
+                      //     ),
+                      //     onPressed: () {},
+                      //   ),
+                      //   IconButton(
+                      //     icon: SizedBox(
+                      //       width: 40,
+                      //       height: 40,
+                      //       child: Image.asset('lib/assets/google.png'), 
+                      //     ),
+                      //     onPressed: () {},
+                      //   ),
+                      // ],
                     ),
                     SizedBox(height: 20),
                     TextButton(
