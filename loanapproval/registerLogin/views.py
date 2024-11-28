@@ -143,7 +143,9 @@ def user_action(request):
             
             if user:
         # If authentication is successful, log the user in
+        
                 login(request, user)
+                refresh = RefreshToken.for_user(user)
                 messages.success(request, "You've Successfully Logged In!")
                 return redirect('home')  # Redirect to the home page
             else:

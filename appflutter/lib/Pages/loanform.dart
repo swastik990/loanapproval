@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart'; // Import the SharedPreferences package
+import 'package:shared_preferences/shared_preferences.dart'; 
 import 'homepage.dart';
+import 'package:flutter/services.dart';
 
 
 class LoanApplication {
@@ -311,7 +312,8 @@ Widget build(BuildContext context) {
         child: Column(
           children: [
            
-            _buildTextField(controller: citizenshipNo, label: 'Citizenship Number'),
+            _buildTextField(controller: citizenshipNo, label: 'Citizenship Number', keyboardType: TextInputType.number,maxLength: 14,),
+            
             _buildTextField(controller: country, label: 'Country'),
             _buildTextField(controller: state, label: 'State'),
             _buildTextField(controller: street, label: 'Street Address'),
@@ -328,10 +330,10 @@ Widget build(BuildContext context) {
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Column(
           children: [
-            _buildTextField(controller: loanAmount, label: 'Loan Amount', keyboardType: TextInputType.number),
-            _buildTextField(controller: loanTerm, label: 'Loan Term', keyboardType: TextInputType.number),
-            _buildTextField(controller: creditScore, label: 'Credit Score', keyboardType: TextInputType.number),
-            _buildTextField(controller: dependents, label: 'Number of Dependents', keyboardType: TextInputType.number),
+            _buildTextField(controller: loanAmount, label: 'Loan Amount', keyboardType: TextInputType.number,maxLength: 11,),
+            _buildTextField(controller: loanTerm, label: 'Loan Term(in years)', keyboardType: TextInputType.number,maxDigits:30,maxLength:2),
+            _buildTextField(controller: creditScore, label: 'Credit Score(max 30yrs)', keyboardType: TextInputType.number,maxLength: 3,),
+            _buildTextField(controller: dependents, label: 'Dependents(max 10 dependents)', keyboardType: TextInputType.number,maxLength: 2,maxDigits:10,),
             SwitchListTile(
               title: Text('Graduate'),
               value: isGraduate,
@@ -362,38 +364,49 @@ Widget build(BuildContext context) {
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Column(
           children: [
-            _buildTextField(controller: annualIncome, label: 'Annual Income', keyboardType: TextInputType.number),
-            _buildTextField(controller: residentialAsset, label: 'Residential Asset'),
-            _buildTextField(controller: luxuryAsset, label: 'Luxury Asset'),
-            _buildTextField(controller: bankAsset, label: 'Bank Asset'),
-            _buildTextField(controller: commercialAsset, label: 'Commercial Asset'),
+            _buildTextField(controller: annualIncome, label: 'Annual Income', keyboardType: TextInputType.number,maxLength: 10,),
+            _buildTextField(controller: residentialAsset, label: 'Residential Asset',keyboardType: TextInputType.number,maxLength: 10,),
+            _buildTextField(controller: luxuryAsset, label: 'Luxury Asset',keyboardType: TextInputType.number,maxLength: 10),
+            _buildTextField(controller: bankAsset, label: 'Bank Asset',keyboardType: TextInputType.number,maxLength: 10),
+            _buildTextField(controller: commercialAsset, label: 'Commercial Asset',keyboardType: TextInputType.number,maxLength: 10),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: TextStyle(color: Colors.black),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF13136A)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF13136A), width: 2.0),
-          ),
+ 
+ Widget _buildTextField({
+  required TextEditingController controller,
+  required String label,
+  TextInputType keyboardType = TextInputType.text,
+  int? maxLength, 
+  int? maxDigits,
+}) {
+  // If both maxLength and maxDigits are provided, prefer maxDigits for limiting the number of digits
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: Colors.black),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFF13136A)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFF13136A), width: 2.0),
         ),
       ),
-    );
-  }
+      inputFormatters: [
+        if (maxDigits != null) 
+          LengthLimitingTextInputFormatter(maxDigits), // Apply max digits limit if specified
+        if (maxLength != null)
+          LengthLimitingTextInputFormatter(maxLength), // Apply max length limit if specified
+        FilteringTextInputFormatter.digitsOnly, // Ensures only numeric input
+      ],
+    ),
+  );
+}
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'signup_mobile.dart';
 import 'login_mobile.dart';
@@ -19,7 +18,7 @@ class _LandingPageState extends State<LandingPage> {
       _isLoading = true;
     });
 
-    await Future.delayed(Duration(seconds: 2)); // Simulate a delay
+    await Future.delayed(const Duration(seconds: 2));
 
     Navigator.push(
       context,
@@ -33,19 +32,15 @@ class _LandingPageState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Change status bar color
-    
-
     return SafeArea(
       child: Scaffold(
-        backgroundColor:Color(0xFFFEFEFE),
         appBar: AppBar(
           title: Row(
             children: [
-              CircleAvatar(
-  radius: 20, // Adjust the size of the circle
-  backgroundImage: AssetImage('lib/assets/logo.png'),
-),
+              const CircleAvatar(
+                radius: 20,
+                backgroundImage: AssetImage('lib/assets/logo.png'),
+              ),
               const SizedBox(width: 10),
               const Text(
                 'Loan Approval System',
@@ -54,66 +49,67 @@ class _LandingPageState extends State<LandingPage> {
             ],
           ),
           flexibleSpace: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                // colors: [Color(0xFF13136A), Color(0xff281537)], 
-                                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)], 
-                                begin: Alignment.bottomRight, 
-                                end: Alignment.topLeft, 
-                              ),
-                            ),
-                          ),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF13136A), Color(0xFF5C6BC0)],
+                begin: Alignment.bottomRight,
+                end: Alignment.topLeft,
+              ),
+            ),
+          ),
           actions: [
             PopupMenuButton<int>(
-              icon: Icon(Icons.info_outline, color: Colors.white, size: 40),
+              icon: const Icon(Icons.info_outline, color: Colors.white, size: 40),
               onSelected: (value) {
                 switch (value) {
                   case 0:
                     showDialog(
                       context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('About Us'),
-                          content: Text('Information about the Loan Approval System by GROUP 30.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('Close', style: TextStyle(color: Colors.black),),
+                      builder: (context) => AlertDialog(
+                        title: const Text('About Us'),
+                        content: const Text('Information about the Loan Approval System by GROUP 30.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              'Close',
+                              style: TextStyle(color: Colors.black),
                             ),
-                          ],
-                        );
-                      },
+                          ),
+                        ],
+                      ),
                     );
                     break;
                   case 1:
                     showDialog(
                       context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('This Page'),
-                          content: Text('This is the landing page.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('Close', style: TextStyle(color: Colors.black)),
+                      builder: (context) => AlertDialog(
+                        title: const Text('This Page'),
+                        content: const Text('This is the landing page.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              'Close',
+                              style: TextStyle(color: Colors.black),
                             ),
-                          ],
-                        );
-                      },
+                          ),
+                        ],
+                      ),
                     );
                     break;
                 }
               },
-              itemBuilder: (context) => [
-                const PopupMenuItem(
+              itemBuilder: (context) => const [
+                PopupMenuItem(
                   value: 0,
                   child: Text('About Us'),
                 ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 1,
                   child: Text('This Page'),
                 ),
@@ -128,74 +124,107 @@ class _LandingPageState extends State<LandingPage> {
                   size: 50.0,
                 ),
               )
-            : Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text(
-                          'Seamless Loan Approvals, Anytime, Anywhere.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF13136A),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: ClipRRect(
-                borderRadius: BorderRadius.circular(20), // Set radius value here
-                child: Image.asset(
-                  'lib/assets/LoanApprovalGIF.gif', // Replace PNG with GIF
-                  height: 250,
-                  width: 250, // Optional: Set width if needed
-                  fit: BoxFit.cover, // Optional: To maintain aspect ratio while filling the container
+            : Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('lib/assets/back.jpg'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 90.0, 16.0, 16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () => _navigateToPage(LoginPage()),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF13136A),
-                                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                                minimumSize: Size(140, 50),
-                              ),
-                              child: const Text(
-                                'Log In',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                ),
+                child: Container(
+                  color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Loan Approval System\n',
+                                    style: TextStyle(
+                                      fontSize: 35,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF13136A),
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: ' using\n',
+                                    style: TextStyle(
+                                      fontSize: 35,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color.fromARGB(255, 103, 7, 0),
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'Machine Learning',
+                                    style: TextStyle(
+                                      fontSize: 35,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color.fromARGB(255, 0, 72, 1),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            ElevatedButton(
-                              onPressed: () => _navigateToPage(SignupPage()),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF13136A),
-                                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                                minimumSize: Size(140, 50),
-                              ),
-                              child: const Text(
-                                'Sign Up',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(120),
+                              child: Image.asset(
+                                'lib/assets/LoanApprovalGIF.gif',
+                                height: 250,
+                                width: 250,
+                                fit: BoxFit.cover,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16.0, 90.0, 16.0, 16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () => _navigateToPage( LoginPage()),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF13136A),
+                                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                                    minimumSize: const Size(140, 50),
+                                  ),
+                                  child: const Text(
+                                    'Log In',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),SizedBox(height: 20),
+                                ElevatedButton(
+                                  onPressed: () => _navigateToPage(SignupPage()),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF13136A),
+                                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                                    minimumSize: const Size(140, 50),
+                                  ),
+                                  child: const Text(
+                                    'Sign Up',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
