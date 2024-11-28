@@ -172,6 +172,7 @@ def user_action(request):
             
             if user:
         # If authentication is successful, log the user in
+        
                 login(request, user)
                                 # Optional: Generate JWT tokens for API compatibility
                 refresh = RefreshToken.for_user(user)
